@@ -1,6 +1,8 @@
 package com.team_3.accountbook;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -17,18 +19,21 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
-    ArrayList<Message> arrayList=new ArrayList<>();
+    ArrayList<String> arrayList=new ArrayList<>();
+    RecyclerView mRecyclerView;
     TextView t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callPermission();
         readSMSMessage();
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
+
+        mRecyclerView.setAdapter(new adapter(arrayList));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
     public int readSMSMessage() {
-        t= findViewById(R.id.t);
         Uri allMessage = Uri.parse("content://sms");   //문자 접근
         ContentResolver cr = getContentResolver();
         Cursor c = cr.query(allMessage,
@@ -37,28 +42,16 @@ public class MainActivity extends AppCompatActivity {
                 "date DESC");
 
         while (c.moveToNext()) {
-            Message msg = new Message(); // 따로 저는 클래스를 만들어서 담아오도록 했습니다.
-            String address = c.getString(0);
-            msg.address=String.valueOf(address);
-            if(address.equals("15881688")) {
-                long timestamp = c.getLong(1);
-                msg.timestamp = String.valueOf(timestamp);
-                String body = c.getString(2);
-                msg.body = String.valueOf(body);
-                arrayList.add(msg); //
-                t.setText(body);
-                break;
+
+
+            if(c.getString(0).equals("15881688")) {
+                long timestamp = c.getLong(1);     ///숫자 이상함 막 60으로 나누고 어쩌고 해야할듯
+                String body = c.getString(2);      //문자에 날짜 나오는데 연도가 안나옴
+                arrayList.add(body);
             }
         }
         return 0;
     }
-    public class Message {
-        public String address; //휴대폰번호
-        public String timestamp; //시간
-        public String body; //문자내용
-    }
-
-
     private void callPermission() {        //문자 권한 얻기
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.READ_SMS)
