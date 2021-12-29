@@ -5,9 +5,21 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/dt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="날짜"
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/bd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="15dp"
             android:text="내용"
             android:textSize="16sp"
             android:textColor="#000"/>

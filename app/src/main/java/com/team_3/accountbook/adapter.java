@@ -12,11 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
-    private ArrayList<String> arrayList;
+    private ArrayList<item> arrayList;
 
-    public adapter(ArrayList<String> arrayList) {
-        this.arrayList=arrayList;
+    public adapter(ArrayList<item> arrayList) {
+        this.arrayList = arrayList;
     }
+
     @Override
     public int getItemCount() {
         return arrayList.size();
@@ -25,22 +26,26 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     @NonNull
     @Override
     public adapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
         CumstomViewHolder holder = new CumstomViewHolder(view);
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-
-        holder.text.setText(arrayList.get(position));
+        holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate());
+        holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
     }
 
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
+        TextView dt;
+        TextView bd;
+
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
-            text=itemView.findViewById(R.id.text);
+            dt = itemView.findViewById(R.id.dt);
+            bd = itemView.findViewById(R.id.bd);
         }
     }
 }

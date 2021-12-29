@@ -15,47 +15,55 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
-    ArrayList<String> arrayList=new ArrayList<>();
+
+    ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
-    TextView t;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         callPermission();
         readSMSMessage();
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
         mRecyclerView.setAdapter(new adapter(arrayList));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
     public int readSMSMessage() {
         Uri allMessage = Uri.parse("content://sms");   //문자 접근
+
         ContentResolver cr = getContentResolver();
         Cursor c = cr.query(allMessage,
-                new String[]{"address","date","body"},  //new String[]{"_id", "thread_id", "address", "person", "date", "body"},
+                new String[]{"address", "body", "date"},  //new String[]{"_id", "thread_id", "address", "person", "date", "body"},
                 null, null,
                 "date DESC");
 
         while (c.moveToNext()) {
-
-
+            SimpleDateFormat sdf = new SimpleDateFormat("< yyyy년 MM월 dd일 HH:mm >");
+            Date timeInDate;
             if(c.getString(0).equals("15881688")) {
-                long timestamp = c.getLong(1);     ///숫자 이상함 막 60으로 나누고 어쩌고 해야할듯
-                String body = c.getString(2);      //문자에 날짜 나오는데 연도가 안나옴
-                arrayList.add(body);
+                String body = c.getString(1);      //문자에 날짜 나오는데 연도가 안나옴
+                long timestamp = c.getLong(2);
+
+                timeInDate = new Date(timestamp);
+                String date = sdf.format(timeInDate);
+
+                arrayList.add(new item(date, body));
             }
         }
         return 0;
     }
     private void callPermission() {        //문자 권한 얻기
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
+                && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(
                     new String[]{Manifest.permission.READ_SMS},
