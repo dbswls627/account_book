@@ -14,14 +14,17 @@ import java.util.ArrayList;
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     private ArrayList<item> arrayList;
 
+
     public adapter(ArrayList<item> arrayList) {
         this.arrayList = arrayList;
     }
+
 
     @Override
     public int getItemCount() {
         return arrayList.size();
     }
+
 
     @NonNull
     @Override
@@ -32,11 +35,13 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         return holder;
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
         holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate());
         holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
     }
+
 
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
         TextView dt;
