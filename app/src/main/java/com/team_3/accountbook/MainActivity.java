@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
 
-    private Pattern p = Pattern.compile("\\S*(원)"); // 가격을 뽑기 위한 정규식
+    private Pattern p = Pattern.compile("\\S*(원)"); // 가격을 뽑기 위한 정규식(\S: 공백이 아닌 모든 문자, *: 앞 문자 0개 이상)
     private Matcher m;         // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
     private String amount = null;      // 추출한 가격(~원)
     private int regexAmount;         // 추출한 가격(only 숫자)
