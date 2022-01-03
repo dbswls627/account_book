@@ -40,17 +40,20 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
         holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate());
         holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
+        holder.amt.setText(""+arrayList.get(position).getMsgAmount());
     }
 
 
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
         TextView dt;
         TextView bd;
+        TextView amt;
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
             dt = itemView.findViewById(R.id.dt);
             bd = itemView.findViewById(R.id.bd);
+            amt = itemView.findViewById(R.id.amt);
         }
     }
 }

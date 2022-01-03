@@ -1,5 +1,7 @@
 package com.team_3.accountbook;
 
+import static java.lang.Integer.parseInt;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,16 +16,26 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
 
     ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
+
+    private Pattern p = Pattern.compile("\\S*(원)"); // 가격을 뽑기 위한 정규식
+    private Matcher m;         // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
+    private String amount = null;      // 추출한 가격(~원)
+    private int regexAmount;         // 추출한 가격(only 숫자)
 
 
     @Override
@@ -51,22 +63,46 @@ public class MainActivity extends AppCompatActivity {
                 where, null,
                 "date DESC");
 
+
+
+        Date timeInDate;
+
         while (c.moveToNext()) {
             SimpleDateFormat sdf = new SimpleDateFormat("< yyyy년 MM월 dd일 HH:mm >");
-            Date timeInDate;
 
             String body = c.getString(0);      //문자에 날짜 나오는데 연도가 안나옴
             long timestamp = c.getLong(1);
 
             timeInDate = new Date(timestamp);
             String date = sdf.format(timeInDate);
-            arrayList.add(new item(date, body));
+
+            regexAmount = parsingAmount(body);
+
+            arrayList.add(new item(date, body, regexAmount));
         }
         return 0;
     }
 
 
-    private void callPermission() {        //문자 권한 얻기
+    private int parsingAmount(String body){
+        int int_amount;
+        m = p.matcher(body);     // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
+
+        if(m.find()){ amount = m.group(); }   // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
+        else{ amount = null; }                // 매칭되는 문자가 없으면 null
+
+        // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
+        try {
+            int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", ""));
+            return int_amount;
+        }
+        catch (Exception e) {
+            return -1;
+        }
+    }
+
+
+    private void callPermission() {     //문자 권한 얻기
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
 
