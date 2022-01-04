@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         String amount;     // 추출한 가격(~원)
         int int_amount;    // int 형으로 변환한 가격(only 숫자)
 
-        Pattern p = Pattern.compile("\\S*(원)"); // 가격을 뽑기 위한 정규식(\S: 공백이 아닌 모든 문자, *: 앞 문자 0개 이상)
+        Pattern p = Pattern.compile("([0-9]*)(.*)([0-9]+)(원)"); // 가격을 뽑기 위한 정규식(\S: 공백이 아닌 모든 문자, *: 앞 문자 0개 이상)
         Matcher m;         // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
         m = p.matcher(body);     // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
 
