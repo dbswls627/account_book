@@ -70,17 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
             timeInDate = new Date(timestamp);
             String date = sdf.format(timeInDate);
-
-            int regexAmount = parsingAmount(body);
-
-            arrayList.add(new item(date, body, regexAmount));
+            arrayList.add(parsing(body,date));
         }
         return 0;
     }
 
 
-    private int parsingAmount(String body){
+    private item parsing(String body,String date){
         String amount;     // 추출한 가격(~원)
+        String place;     // 추출한 사용처
         int int_amount;    // int 형으로 변환한 가격(only 숫자)
 
         Pattern p = Pattern.compile("([0-9]*)(.*)([0-9]+)(원)"); // 가격을 뽑기 위한 정규식(\S: 공백이 아닌 모든 문자, *: 앞 문자 0개 이상)
@@ -88,17 +86,24 @@ public class MainActivity extends AppCompatActivity {
         m = p.matcher(body);     // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
 
         if(m.find()){ amount = m.group(); }   // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
-        else{ amount = null; }                // 매칭되는 문자가 없으면 null
+        else{ amount = null; }                // 매칭되는 문자가 없으면 null4
 
-        // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
-        try {
-            int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", ""));
-            return int_amount;
-        }
-        catch (Exception e) {
-            return -1;
-        }
+
+        p = Pattern.compile("(.*사용)"); // p객체 재활용 *** 사용 까지 parsing
+        m = p.matcher(body);     //  m객체 재활용
+
+        if(m.find()){ place = m.group(); }   // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
+        else{ place = null; }                // 매칭되는 문자가 없으면 null
+        try {  //null 값을 받으면 에러가 나서 예외처리 사용
+            place=place.replaceAll("사용$","");   //정규식으로 끝에 있는 사용만 제거
+        }catch (Exception e){place = "";}
+        try {  //null 값을 받으면 에러가 나서 예외처리 사용
+            int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", "")); // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
+        }catch (Exception e){int_amount=-1;}
+
+        return new item(date,place,int_amount);
     }
+
 
 
     private void callPermission() {     //문자 권한 얻기

@@ -38,9 +38,11 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate());
-        holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
-        holder.amt.setText(""+arrayList.get(position).getMsgAmount());
+        if(arrayList.get(position).getMsgAmount()!=-1) {  // 결제 문자가 아니면 Amount 값이 -1임
+            holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate());
+            holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
+            holder.amt.setText("" + arrayList.get(position).getMsgAmount());
+        }
     }
 
 
