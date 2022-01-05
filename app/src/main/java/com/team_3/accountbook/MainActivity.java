@@ -65,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
         while (c.moveToNext()) {
             SimpleDateFormat sdf = new SimpleDateFormat("< yyyy년 MM월 dd일 HH:mm >");
 
-            String body = c.getString(0);      //문자에 날짜 나오는데 연도가 안나옴
+            String body = c.getString(0);
             long timestamp = c.getLong(1);
 
             timeInDate = new Date(timestamp);
             String date = sdf.format(timeInDate);
-            arrayList.add(parsing(body,date));
+            arrayList.add(parsing(body,date)); //리턴 받은 값 바로 리스트에 저장
         }
         return 0;
     }
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         String place;     // 추출한 사용처
         int int_amount;    // int 형으로 변환한 가격(only 숫자)
 
-        Pattern p = Pattern.compile("([0-9]*)(.*)([0-9]+)(원)"); // 가격을 뽑기 위한 정규식(\S: 공백이 아닌 모든 문자, *: 앞 문자 0개 이상)
+        Pattern p = Pattern.compile("([0-9]*)(.*)([0-9]+)(원)"); // 원 앞에 있는 숫자들과 원을 파싱 적어도 앞에 숫자하나가 있어야함
         Matcher m;         // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
         m = p.matcher(body);     // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", "")); // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
         }catch (Exception e){int_amount=-1;}
 
-        return new item(date,place,int_amount);
+        return new item(date,place,int_amount); //item 형태의 객체 return
     }
 
 
