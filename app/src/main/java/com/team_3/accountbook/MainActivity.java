@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
+    public SimpleDateFormat sdf = new SimpleDateFormat("< yyyy년 MM월 dd일 HH:mm >");
 
     ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
@@ -62,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         Date timeInDate;
 
         while (c.moveToNext()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("< yyyy년 MM월 dd일 HH:mm >");
 
             String body = c.getString(0);
             long timestamp = c.getLong(1);
@@ -120,4 +122,5 @@ public class MainActivity extends AppCompatActivity {
             // 해당 로직으로 이동
         }
     }
+
 }
