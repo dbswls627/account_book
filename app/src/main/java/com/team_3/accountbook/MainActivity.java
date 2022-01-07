@@ -3,6 +3,8 @@ package com.team_3.accountbook;
 import static java.lang.Integer.parseInt;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -120,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
                     PERMISSIONS_REQUEST_READ_SMS);
         } else {
             // 해당 로직으로 이동
+        }
+        String[] permissions = {Manifest.permission.RECEIVE_SMS};
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if(permissionCheck == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, permissions, 1);
         }
     }
 
