@@ -38,7 +38,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        if(arrayList.get(position).getMsgAmount()!=-1) {  // 결제 문자가 아니면 Amount 값이 -1임
+        if(!arrayList.get(position).getMsgBody().equals("") && arrayList.get(position).getMsgAmount()!=-1) {  //정규식에 예외처리가 되지 않으면..
             holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate());
             holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
             holder.amt.setText("" + arrayList.get(position).getMsgAmount());
