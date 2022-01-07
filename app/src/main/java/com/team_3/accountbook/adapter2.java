@@ -44,11 +44,13 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
         ArrayList<String> dateArray = new ArrayList<>(); //날짜만 들어있는 리스트
         ArrayList<item> Array = new ArrayList<>();
         for (item item : arrayList) {  //arrayList 의 날짜 값이랑 같은 값만 adapter로 넘겨주기 위함
-            if(item.getMsgDate().substring(1,15).equals(arrayList.get(position).getMsgDate().substring(1,15))){
-                Array.add(item);
-            }
             if(!dateArray.contains(item.getMsgDate().substring(1, 15))) {//중복제거하기 위한 코드
                 dateArray.add(item.getMsgDate().substring(1, 15));
+            }
+        }
+        for (item item : arrayList) {  //arrayList 의 날짜 값이랑 같은 값만 adapter로 넘겨주기 위함
+            if(item.getMsgDate().substring(1,15).equals(dateArray.get(position))){
+                Array.add(item);
             }
         }
 
