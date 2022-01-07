@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
-
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter(arrayList));
+        mRecyclerView.setAdapter(new adapter2(context,arrayList));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         callPermission();
