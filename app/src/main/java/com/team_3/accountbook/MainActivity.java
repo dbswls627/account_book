@@ -73,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
             timeInDate = new Date(timestamp);
             String date = sdf.format(timeInDate);
-
-            arrayList.add(parsing(body,date));    // 리턴 받은 값 바로 리스트에 저장
+            item item=parsing(body,date);
+            if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
+                arrayList.add(parsing(body, date));    // 리턴 받은 값 바로 리스트에 저장
+            }
         }
         return 0;
     }
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         m = p.matcher(body);                      // m객체 재활용
 
         if(m.find()){ place = m.group(); }        // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
-        else{ place = null; }                     // 매칭되는 문자가 없으면 null
+        else{ place = ""; }                     // 매칭되는 문자가 없으면 null
         try {                                     // null 값을 받으면 에러가 나서 예외처리 사용
             place=place.replaceAll("사용$","");    // 정규식으로 끝에 있는 사용만 제거
         }

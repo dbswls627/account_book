@@ -53,10 +53,8 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
                 Array.add(item);
             }
         }
-
-        if(!arrayList.get(position).getMsgBody().equals("") && arrayList.get(position).getMsgAmount()!=-1) {//정규화 예외처리가 나지않았을때
             holder.dt.setText(dateArray.get(position));
-        }
+
 
 
         holder.rv.setAdapter(new adapter(Array,arrayList.get(position).getMsgDate().substring(1,15))); //년도 부터 날짜까지 매개변수로 넘김

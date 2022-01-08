@@ -41,11 +41,10 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        if(true ) {   // 메게변수로 받은 상위 리사이클러뷰의 값과 날짜가 같은 값만
+
             holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(15,21));
             holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
             holder.amt.setText(arrayList.get(position).getMsgAmount()+"원");
-        }
     }
 
 
