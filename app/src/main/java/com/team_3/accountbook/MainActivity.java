@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             String date = sdf.format(timeInDate);
             item item=parsing(body,date);
             if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
-                arrayList.add(parsing(body, date));    // 리턴 받은 값 바로 리스트에 저장
+                arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
             }
         }
         return 0;
