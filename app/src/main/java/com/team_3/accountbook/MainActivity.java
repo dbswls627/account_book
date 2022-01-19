@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         String where = "address = 15881688";
 
         ContentResolver cr = getContentResolver();
-        Cursor c = cr.query(allMessage,    // .query(from / select / ? / where / order by);
+        Cursor c = cr.query(allMessage,              // .query(from / select / ? / where / order by);
                 new String[]{"body", "date"},
                 where, null,
                 "date DESC");
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
             timeInDate = new Date(timestamp);
             String date = sdf.format(timeInDate);
-            item item=parsing(body,date);
+            item item = parsing(body,date);
             if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
                 arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
             }
@@ -83,39 +83,38 @@ public class MainActivity extends AppCompatActivity {
 
 
     private item parsing(String body,String date){
-        String amount;       // 추출한 가격(~원)
-        String place;        // 추출한 사용처
-        int int_amount;      // int 형으로 변환한 가격(only 숫자)
+        String amount;              // 추출한 가격(~원)
+        String place;               // 추출한 사용처
+        int int_amount;             // int 형으로 변환한 가격(only 숫자)
 
         Pattern p = Pattern.compile("([0-9]*)(.*)([0-9]+)(원)");  // 원 앞에 있는 숫자들과 원을 파싱 적어도 앞에 숫자하나가 있어야함
-        Matcher m;               // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
-        m = p.matcher(body);     // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
+        Matcher m;                  // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
+        m = p.matcher(body);        // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
 
-        if(m.find()){ amount = m.group(); }       // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
-        else{ amount = null; }                    // 매칭되는 문자가 없으면 null4
+        if(m.find()){ amount = m.group(); }               // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
+        else{ amount = null; }                            // 매칭되는 문자가 없으면 null
 
+        p = Pattern.compile("(.*사용)");                  // p객체 재활용 *** 사용 까지 parsing
+        m = p.matcher(body);                             // m객체 재활용
 
-        p = Pattern.compile("(.*사용)");           // p객체 재활용 *** 사용 까지 parsing
-        m = p.matcher(body);                      // m객체 재활용
-
-        if(m.find()){ place = m.group(); }        // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
-        else{ place = ""; }                     // 매칭되는 문자가 없으면 null
-        try {                                     // null 값을 받으면 에러가 나서 예외처리 사용
-            place=place.replaceAll("사용$","");    // 정규식으로 끝에 있는 사용만 제거
+        if(m.find()){ place = m.group(); }               // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
+        else{ place = ""; }                              // 매칭되는 문자가 없으면 null
+        try {                                            // null 값을 받으면 에러가 나서 예외처리 사용
+            place=place.replaceAll("사용$", "");          // 정규식으로 끝에 있는 사용만 제거
         }
         catch (Exception e){place = "";}
 
-        try {  //null 값을 받으면 에러가 나서 예외처리 사용
-            int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", "")); // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
+        try {           // null 값을 받는 상황을 위해 예외처리 사용
+            int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", ""));   // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
         }
-        catch (Exception e){int_amount=-1;}
+        catch (Exception e){int_amount = -1;}
 
-        return new item(date,place,int_amount);   // item 형태의 객체 return
+        return new item(date, place, int_amount);        // item 형태의 객체 return
     }
 
 
 
-    private void callPermission() {     // 문자 권한 얻기
+    private void callPermission() {       // 문자 권한 얻기
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
 
