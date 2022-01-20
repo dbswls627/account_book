@@ -4,14 +4,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
    <item
        android:id="@+id/home"
-        android:title="홈" />
+       android:icon="@drawable/ic_baseline_home_24"
+       android:title="홈" />
    <item
+       android:icon="@drawable/ic_baseline_pie_chart_24"
        android:id="@+id/graph"
        android:title="통계"/>
    <item
+       android:icon="@drawable/ic_baseline_attach_money_24"
        android:id="@+id/assets"
        android:title="자산"/>
    <item
+       android:icon="@drawable/ic_baseline_settings_24"
        android:id="@+id/setting"
        android:title="설정"/>
 
