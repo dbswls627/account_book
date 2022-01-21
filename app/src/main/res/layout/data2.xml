@@ -16,7 +16,7 @@
             android:textStyle="bold"/>
         <View
             android:background="#ff0000"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="1dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_rv"

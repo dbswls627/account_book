@@ -18,19 +18,24 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         BottomNavigationView bottom_menu = findViewById(R.id.bottom_menu);
+        bottom_menu.setSelectedItemId(R.id.home);
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
                 switch (menuItem.getItemId()) {
                     case R.id.home:
+                        intent = new Intent(this, HomeActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.graph:
-                        intent = new Intent(this, AddActivity.class);
+                        intent = new Intent(this, GraphActivity.class);
                         startActivity(intent);
                         break;
                     case R.id.assets:
+                        intent = new Intent(this, AssetsActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.setting:
-                        intent = new Intent(this, MainActivity.class);
+                        intent = new Intent(this, SettingActivity.class);
                         startActivity(intent);
                         break;
                 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".MainActivity">
+    tools:context=".GraphActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="홈액티비티"/>
+            android:text="그래프 액티비티"/>
     </LinearLayout>
 
 
