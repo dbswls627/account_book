@@ -27,6 +27,7 @@ public class SettingActivity extends AppCompatActivity {
             intent = new Intent(this, AddActivity.class);
             startActivity(intent);
         });
+        
         sms.setOnClickListener((view)->{
             intent = new Intent(this, MainActivity.class);
             startActivity(intent);
