@@ -6,12 +6,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+    private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
+
+    @Override
+    public void onBackPressed() {
+        // ↓ 기존 뒤로가기 버튼의 기능을 막기위해 주석처리
+        //super.onBackPressed();
+
+        // 뒤로가기를 누르고 2초가 지났다면~
+        if(System.currentTimeMillis() > firstBackPressedTime + 2000) {
+            firstBackPressedTime = System.currentTimeMillis();
+            Log.d("time:", String.valueOf(System.currentTimeMillis()));
+            Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+        // 뒤로가기 버튼을 누른지 2초가 안지났다면~
+        else if(System.currentTimeMillis() <= firstBackPressedTime + 2000) {
+            finish();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,5 +61,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 return true;
         });
+
+
     }
 }

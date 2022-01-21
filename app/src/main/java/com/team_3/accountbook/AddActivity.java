@@ -41,7 +41,7 @@ public class AddActivity extends AppCompatActivity {
             df = new DecimalFormat("#,###.##");        // "#,###.##" 형식 지정
             df.setDecimalSeparatorAlwaysShown(true);
             dfnd = new DecimalFormat("#,###");         // "#,###" 형식 지정
-            this.edit_sum = et;                        // 매개변수로 받은 EditText 를 et에 저장
+            this.edit_sum = et;                        // 매개변수로 받은 EditText 를 edit_sum 에 저장
             hasFractionalPart = false;                 // 플래그로 사용하는 boolean 값을 false 로.
         }
 
