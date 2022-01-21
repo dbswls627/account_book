@@ -15,6 +15,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class SettingActivity extends AppCompatActivity {
     TextView add,sms;
     Intent intent;
+    BottomNavigationView bottom_menu;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bottom_menu = findViewById(R.id.bottom_menu);
+        bottom_menu.setSelectedItemId(R.id.setting);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +39,7 @@ public class SettingActivity extends AppCompatActivity {
             intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
-        BottomNavigationView bottom_menu = findViewById(R.id.bottom_menu);
-        bottom_menu.setSelectedItemId(R.id.setting);
+        bottom_menu = findViewById(R.id.bottom_menu);
 
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
 

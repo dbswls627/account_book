@@ -14,7 +14,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    
+    BottomNavigationView bottom_menu;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bottom_menu = findViewById(R.id.bottom_menu);
+        bottom_menu.setSelectedItemId(R.id.home);
+    }
+
     @Override
     public void onBackPressed() {
         // ↓ 기존 뒤로가기 버튼의 기능을 막기위해 주석처리
@@ -36,8 +44,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView bottom_menu = findViewById(R.id.bottom_menu);
-        bottom_menu.setSelectedItemId(R.id.home);
+        bottom_menu = findViewById(R.id.bottom_menu);
+
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
                 switch (menuItem.getItemId()) {

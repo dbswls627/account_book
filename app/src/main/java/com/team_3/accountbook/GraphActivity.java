@@ -12,13 +12,19 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class GraphActivity extends AppCompatActivity {
+    BottomNavigationView bottom_menu;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bottom_menu = findViewById(R.id.bottom_menu);
+        bottom_menu.setSelectedItemId(R.id.graph);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-        BottomNavigationView bottom_menu = findViewById(R.id.bottom_menu);
-        bottom_menu.setSelectedItemId(R.id.graph);
+        bottom_menu = findViewById(R.id.bottom_menu);
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
             switch (menuItem.getItemId()) {

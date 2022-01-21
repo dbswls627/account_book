@@ -12,13 +12,18 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AssetsActivity extends AppCompatActivity {
+    BottomNavigationView bottom_menu;
+    protected void onStart() {
+        super.onStart();
+        bottom_menu = findViewById(R.id.bottom_menu);
+        bottom_menu.setSelectedItemId(R.id.assets);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assets);
 
-        BottomNavigationView bottom_menu = findViewById(R.id.bottom_menu);
-        bottom_menu.setSelectedItemId(R.id.assets);
+        bottom_menu = findViewById(R.id.bottom_menu);
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
             switch (menuItem.getItemId()) {
