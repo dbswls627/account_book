@@ -24,24 +24,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
-    static LocalDate selectedDate;
+    static LocalDate selectedDate;                  // 날짜 변수
+
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    BottomNavigationView bottom_menu;
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
+
+    BottomNavigationView bottom_menu;
+
+
     protected void onStart() {
         super.onStart();
         bottom_menu = findViewById(R.id.bottom_menu);
         bottom_menu.setSelectedItemId(R.id.home);
     }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         bottom_menu = findViewById(R.id.bottom_menu);
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
+
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
             switch (menuItem.getItemId()) {
@@ -65,10 +73,11 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
         
-        selectedDate = LocalDate.now();
+        selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         setMonthView();
-
     }
+
+
     public void onBackPressed() {
         // ↓ 기존 뒤로가기 버튼의 기능을 막기위해 주석처리
         //super.onBackPressed();
@@ -83,54 +92,58 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         }
     }
-    
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setMonthView() {       //버튼클릭으로 월 바꾸면 다시 달력을 그리도록 초기화 해줌
-        monthYearText.setText(monthYearFromDate(selectedDate));
-        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth,this);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);  //리사이클러뷰를 그리드뷰매니저를 사용해 그리뷰로 표현
-        calendarRecyclerView.setLayoutManager(layoutManager);
-        calendarRecyclerView.setAdapter(calendarAdapter);
-    }
+    private ArrayList<String> daysInMonthArray(LocalDate date) {   // 월에 맞게 날짜들을 표시하는 함수.
+        ArrayList<String> daysInMonthArray = new ArrayList<>();        // String 배열 daysInMonthArray 생성.
+        YearMonth yearMonth = YearMonth.from(date);                    // .from(date): date 의 인스턴스를 가져온다.    *안드로이드 developers 설명: from(TemporalAccessor temporal) - Obtains an instance of YearMonth from a temporal object.
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private ArrayList<String> daysInMonthArray(LocalDate date) {  //얘는 뭐지...? 월마다 달력에 요일과 날자에 맞게 잘 세팅해주는건가??
-        ArrayList<String> daysInMonthArray = new ArrayList<>();
-        YearMonth yearMonth = YearMonth.from(date);
+        int daysInMonth = yearMonth.lengthOfMonth();                   // 월의 길이.            .lengthOfMonth(): 연도를 고려하여 월의 길이를 반환함.
 
-        int daysInMonth = yearMonth.lengthOfMonth();
+        LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);       // 달 첫째 날짜.         .withDayOfMonth(i): 달의 i일 날짜를 반환함.
+        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();        // 달 첫째 날의 요일.(0-일 1-월 ... 6-토)      .getDayOfWeek(): 요일 반환 메소드.
 
-        LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);
-        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
-
-        for(int i = 1; i <= 42; i++) {
-            if(i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("");
+        for(int i = 1; i <= 42; i++) {                                 // 그리드뷰의 첫번째 칸부터 마지막 칸까지
+            if(i <= dayOfWeek || i > daysInMonth + dayOfWeek) {        // i가 달의 첫째 날보다 작거나 마지막 날보다 크면~
+                daysInMonthArray.add("");                              // ~빈칸으로 만듦.
             }
             else {
                 daysInMonthArray.add(String.valueOf(i - dayOfWeek));
             }
         }
-        return  daysInMonthArray;
+        return  daysInMonthArray;                                      // 완성한 달력 배열 반환.
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private String monthYearFromDate(LocalDate date) {    //LocalDate 형으로 데이터를 넣으면 1월2022 으로 변환됩니다...패턴 바꾸면 다른 형식이로 나오는듯
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");//패턴 MMMM-01월 까지나옴 MM-01까지 나옴
+    private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MMMM");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void previousMonthAction(View view) {   //버튼클릭   입 맛에 맞게 setOnClickListener 로 바꿔도 됨
-        selectedDate = selectedDate.minusMonths(1);
+    public void previousMonthAction(View view) {    // 이전 달 이동 버튼 클릭. setOnClickListener 로 바꿔도 됨.
+        selectedDate = selectedDate.minusMonths(1); // 현재 달 - 1
         setMonthView();
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void nextMonthAction(View view) {    //버튼클릭   입 맛에 맞게 setOnClickListener 로 바꿔도 됨
-        selectedDate = selectedDate.plusMonths(1);
+    public void nextMonthAction(View view) {        // 다음 달 이동 버튼 클릭. setOnClickListener 로 바꿔도 됨.
+        selectedDate = selectedDate.plusMonths(1);  // 현재 달 + 1
         setMonthView();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setMonthView() {                   // 달력 이동 버튼 클릭시, 해당 달의 달력을 그리는 함수
+        monthYearText.setText(monthYearFromDate(selectedDate));                    // 현재 년/월을 setText
+        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);            // 해당 달의 달력 배열을 만들어 daysInMonth 에 저장
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth,this);   // 달력 배열을 가지는 Adapter 생성
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);   // 가로 7칸의 그리드뷰(퍼즐 형식)로 만드는 리사이클러뷰 레이아웃 매니저 layoutManager 생성
+        calendarRecyclerView.setLayoutManager(layoutManager);                      // 레이아웃 매니저를 layoutManager 로 지정
+        calendarRecyclerView.setAdapter(calendarAdapter);
     }
 }
