@@ -19,7 +19,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
             android:background="@null"
             android:textStyle="bold"
             android:onClick="previousMonthAction"
@@ -32,14 +31,12 @@
             android:layout_height="wrap_content"
             android:text="Feb 2021"
             android:textSize="20sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"/>
+            android:textAlignment="center"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
             android:background="@null"
             android:textStyle="bold"
             android:onClick="nextMonthAction"
@@ -58,7 +55,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="SUN"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
@@ -67,7 +63,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="MON"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
@@ -76,7 +71,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TUE"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
@@ -85,7 +79,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="WED"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
@@ -94,7 +87,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="THUR"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
@@ -103,7 +95,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="FRI"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
@@ -112,7 +103,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="SAT"
-
             android:textAlignment="center"
             android:textSize="16sp"/>
 
