@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
 
+
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
             switch (menuItem.getItemId()) {
@@ -78,6 +80,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+
     public void onBackPressed() {
         // ↓ 기존 뒤로가기 버튼의 기능을 막기위해 주석처리
         //super.onBackPressed();
@@ -92,6 +95,11 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         }
     }
+
+
+
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -116,11 +124,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MMMM");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -130,11 +140,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void nextMonthAction(View view) {        // 다음 달 이동 버튼 클릭. setOnClickListener 로 바꿔도 됨.
         selectedDate = selectedDate.plusMonths(1);  // 현재 달 + 1
         setMonthView();
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -146,4 +158,6 @@ public class HomeActivity extends AppCompatActivity {
         calendarRecyclerView.setLayoutManager(layoutManager);                      // 레이아웃 매니저를 layoutManager 로 지정
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
+
+
 }

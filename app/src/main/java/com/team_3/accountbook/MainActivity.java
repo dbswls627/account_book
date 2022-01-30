@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         callPermission();
         readSMSMessage();
+
     }
 
 
@@ -130,5 +132,9 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, permissions, 1);
         }
     }
+
+
+
+
 
 }

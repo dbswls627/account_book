@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_assetsName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:hint="자산명"/>
+    <Button
+        android:id="@+id/bt_insertAssets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:onClick="mOnClick"
+        android:text="insert_Assets"/>
+
+    <EditText
+        android:id="@+id/et_wayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:hint="수단명"/>
+    <EditText
+        android:id="@+id/et_wayBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:hint="잔액"/>
+    <EditText
+        android:id="@+id/et_FK_assetsId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:inputType="number"
+        android:hint="자산 FK_id"/>
+    <Button
+        android:id="@+id/bt_insertWay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:onClick="mOnClick"
+        android:text="insert_Way"/>
+
+    <Button
+        android:id="@+id/bt_deleteAssetsAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:onClick="mOnClick"
+        android:text="delete_AssetsAll"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/bt_referAssets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:onClick="mOnClick"
+            android:textAllCaps="false"
+            android:text="refer\nAsset"/>
+        <Button
+            android:id="@+id/bt_referWay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:onClick="mOnClick"
+            android:textAllCaps="false"
+            android:text="refer\nWay"/>
+        <Button
+            android:id="@+id/bt_referCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:onClick="mOnClick"
+            android:textAllCaps="false"
+            android:text="refer\nCost"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/bt_referAssetWithWays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:onClick="mOnClick"
+            android:textAllCaps="false"
+            android:text="refer\nAssetWithWays"/>
+        <Button
+            android:id="@+id/bt_referWayWithCosts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:onClick="mOnClick"
+            android:textAllCaps="false"
+            android:text="refer\nWayWithCosts"/>
+    </LinearLayout>
+
+
+</LinearLayout>

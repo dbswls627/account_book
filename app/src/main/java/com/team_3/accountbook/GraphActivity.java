@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,5 +48,17 @@ public class GraphActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
+
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.go_sqlTest:
+                Intent intent = new Intent(this, SQLTestActivity.class);
+                startActivity(intent);
+                break;
+        }
+
     }
 }
