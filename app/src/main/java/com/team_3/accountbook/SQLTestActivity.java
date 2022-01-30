@@ -35,6 +35,9 @@ public class SQLTestActivity extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build();
 
+
+
+
         //buildTableData();           // ★!!! <앱 첫 실행시에만 실행시킬것> !!!★    첫실행 후 주석처리 하기.
     }
 
