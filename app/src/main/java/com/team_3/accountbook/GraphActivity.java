@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class GraphActivity extends AppCompatActivity {
     BottomNavigationView bottom_menu;
+    Button button;
     @Override
     protected void onStart() {
         super.onStart();
@@ -23,7 +26,11 @@ public class GraphActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-
+        button=findViewById(R.id.sql);
+        button.setOnClickListener((view -> {
+            Intent intent = new Intent(this,SqlTestActivity.class);
+            startActivity(intent);
+        }));
         bottom_menu = findViewById(R.id.bottom_menu);
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;

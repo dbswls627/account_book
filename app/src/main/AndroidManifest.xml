@@ -13,9 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Accountbook">
         <activity
+            android:name=".SqlTestActivity"
+            android:exported="true" />
+        <activity
             android:name=".SettingActivity"
             android:exported="true"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
             android:name=".AssetsActivity"
             android:exported="true"
