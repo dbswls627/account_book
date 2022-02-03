@@ -79,12 +79,15 @@
             android:orientation="vertical"
             android:layout_marginLeft="20dp">
             <EditText
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <EditText
+                android:id="@+id/assets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <EditText
+                android:id="@+id/sort"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <EditText
@@ -93,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"/>
             <EditText
+                android:id="@+id/body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

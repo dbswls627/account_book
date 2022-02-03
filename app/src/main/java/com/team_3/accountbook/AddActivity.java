@@ -15,7 +15,7 @@ import java.text.ParseException;
 
 public class AddActivity extends AppCompatActivity {
 
-    EditText mEditSum;
+    EditText mEditSum,mDate,mSort,mAssets,mBody;
     TextView mTestView;
 
     @Override
@@ -25,8 +25,20 @@ public class AddActivity extends AppCompatActivity {
 
         mEditSum = findViewById(R.id.edit_sum);
         mTestView = findViewById(R.id.testView);
+        mDate = findViewById(R.id.date);
+        mSort = findViewById(R.id.sort);
+        mAssets = findViewById(R.id.assets);
+        mBody = findViewById(R.id.body);
 
         mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));
+
+        String date =getIntent().getStringExtra("date");
+        String body =getIntent().getStringExtra("body");
+        int amount =getIntent().getIntExtra("amount",0);
+
+        mDate.setText(date);
+        mBody.setText(body);
+        mEditSum.setText(String.valueOf(amount));
     }
 
 
