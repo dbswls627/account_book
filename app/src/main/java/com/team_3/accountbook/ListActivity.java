@@ -49,7 +49,7 @@ public class ListActivity extends AppCompatActivity {
 
         db =AppDatabase.getInstance(this);
 
-        arrayList2= (ArrayList<Cost>) db.dao().getCostAll();    //모든 Cost의 값을 받아옴
+        arrayList2= (ArrayList<Cost>) db.dao().getCostAll();    //db 모든 Cost의 값을 받아옴      부분적으로 받아오는게 효울적일거같음 data.java 생성필요
         arrayList2.forEach(it ->
                 arrayList.add(new item(it.getUseDate(),it.getContent(),it.getAmount())) //받아온 Cost 데이터를 item에 맞게 뿌려줌
         );
