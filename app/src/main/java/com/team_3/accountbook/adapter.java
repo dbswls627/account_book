@@ -44,7 +44,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
 
-            holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(15,21));
+            holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(14,19));
             holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
             holder.amt.setText(arrayList.get(position).getMsgAmount()+"원");
             holder.itemView.setOnClickListener((view -> {

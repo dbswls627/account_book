@@ -34,7 +34,8 @@ public interface sqlDao {
     @Query("DELETE FROM Asset")
     void deleteAssetAll();
 
-
+    @Query("SELECT wayId FROM Way where wayName = :name ")
+    int getFk(String name);
 
     @Query("SELECT * FROM Asset")
     List<Asset> getAssetAll();
@@ -42,7 +43,7 @@ public interface sqlDao {
     @Query("SELECT * FROM Way")
     List<Way> getWayAll();
 
-    @Query("SELECT * FROM Cost c ORDER BY c.costId")
+    @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 
 

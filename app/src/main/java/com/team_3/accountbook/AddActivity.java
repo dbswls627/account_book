@@ -2,10 +2,12 @@ package com.team_3.accountbook;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,15 +16,18 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 
 public class AddActivity extends AppCompatActivity {
-
+    Button add;
     EditText mEditSum,mDate,mSort,mAssets,mBody;
     TextView mTestView;
-
+    AppDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+        db = AppDatabase.getInstance(this);
+
+        add = findViewById(R.id.add);
         mEditSum = findViewById(R.id.edit_sum);
         mTestView = findViewById(R.id.testView);
         mDate = findViewById(R.id.date);
@@ -35,10 +40,23 @@ public class AddActivity extends AppCompatActivity {
         String date =getIntent().getStringExtra("date");
         String body =getIntent().getStringExtra("body");
         int amount =getIntent().getIntExtra("amount",0);
-
+        Log.d("test",date.substring(0,14));
         mDate.setText(date);
         mBody.setText(body);
         mEditSum.setText(String.valueOf(amount));
+
+        add.setOnClickListener(view -> {
+            db.dao().insertCost(
+                    2000,                                       //가격     , 생성으로 데이터 안들어감 정규화로 , 다시 지우는 과정필요
+                    mBody.getText().toString(),                         //사용처
+                    mDate.getText().toString(),                         //날짜
+                    0,                                          //잔액
+                    mSort.getText().toString(),                         //분류
+                    "expense",                                  //구분    버튼으로 구현 예정
+                    db.dao().getFk(mAssets.getText().toString()));
+            Intent intent = new Intent(this,ListActivity.class);
+            startActivity(intent);
+        });
     }
 
 

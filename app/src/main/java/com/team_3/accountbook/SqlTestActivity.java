@@ -30,10 +30,7 @@ public class SqlTestActivity extends AppCompatActivity {
         mWayBalance = findViewById(R.id.et_wayBalance);
         mFKAssetsId = findViewById(R.id.et_FK_assetsId);
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "AccountBook_DB")
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
+        db = AppDatabase.getInstance(this);
 
         //buildTableData();           // ★!!! <앱 첫 실행시에만 실행시킬것> !!!★    첫실행 후 주석처리 하기.
     }
@@ -166,7 +163,7 @@ public class SqlTestActivity extends AppCompatActivity {
             db.dao().insertWay(wayName[i], wayBalance[i], FK_assetId[i]);
         }
         for (int i = 0; i < amount.length; i++) {
-            db.dao().insertCost(amount[i], content[i], date[i], balance[i], sortName[i], division[i], FK_wayId[i]);
+          //  db.dao().insertCost(amount[i], content[i], date[i], balance[i], sortName[i], division[i], FK_wayId[i]);
         }
     }
 }

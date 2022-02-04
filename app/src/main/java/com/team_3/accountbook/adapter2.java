@@ -45,13 +45,13 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
         ArrayList<item> Array = new ArrayList<>();
 
         for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
-            if(!dateArray.contains(item.getMsgDate().substring(1, 15))) {      //중복제거하기 위한 코드
-                dateArray.add(item.getMsgDate().substring(1, 15));
+            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {      //중복제거하기 위한 코드
+                dateArray.add(item.getMsgDate().substring(0, 14));
             }
         }
 
         for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
-            if(item.getMsgDate().substring(1, 15).equals(dateArray.get(position))){
+            if(item.getMsgDate().substring(0, 14).equals(dateArray.get(position))){
                 Array.add(item);
             }
         }
@@ -59,7 +59,7 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
 
 
-        holder.rv.setAdapter(new adapter(Array,arrayList.get(position).getMsgDate().substring(1, 15))); //년도 부터 날짜까지 매개변수로 넘김
+        holder.rv.setAdapter(new adapter(Array,arrayList.get(position).getMsgDate().substring(0, 14))); //년도 부터 날짜까지 매개변수로 넘김
         holder.rv.setLayoutManager(new LinearLayoutManager(context));
     }
 

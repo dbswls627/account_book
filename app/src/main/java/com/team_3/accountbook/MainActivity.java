@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
-    public SimpleDateFormat sdf = new SimpleDateFormat("< yyyy년 MM월 dd일 HH:mm >");
+    public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
 
     ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
