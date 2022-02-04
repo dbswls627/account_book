@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context,arrayList));
+        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
+        mRecyclerView.setAdapter(new adapter2(context, arrayList));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         callPermission();
@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public int readSMSMessage() {
+
+    public void readSMSMessage() {
         Uri allMessage = Uri.parse("content://sms");   // 문자 접근
 
         String where = "address = 15881688";
@@ -74,13 +75,13 @@ public class MainActivity extends AppCompatActivity {
 
             timeInDate = new Date(timestamp);
             String date = sdf.format(timeInDate);
-            item item = parsing(body,date);
+            item item = parsing(body, date);
             if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
                 arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
             }
         }
-        return 0;
     }
+
 
 
     private item parsing(String body,String date){

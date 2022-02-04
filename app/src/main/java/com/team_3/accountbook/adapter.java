@@ -19,10 +19,11 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     private String date;
     private Context context;
 
-    public adapter(ArrayList<item> arrayList,String date) {
+    public adapter(ArrayList<item> arrayList, String date) {
         this.arrayList = arrayList;
-        this.date=date;
+        this.date = date;
     }
+
 
 
     @Override
@@ -31,14 +32,17 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     }
 
 
+
     @NonNull
     @Override
     public adapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
         CumstomViewHolder holder = new CumstomViewHolder(view);
-        context=parent.getContext();
+        context = parent.getContext();
+
         return holder;
     }
+
 
 
     @Override
@@ -46,28 +50,32 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
             holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(14,19));
             holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
-            holder.amt.setText(arrayList.get(position).getMsgAmount()+"원");
+            holder.amt.setText(arrayList.get(position).getMsgAmount() + "원");
+
+            // 리스트 항목 클릭시~
             holder.itemView.setOnClickListener((view -> {
-                Intent intent = new Intent(context,AddActivity.class);
-                intent.putExtra("amount",arrayList.get(position).getMsgAmount());
-                intent.putExtra("date",arrayList.get(position).getMsgDate());
-                intent.putExtra("body",arrayList.get(position).getMsgBody());
-                context.startActivity(intent);
+                Intent intent = new Intent(context, AddActivity.class);
+                intent.putExtra("amount", arrayList.get(position).getMsgAmount());
+                intent.putExtra("date", arrayList.get(position).getMsgDate());
+                intent.putExtra("body", arrayList.get(position).getMsgBody());
+
+                context.startActivity(intent);      // ~AddActivity 로 넘어감
             }));
     }
 
 
+
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
-        TextView dt;
-        TextView bd;
-        TextView amt;
+        TextView dt;        // 시간(HH:mm)
+        TextView bd;        // 내용
+        TextView amt;       // 금액
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
+
             dt = itemView.findViewById(R.id.dt);
             bd = itemView.findViewById(R.id.bd);
             amt = itemView.findViewById(R.id.amt);
-
         }
     }
 }

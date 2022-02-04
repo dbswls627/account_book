@@ -23,10 +23,12 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
     }
 
 
+
     @Override
     public int getItemCount() {
         return arrayList.size();
     }
+
 
 
     @NonNull
@@ -39,14 +41,15 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
     }
 
 
+
     @Override
     public void onBindViewHolder(@NonNull adapter2.CumstomViewHolder holder, int position) {
-        ArrayList<String> dateArray = new ArrayList<>();    //날짜만 들어있는 리스트
-        ArrayList<item> Array = new ArrayList<>();
+        ArrayList<String> dateArray = new ArrayList<>();    // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트
+        ArrayList<item> Array = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
 
         for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
-            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {      //중복제거하기 위한 코드
-                dateArray.add(item.getMsgDate().substring(0, 14));
+            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {       // 배열리스트에 날짜가 없다면~
+                dateArray.add(item.getMsgDate().substring(0, 14));              // ~그 날짜를 배열리스트에 추가함.
             }
         }
 
@@ -55,24 +58,24 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
                 Array.add(item);
             }
         }
-            holder.dt.setText(dateArray.get(position));
 
+        holder.dt.setText(dateArray.get(position));
 
-
-        holder.rv.setAdapter(new adapter(Array,arrayList.get(position).getMsgDate().substring(0, 14))); //년도 부터 날짜까지 매개변수로 넘김
+        holder.rv.setAdapter(new adapter(Array, arrayList.get(position).getMsgDate().substring(0, 14))); // 년도 부터 일까지 매개변수로 넘김
         holder.rv.setLayoutManager(new LinearLayoutManager(context));
     }
 
 
+
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
-        TextView dt;
-        RecyclerView rv;
+        TextView dt;        // 날짜(yyyy년 MM월 dd일)
+        RecyclerView rv;    // 하위 리스트
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
+
             dt = itemView.findViewById(R.id.dt2);
             rv = itemView.findViewById(R.id.item_rv);
-
         }
     }
 }

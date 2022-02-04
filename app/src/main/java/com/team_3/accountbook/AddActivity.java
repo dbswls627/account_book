@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,7 +18,7 @@ import java.text.ParseException;
 
 public class AddActivity extends AppCompatActivity {
     Button add;
-    EditText mEditSum,mDate,mSort,mAssets,mBody;
+    EditText mEditSum, mDate, mSort, mWay, mBody;
     TextView mTestView;
     AppDatabase db;
     @Override
@@ -27,37 +28,48 @@ public class AddActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
-        add = findViewById(R.id.add);
-        mEditSum = findViewById(R.id.edit_sum);
+        mDate = findViewById(R.id.date);            // 날짜
+        mWay = findViewById(R.id.way);              // 수단
+        mSort = findViewById(R.id.sort);            // 분류
+        mEditSum = findViewById(R.id.edit_sum);     // 금액
+        mBody = findViewById(R.id.body);            // 내용
         mTestView = findViewById(R.id.testView);
-        mDate = findViewById(R.id.date);
-        mSort = findViewById(R.id.sort);
-        mAssets = findViewById(R.id.assets);
-        mBody = findViewById(R.id.body);
+        add = findViewById(R.id.add);               // 추가버튼
 
-        mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));
+        mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));       // 금액 입력반응
 
+        // MainActivity 에서 리스트 클릭시 실행되는 부분
         String date =getIntent().getStringExtra("date");
         String body =getIntent().getStringExtra("body");
         int amount =getIntent().getIntExtra("amount",0);
-        Log.d("test",date.substring(0,14));
         mDate.setText(date);
         mBody.setText(body);
         mEditSum.setText(String.valueOf(amount));
 
-        add.setOnClickListener(view -> {
-            db.dao().insertCost(
-                    2000,                                       //가격     , 생성으로 데이터 안들어감 정규화로 , 다시 지우는 과정필요
-                    mBody.getText().toString(),                         //사용처
-                    mDate.getText().toString(),                         //날짜
-                    0,                                          //잔액
-                    mSort.getText().toString(),                         //분류
-                    "expense",                                  //구분    버튼으로 구현 예정
-                    db.dao().getFk(mAssets.getText().toString()));
-            Intent intent = new Intent(this,ListActivity.class);
-            startActivity(intent);
-        });
     }
+
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.save:
+                db.dao().insertCost(
+                        2000,                                           // 가격 - 쉼표(,)생성으로 데이터 안들어감. 정규화로 다시 지우는 과정 필요
+                        mBody.getText().toString(),                         // 사용처
+                        mDate.getText().toString(),                         // 날짜
+                        0,                                              // 잔액
+                        mSort.getText().toString(),                         // 분류
+                        "expense",                                      // 구분 - 버튼으로 구현 예정
+                        db.dao().getFk(mWay.getText().toString())       // 수단
+                );
+
+                Intent intent = new Intent(this, ListActivity.class);
+                startActivity(intent);
+
+                break;
+        }
+    }
+
 
 
     class NumberTextWatcher implements TextWatcher {

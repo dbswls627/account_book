@@ -41,6 +41,7 @@ public class ListActivity extends AppCompatActivity {
     Context context;
     AppDatabase db;
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +49,14 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         db =AppDatabase.getInstance(this);
+
         arrayList2= (ArrayList<Cost>) db.dao().getCostAll();
-        arrayList2.forEach(it -> arrayList.add(new item(it.getUseDate(),it.getContent(),it.getAmount())));
+        arrayList2.forEach(it ->
+                arrayList.add(new item(it.getUseDate(),it.getContent(),it.getAmount()))
+        );
         mRecyclerView = (RecyclerView) findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context,arrayList));
+        mRecyclerView.setAdapter(new adapter2(context, arrayList));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-
     }
 
 
