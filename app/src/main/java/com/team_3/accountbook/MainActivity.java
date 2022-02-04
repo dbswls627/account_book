@@ -44,13 +44,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context, arrayList));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         callPermission();
         readSMSMessage();
+        ArrayList<String> dateArray = new ArrayList<>();    // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2의 넘겨주기 위함)
+        for (item item : arrayList) {
+            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {
+                dateArray.add(item.getMsgDate().substring(0, 14));
+            }
+        }
+        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
+        mRecyclerView.setAdapter(new adapter2(context, arrayList,dateArray));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
     }
 
 

@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 
 
 public class ListActivity extends AppCompatActivity {
-    private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
 
     ArrayList<item> arrayList = new ArrayList<>();
     ArrayList<Cost> arrayList2 = new ArrayList<>();
@@ -50,12 +49,18 @@ public class ListActivity extends AppCompatActivity {
 
         db =AppDatabase.getInstance(this);
 
-        arrayList2= (ArrayList<Cost>) db.dao().getCostAll();
+        arrayList2= (ArrayList<Cost>) db.dao().getCostAll();    //모든 Cost의 값을 받아옴
         arrayList2.forEach(it ->
-                arrayList.add(new item(it.getUseDate(),it.getContent(),it.getAmount()))
+                arrayList.add(new item(it.getUseDate(),it.getContent(),it.getAmount())) //받아온 Cost 데이터를 item에 맞게 뿌려줌
         );
+        ArrayList<String> dateArray = new ArrayList<>();    // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2의 넘겨주기 위함)
+        for (item item : arrayList) {
+            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {
+                dateArray.add(item.getMsgDate().substring(0, 14));
+            }
+        }
         mRecyclerView = (RecyclerView) findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context, arrayList));
+        mRecyclerView.setAdapter(new adapter2(context, arrayList,dateArray));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 

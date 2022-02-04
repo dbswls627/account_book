@@ -16,17 +16,19 @@ import java.util.ArrayList;
 public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
     private ArrayList<item> arrayList;
     private Context context;
+    private ArrayList<String> dateArray;
 
-    public adapter2(Context context, ArrayList<item> arrayList) {
+    public adapter2(Context context, ArrayList<item> arrayList,ArrayList<String> dateArray) {
         this.context = context;
         this.arrayList = arrayList;
+        this.dateArray = dateArray;
     }
 
 
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return dateArray.size();
     }
 
 
@@ -44,14 +46,8 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter2.CumstomViewHolder holder, int position) {
-        ArrayList<String> dateArray = new ArrayList<>();    // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트
-        ArrayList<item> Array = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
 
-        for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
-            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {       // 배열리스트에 날짜가 없다면~
-                dateArray.add(item.getMsgDate().substring(0, 14));              // ~그 날짜를 배열리스트에 추가함.
-            }
-        }
+        ArrayList<item> Array = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
 
         for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
             if(item.getMsgDate().substring(0, 14).equals(dateArray.get(position))){
