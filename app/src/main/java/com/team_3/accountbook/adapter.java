@@ -16,12 +16,10 @@ import java.util.ArrayList;
 
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     private ArrayList<item> arrayList;
-    private String date;
     private Context context;
 
-    public adapter(ArrayList<item> arrayList, String date) {
+    public adapter(ArrayList<item> arrayList) {
         this.arrayList = arrayList;
-        this.date = date;
     }
 
 
