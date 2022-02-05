@@ -46,7 +46,8 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 
-
+    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate desc")
+    List<Cost> getDate(String date);
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
