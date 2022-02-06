@@ -17,7 +17,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 
 public class AddActivity extends AppCompatActivity {
-    Button add;
     EditText mEditSum, mDate, mSort, mWay, mBody;
     TextView mTestView;
     AppDatabase db;
@@ -34,7 +33,6 @@ public class AddActivity extends AppCompatActivity {
         mEditSum = findViewById(R.id.edit_sum);     // 금액
         mBody = findViewById(R.id.body);            // 내용
         mTestView = findViewById(R.id.testView);
-        add = findViewById(R.id.add);               // 추가버튼
 
         mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));       // 금액 입력반응
 
