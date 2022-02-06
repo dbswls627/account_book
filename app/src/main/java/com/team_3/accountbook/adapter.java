@@ -45,12 +45,12 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
+        holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(14, 19));
+        holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
+        holder.amt.setText(arrayList.get(position).getMsgAmount() + "원");
 
-            holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(14,19));
-            holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
-            holder.amt.setText(arrayList.get(position).getMsgAmount() + "원");
-
-            // 리스트 항목 클릭시~
+        // 리스트 항목 클릭시~
+        if (context instanceof MainActivity) {  //호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
             holder.itemView.setOnClickListener((view -> {
                 Intent intent = new Intent(context, AddActivity.class);
                 intent.putExtra("amount", arrayList.get(position).getMsgAmount());
@@ -59,6 +59,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
                 context.startActivity(intent);      // ~AddActivity 로 넘어감
             }));
+        }
     }
 
 
