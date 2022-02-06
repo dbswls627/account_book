@@ -55,10 +55,14 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
-        holder.dayOfMonth.setText(daysOfMonth.get(position));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");      // 변환 형식 formatter 구축.
         db =AppDatabase.getInstance(context);
+
+        holder.dayOfMonth.setText(daysOfMonth.get(position));
+        holder.amount.setText(db.dao().getAmount(HomeActivity.selectedDate.format(formatter)+" "+daysOfMonth.get(position)+"일","expense"));     //지출값 출력
+
         holder.itemView.setOnClickListener((i)->{        // 클릭 테스트용.  ex) '01월 21일' 토스트
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");      // 변환 형식 formatter 구축.
+
             arrayList2 = (ArrayList<Cost>) db.dao().getDate(HomeActivity.selectedDate.format(formatter)+" "+daysOfMonth.get(position)+"일"); //클릭한 날짜만 받아옴
             arrayList.clear();
             arrayList2.forEach(it -> {  //클릭한 날짜의 값을 adapter에 연결할 arrayList에 뿌려줌
@@ -71,12 +75,12 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
 
 
     public class CalendarViewHolder extends RecyclerView.ViewHolder {
-        TextView dayOfMonth;
+        TextView dayOfMonth,amount;
 
         public CalendarViewHolder(@NonNull View itemView) {
             super(itemView);
             dayOfMonth = itemView.findViewById(R.id.cellDayText);
-
+            amount = itemView.findViewById(R.id.amount);
         }
     }
 }

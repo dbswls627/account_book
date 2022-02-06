@@ -46,8 +46,11 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 
-    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate desc")
+    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate desc")    //날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);
+
+    @Query("SELECT sum(amount) FROM Cost c  where substr(useDate,0,14) = :date and division = :division")    //날짜에 맞는  amount값의 합
+    String getAmount(String date,String division);
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
