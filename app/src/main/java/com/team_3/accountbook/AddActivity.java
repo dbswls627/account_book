@@ -51,10 +51,15 @@ public class AddActivity extends AppCompatActivity {
 
 
     public void mOnClick(View v){
+        String amount=mEditSum.getText().toString();
+        try {                                            // null 값을 받으면 에러가 나서 예외처리 사용
+            amount=amount.replaceAll(",", "");          // 정규식으로 끝에 있는 사용만 제거
+        }
+        catch (Exception e){}
         switch (v.getId()){
             case R.id.save:
                 db.dao().insertCost(
-                        2000,                                           // 가격 - 쉼표(,)생성으로 데이터 안들어감. 정규화로 다시 지우는 과정 필요
+                        Integer.parseInt(amount),                                           // 가격 - 쉼표(,)생성으로 데이터 안들어감. 정규화로 다시 지우는 과정 필요
                         mBody.getText().toString(),                         // 사용처
                         mDate.getText().toString(),                         // 날짜
                         0,                                              // 잔액
