@@ -34,7 +34,7 @@ public interface sqlDao {
     @Query("DELETE FROM Asset")
     void deleteAssetAll();
 
-    @Query("SELECT wayId FROM Way where wayName = :name ")
+    @Query("SELECT wayId FROM Way WHERE wayName = :name ")
     int getFk(String name);
 
     @Query("SELECT * FROM Asset")
@@ -46,10 +46,10 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 
-    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate desc")    //날짜에 맞는 값을 정렬하여 리턴
+    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC")    //날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);
 
-    @Query("SELECT sum(amount) FROM Cost c  where substr(useDate,0,14) = :date and division = :division")    //날짜에 맞는  amount값의 합
+    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    //날짜에 맞는  amount값의 합
     String getAmount(String date,String division);
 
     @Transaction

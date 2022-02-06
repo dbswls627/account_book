@@ -148,7 +148,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
     @Override
-    public void onClick(ArrayList<item> arrayList) {    //interface CalendarAdapter에서 클릭하면 실행되는 함수
+    public void onClick(ArrayList<item> arrayList) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
         listRv.setAdapter(new adapter(arrayList));
         listRv.setLayoutManager(new LinearLayoutManager(this));
     }

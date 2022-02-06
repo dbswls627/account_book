@@ -19,14 +19,14 @@ import java.util.ArrayList;
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
     private ArrayList<String> daysOfMonth;
-    Context context;
-    AppDatabase db;
     private OnItemClick mCallback;
-    ArrayList<item> arrayList = new ArrayList<>();
-    ArrayList<Cost> arrayList2 = new ArrayList<>();
     public interface OnItemClick {
         void onClick (ArrayList<item> arrayList);
     }
+    ArrayList<item> arrayList = new ArrayList<>();      // arrayList2에서 item 으로 추린 리스트
+    ArrayList<Cost> arrayList2 = new ArrayList<>();     // 클릭한 날의 Cost 테이블 전체 정보
+    Context context;
+    AppDatabase db;
 
     public CalendarAdapter(ArrayList<String> daysOfMonth, Context context,OnItemClick listener) {
         this.daysOfMonth = daysOfMonth;
@@ -59,23 +59,24 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         db =AppDatabase.getInstance(context);
 
         holder.dayOfMonth.setText(daysOfMonth.get(position));
-        holder.amount.setText(db.dao().getAmount(HomeActivity.selectedDate.format(formatter)+" "+daysOfMonth.get(position)+"일","expense"));     //지출값 출력
+        holder.amount.setText(db.dao().getAmount(HomeActivity.selectedDate.format(formatter) + " " +
+                                                daysOfMonth.get(position) + "일", "expense"));     // 날짜의 총 지출값 출력
 
-        holder.itemView.setOnClickListener((i)->{        // 클릭 테스트용.  ex) '01월 21일' 토스트
-
-            arrayList2 = (ArrayList<Cost>) db.dao().getDate(HomeActivity.selectedDate.format(formatter)+" "+daysOfMonth.get(position)+"일"); //클릭한 날짜만 받아옴
+        holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
             arrayList.clear();
-            arrayList2.forEach(it -> {  //클릭한 날짜의 값을 adapter에 연결할 arrayList에 뿌려줌
-                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount())); //받아온 Cost 데이터를 item에 맞게 뿌려줌
+            arrayList2 = (ArrayList<Cost>) db.dao().getDate(HomeActivity.selectedDate.format(formatter) + " " +
+                                                            daysOfMonth.get(position) + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+            arrayList2.forEach(it -> {
+                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount()));           // 받아온 Cost 데이터를 item 에 뿌려줌
             });
-            mCallback.onClick(arrayList);   //만든 arrayList를 연결 해야하는데 어뎁터에서 하지못하고 Homeactivity에서 해줘야 하기 때문에 interface 사용
+            mCallback.onClick(arrayList);   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
         });
     }
 
 
 
     public class CalendarViewHolder extends RecyclerView.ViewHolder {
-        TextView dayOfMonth,amount;
+        TextView dayOfMonth, amount;        // 일, 지출값
 
         public CalendarViewHolder(@NonNull View itemView) {
             super(itemView);
