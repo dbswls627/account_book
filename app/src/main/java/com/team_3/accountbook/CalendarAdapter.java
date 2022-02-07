@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -26,12 +27,14 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
     ArrayList<item> arrayList = new ArrayList<>();      // arrayList2에서 item 으로 추린 리스트
     ArrayList<Cost> arrayList2 = new ArrayList<>();     // 클릭한 날의 Cost 테이블 전체 정보
     Context context;
+    LocalDate selectedDate;
     AppDatabase db;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, Context context,OnItemClick listener) {
+    public CalendarAdapter(ArrayList<String> daysOfMonth, LocalDate selectedDate, Context context, OnItemClick listener) {
         this.daysOfMonth = daysOfMonth;
         this.context=context;
         this.mCallback = listener;
+        this.selectedDate = selectedDate;
     }
 
     @Override
@@ -55,17 +58,24 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
+        String day = daysOfMonth.get(position);
+        if(daysOfMonth.get(position).length()==1){      //일이 1자리면 앞에 0을 붙여주어 데베랑 값 맞춤
+            day = "0"+daysOfMonth.get(position);
+        }
+        String day1 = day;  //한번 더 선언을 안해주면 오류 뜸
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");      // 변환 형식 formatter 구축.
         db =AppDatabase.getInstance(context);
 
         holder.dayOfMonth.setText(daysOfMonth.get(position));
-        holder.amount.setText(db.dao().getAmount(HomeActivity.selectedDate.format(formatter) + " " +
-                                                daysOfMonth.get(position) + "일", "expense"));     // 날짜의 총 지출값 출력
+        holder.amount.setText(db.dao().getAmount(selectedDate.format(formatter) + " " +
+                                                day1 + "일", "expense"));     // 날짜의 총 지출값 출력
+
 
         holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
             arrayList.clear();
-            arrayList2 = (ArrayList<Cost>) db.dao().getDate(HomeActivity.selectedDate.format(formatter) + " " +
-                                                            daysOfMonth.get(position) + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+            arrayList2 = (ArrayList<Cost>) db.dao().getDate(selectedDate.format(formatter) + " " +
+                    day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
             arrayList2.forEach(it -> {
                 arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount()));           // 받아온 Cost 데이터를 item 에 뿌려줌
             });

@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
-    static LocalDate selectedDate;                  // 날짜 변수
+    LocalDate selectedDate;                  // 날짜 변수
 
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
     private TextView monthYearText;
@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private void setMonthView() {                   // 달력 이동 버튼 클릭시, 해당 달의 달력을 그리는 함수
         monthYearText.setText(monthYearFromDate(selectedDate));                    // 현재 년/월을 setText
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);            // 해당 달의 달력 배열을 만들어 daysInMonth 에 저장
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth,this,this);   // 달력 배열을 가지는 Adapter 생성
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, selectedDate,this,this);   // 달력 배열을 가지는 Adapter 생성
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);   // 가로 7칸의 그리드뷰(퍼즐 형식)로 만드는 리사이클러뷰 레이아웃 매니저 layoutManager 생성
         calendarRecyclerView.setLayoutManager(layoutManager);                      // 레이아웃 매니저를 layoutManager 로 지정
         calendarRecyclerView.setAdapter(calendarAdapter);
