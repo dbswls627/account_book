@@ -18,8 +18,8 @@ public interface sqlDao {
     @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId) VALUES(:name, :balance, :id)")
     void insertWay(String name, int balance, int id);
 
-    @Query("INSERT INTO Cost(amount, content, useDate, balance, sortName, division,FK_wayId) VALUES(:amount, :content, :date, :balance, :sortName, :division,:FK_wayID)")
-    void insertCost(int amount, String content, String date, int balance, String sortName, String division,int FK_wayID);
+    @Query("INSERT INTO Cost(useDate, FK_wayId, sortName, amount, content, balance, division) VALUES(:date, :FK_wayID, :sortName, :amount, :content, :balance, :division)")
+    void insertCost(String date, int FK_wayID, String sortName, int amount, String content, int balance, String division);
 
 
 

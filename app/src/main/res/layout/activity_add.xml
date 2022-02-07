@@ -8,28 +8,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
+
+        <TextView
+            android:id="@+id/tv_income"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="3dp"
             android:layout_weight="1"
-            android:background="@drawable/bt_black_line"
-            app:backgroundTint="@null"
+            android:background="@drawable/select_state"
             android:text="수입"
-            android:textColor="@color/black" />
-        <Button
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:onClick="mOnClick"
+            app:backgroundTint="@null" />
+        <TextView
+            android:id="@+id/tv_expense"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="3dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="12dp"
             android:layout_weight="1"
-            android:background="@drawable/bt_black_line"
-            app:backgroundTint="@null"
+            android:background="@drawable/select_state"
             android:text="지출"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:onClick="mOnClick"
+            app:backgroundTint="@null"/>
     </LinearLayout>
 
     <LinearLayout
@@ -98,7 +107,8 @@
             <EditText
                 android:id="@+id/body"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:selectAllOnFocus="true"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -113,6 +123,9 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:onClick="mOnClick"
-       android:text="저장"/>
+       android:background="@drawable/normal"
+       app:backgroundTint="@null"
+       android:text="저장"
+       android:textColor="@color/black"/>
 
 </LinearLayout>

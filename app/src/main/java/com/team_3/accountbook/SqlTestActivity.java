@@ -130,7 +130,8 @@ public class SqlTestActivity extends AppCompatActivity {
 
             case R.id.bt_referWayWithCosts:
                 List<WayWithCost> list_WC = db.dao().getWayWithCosts();
-                list_WC.forEach(it ->Log.d("WayWithCost",it.getUseDate()+it.getWayName()));
+                list_WC.forEach(it ->Log.d("WayWithCost", it.getUseDate() + " " + it.getWayName() + " " +
+                        it.getAmount() + " " + it.getDivision()));
                 break;
         }
     }

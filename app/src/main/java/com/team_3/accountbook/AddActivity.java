@@ -18,8 +18,11 @@ import java.text.ParseException;
 
 public class AddActivity extends AppCompatActivity {
     EditText mEditSum, mDate, mSort, mWay, mBody;
-    TextView mTestView;
+    TextView mTestView, mIncome, mExpense;
     AppDatabase db;
+    boolean checkIncome = false, checkExpense = true;
+    String action = "expense";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,8 @@ public class AddActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
+        mIncome = findViewById(R.id.tv_income);     // 수입버튼
+        mExpense = findViewById(R.id.tv_expense);   // 지출버튼
         mDate = findViewById(R.id.date);            // 날짜
         mWay = findViewById(R.id.way);              // 수단
         mSort = findViewById(R.id.sort);            // 분류
@@ -35,6 +40,7 @@ public class AddActivity extends AppCompatActivity {
         mTestView = findViewById(R.id.testView);
 
         mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));       // 금액 입력반응
+        mExpense.setSelected(true);
 
         // MainActivity 에서 리스트 클릭시 실행되는 부분
         String date =getIntent().getStringExtra("date");
@@ -56,15 +62,37 @@ public class AddActivity extends AppCompatActivity {
         catch (Exception e){ }
 
         switch (v.getId()){
+            case R.id.tv_income:
+                if(!checkIncome){
+                    checkIncome = true;
+                    checkExpense = false;
+                    action = "income";
+
+                    mIncome.setSelected(true);
+                    mExpense.setSelected(false);
+                }
+                break;
+
+            case R.id.tv_expense:
+                if(!checkExpense){
+                    checkIncome = false;
+                    checkExpense = true;
+                    action = "expense";
+
+                    mIncome.setSelected(false);
+                    mExpense.setSelected(true);
+                }
+                break;
+
             case R.id.save:
                 db.dao().insertCost(
-                        Integer.parseInt(amount),
-                        mBody.getText().toString(),                         // 사용처
-                        mDate.getText().toString(),                         // 날짜
-                        0,                                              // 잔액
-                        mSort.getText().toString(),                         // 분류
-                        "expense",                                      // 구분 - 버튼으로 구현 예정
-                        db.dao().getFk(mWay.getText().toString())       // 수단
+                        mDate.getText().toString(),                         // 날짜 - 날짜선택박스 구현 필요
+                        db.dao().getFk(mWay.getText().toString()),          // 수단 - 리스트 구현 필요
+                        mSort.getText().toString(),                         // 분류 - 리스트 구현 필요
+                        Integer.parseInt(amount),                       // 금액
+                        mBody.getText().toString(),                     // 내용
+                        0,                                                  // 잔액 - 계산 구현 필요
+                        action                                          // 구분
                 );
 
                 Intent intent = new Intent(this, ListActivity.class);
