@@ -93,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private item parsing(String body,String date){
+    private item parsing(String body, String date){
         String amount;              // 추출한 가격(~원)
         String place;               // 추출한 사용처
         int int_amount;             // int 형으로 변환한 가격(only 숫자)
 
-        Pattern p = Pattern.compile("([0-9]*)(.*)([0-9]+)(원)");  // 원 앞에 있는 숫자들과 원을 파싱 적어도 앞에 숫자하나가 있어야함
+        Pattern p = Pattern.compile("([0-9])\\S*(원)");  // 원 앞에 있는 숫자들과 원을 파싱 적어도 앞에 숫자하나가 있어야함
         Matcher m;                  // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
         m = p.matcher(body);        // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
 

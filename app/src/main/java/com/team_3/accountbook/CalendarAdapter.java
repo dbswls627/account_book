@@ -95,7 +95,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
 
 
     public class CalendarViewHolder extends RecyclerView.ViewHolder {
-        TextView dayOfMonth, expense , income;        // 일, 지출값
+        TextView dayOfMonth, expense , income;        // 일, 지출액수, 수입액수
 
         public CalendarViewHolder(@NonNull View itemView) {
             super(itemView);

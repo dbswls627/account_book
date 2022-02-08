@@ -23,13 +23,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
-    LocalDate selectedDate;                  // 날짜 변수
-
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
     private TextView monthYearText;
-    private RecyclerView calendarRecyclerView,listRv;
+    private RecyclerView calendarRecyclerView, listRv;
 
     BottomNavigationView bottom_menu;
+    LocalDate selectedDate;                         // 날짜 변수
 
 
     protected void onStart() {
