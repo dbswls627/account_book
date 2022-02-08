@@ -68,8 +68,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         db =AppDatabase.getInstance(context);
 
         holder.dayOfMonth.setText(daysOfMonth.get(position));
-        holder.amount.setText(db.dao().getAmount(selectedDate.format(formatter) + " " +
+        holder.expense.setText(db.dao().getAmount(selectedDate.format(formatter) + " " +
                                                 day1 + "일", "expense"));     // 날짜의 총 지출값 출력
+        holder.income.setText(db.dao().getAmount(selectedDate.format(formatter) + " " +
+                day1 + "일", "income"));     // 날짜의 총 수입값 출력
 
 
         holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
@@ -85,12 +87,13 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
 
 
     public class CalendarViewHolder extends RecyclerView.ViewHolder {
-        TextView dayOfMonth, amount;        // 일, 지출값
+        TextView dayOfMonth, expense , income;        // 일, 지출값
 
         public CalendarViewHolder(@NonNull View itemView) {
             super(itemView);
             dayOfMonth = itemView.findViewById(R.id.cellDayText);
-            amount = itemView.findViewById(R.id.amount);
+            expense = itemView.findViewById(R.id.expense);
+            income = itemView.findViewById(R.id.income);
         }
     }
 }
