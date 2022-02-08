@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -67,12 +68,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");      // 변환 형식 formatter 구축.
         db =AppDatabase.getInstance(context);
 
-        holder.dayOfMonth.setText(daysOfMonth.get(position));
-        holder.expense.setText(db.dao().getAmount(selectedDate.format(formatter) + " " +
-                                                day1 + "일", "expense"));     // 날짜의 총 지출값 출력
-        holder.income.setText(db.dao().getAmount(selectedDate.format(formatter) + " " +
-                day1 + "일", "income"));     // 날짜의 총 수입값 출력
+        DecimalFormat decFormat = new DecimalFormat("###,###");
 
+        String expense = db.dao().getAmount(selectedDate.format(formatter) + " " +  //해당 일 총 지출값
+                day1 + "일", "expense");
+        String income = db.dao().getAmount(selectedDate.format(formatter) + " " +   //해당 일 총 수입값
+                day1 + "일", "income");
+
+        if (expense!=null) expense = decFormat.format(Integer.parseInt(expense));       //null 일때 변환하면 팅김
+        if (income!=null) income = decFormat.format(Integer.parseInt(income));          //null 일때 변환하면 팅김
+
+        holder.dayOfMonth.setText(daysOfMonth.get(position));
+        holder.expense.setText(expense);     // 날짜의 총 지출값 출력
+        holder.income.setText(income);     // 날짜의 총 수입값 출력
 
         holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
             arrayList.clear();
