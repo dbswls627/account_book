@@ -75,7 +75,7 @@ public class smsReceiver extends BroadcastReceiver {
         }
         //context.startActivity(intent);      // sms 정보를 가진 intent 로 액티비티 호출
 
-        smsNotification(context, content);
+        smsNotification(context, content);    // ←-- ★그만할 때 이부분을 주석처리해서 알림이 안뜨게 할 것(선택)
     }
 
 
