@@ -23,19 +23,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
     private ArrayList<String> daysOfMonth;
     private OnItemClick mCallback;
     public interface OnItemClick {
-        void onClick (ArrayList<item> arrayList);
+        void onClick (ArrayList<item> arrayList, String md);
     }
     ArrayList<item> arrayList = new ArrayList<>();      // arrayList2에서 item 으로 추린 리스트
     ArrayList<Cost> arrayList2 = new ArrayList<>();     // 클릭한 날의 Cost 테이블 전체 정보
     Context context;
-    LocalDate selectedDate;
+    String ym;
     AppDatabase db;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, LocalDate selectedDate, Context context, OnItemClick listener) {
+    public CalendarAdapter(ArrayList<String> daysOfMonth, String ym, Context context, OnItemClick listener) {
         this.daysOfMonth = daysOfMonth;
         this.context=context;
         this.mCallback = listener;
-        this.selectedDate = selectedDate;
+        this.ym = ym;
     }
 
     @Override
@@ -65,14 +65,13 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         }
         String day1 = day;                              // 한번 더 선언을 안해주면 오류 뜸
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");      // 변환 형식 formatter 구축.
         db =AppDatabase.getInstance(context);
 
         DecimalFormat decFormat = new DecimalFormat("###,###");
 
-        String expense = db.dao().getAmount(selectedDate.format(formatter) + " " +  //해당 일 총 지출값
+        String expense = db.dao().getAmount(ym + " " +  //해당 일 총 지출값
                 day1 + "일", "expense");
-        String income = db.dao().getAmount(selectedDate.format(formatter) + " " +   //해당 일 총 수입값
+        String income = db.dao().getAmount(ym + " " +   //해당 일 총 수입값
                 day1 + "일", "income");
 
         if (expense!=null) expense = decFormat.format(Integer.parseInt(expense));       //null 일때 변환하면 팅김
@@ -84,11 +83,13 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
 
         holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
             arrayList.clear();
-            arrayList2 = (ArrayList<Cost>) db.dao().getDate(selectedDate.format(formatter) + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+            Log.d("test",ym.toString());
+            arrayList2 = (ArrayList<Cost>) db.dao().getDate(ym + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
             arrayList2.forEach(it -> {
                 arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount(),it.getMs()));           // 받아온 Cost 데이터를 item 에 뿌려줌
             });
-            mCallback.onClick(arrayList);   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
+            //클릭하면 나오는 리스트뷰에 넣을 리스트와 제목테스트(월/일) 매개변수로 전달
+            mCallback.onClick(arrayList,ym.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
         });
     }
 
