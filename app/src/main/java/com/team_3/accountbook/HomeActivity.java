@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    private TextView monthYearText;
+    private TextView monthYearText,date;
     private RecyclerView calendarRecyclerView, listRv;
 
     BottomNavigationView bottom_menu;
@@ -48,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         listRv = findViewById(R.id.listRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
+        date = findViewById(R.id.date);
 
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
@@ -150,5 +151,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     public void onClick(ArrayList<item> arrayList) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
         listRv.setAdapter(new adapter(arrayList));
         listRv.setLayoutManager(new LinearLayoutManager(this));
+        if (!arrayList.isEmpty())   date.setText(arrayList.get(0).getMsgDate().substring(5,14));
     }
 }
