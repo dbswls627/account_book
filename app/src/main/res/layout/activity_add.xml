@@ -103,7 +103,7 @@
                 android:id="@+id/edit_sum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="date"/>
             <EditText
                 android:id="@+id/body"
                 android:layout_width="match_parent"
