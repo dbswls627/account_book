@@ -163,8 +163,8 @@ public class SqlTestActivity extends AppCompatActivity {
         for (int i = 0; i < wayName.length; i++) {
             db.dao().insertWay(wayName[i], wayBalance[i], FK_assetId[i]);
         }
-        for (int i = 0; i < amount.length; i++) {
-          //  db.dao().insertCost(amount[i], content[i], date[i], balance[i], sortName[i], division[i], FK_wayId[i]);
-        }
+      /*  for (int i = 0; i < amount.length; i++) {
+            db.dao().insertCost(amount[i], content[i], date[i], balance[i], sortName[i], division[i], FK_wayId[i]);
+        }*/
     }
 }

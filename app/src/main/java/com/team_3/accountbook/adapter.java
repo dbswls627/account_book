@@ -56,6 +56,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
                 intent.putExtra("amount", arrayList.get(position).getMsgAmount());
                 intent.putExtra("date", arrayList.get(position).getMsgDate());
                 intent.putExtra("body", arrayList.get(position).getMsgBody());
+                intent.putExtra("ms", arrayList.get(position).getMs());
 
                 context.startActivity(intent);      // ~AddActivity 로 넘어감
             }));

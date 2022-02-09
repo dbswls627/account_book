@@ -20,6 +20,7 @@ public class AddActivity extends AppCompatActivity {
     EditText mEditSum, mDate, mSort, mWay, mBody;
     TextView mTestView, mIncome, mExpense;
     AppDatabase db;
+    long ms;
     boolean checkIncome = false, checkExpense = true;
     String action = "expense";
 
@@ -46,6 +47,7 @@ public class AddActivity extends AppCompatActivity {
         String date =getIntent().getStringExtra("date");
         String body =getIntent().getStringExtra("body");
         int amount =getIntent().getIntExtra("amount",0);
+        ms =getIntent().getLongExtra("ms",0);
         mDate.setText(date);
         mBody.setText(body);
         mEditSum.setText(String.valueOf(amount));
@@ -92,7 +94,8 @@ public class AddActivity extends AppCompatActivity {
                         Integer.parseInt(amount),                       // 금액
                         mBody.getText().toString(),                     // 내용
                         0,                                                  // 잔액 - 계산 구현 필요
-                        action                                          // 구분
+                        action,                                          // 구분
+                        ms
                 );
 
                 Intent intent = new Intent(this, ListActivity.class);

@@ -86,7 +86,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             arrayList.clear();
             arrayList2 = (ArrayList<Cost>) db.dao().getDate(selectedDate.format(formatter) + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
             arrayList2.forEach(it -> {
-                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount()));           // 받아온 Cost 데이터를 item 에 뿌려줌
+                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount(),it.getMs()));           // 받아온 Cost 데이터를 item 에 뿌려줌
             });
             mCallback.onClick(arrayList);   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
         });

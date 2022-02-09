@@ -18,8 +18,8 @@ public interface sqlDao {
     @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId) VALUES(:name, :balance, :id)")
     void insertWay(String name, int balance, int id);
 
-    @Query("INSERT INTO Cost(useDate, FK_wayId, sortName, amount, content, balance, division) VALUES(:date, :FK_wayID, :sortName, :amount, :content, :balance, :division)")
-    void insertCost(String date, int FK_wayID, String sortName, int amount, String content, int balance, String division);
+    @Query("INSERT INTO Cost(useDate, FK_wayId, sortName, amount, content, balance, division, ms) VALUES(:date, :FK_wayID, :sortName, :amount, :content, :balance, :division, :ms)")
+    void insertCost(String date, int FK_wayID, String sortName, int amount, String content, int balance, String division, long ms);
 
 
 
@@ -51,6 +51,9 @@ public interface sqlDao {
 
     @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    //날짜에 맞는  amount값의 합
     String getAmount(String date,String division);
+
+    @Query("SELECT ms FROM Cost c")    //모든 ms 값 배열
+    List<Long> getMs();
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")

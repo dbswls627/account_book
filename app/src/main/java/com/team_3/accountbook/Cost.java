@@ -24,8 +24,9 @@ public class Cost {
     private String sortName;        // 분류명
     private String division;        // 구분
     private int FK_wayId;           // 수단 외래키
-    //private int FK_sortId;          // 분류 외래키
+    private long ms;
 
+//private int FK_sortId;          // 분류 외래키
 
     public int getCostId() {
         return costId;
@@ -90,6 +91,9 @@ public class Cost {
     public void setFK_wayId(int FK_wayId) {
         this.FK_wayId = FK_wayId;
     }
+
+    public long getMs() { return ms; }
+    public void setMs(long ms) { this.ms = ms; }
 
 
 

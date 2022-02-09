@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
 
+    AppDatabase db;
     ArrayList<item> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
     Context context;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = AppDatabase.getInstance(this);
         callPermission();
         readSMSMessage();
 
@@ -81,19 +83,21 @@ public class MainActivity extends AppCompatActivity {
 
             String body = c.getString(0);
             long timestamp = c.getLong(1);
-
-            timeInDate = new Date(timestamp);
-            String date = sdf.format(timeInDate);
-            item item = parsing(body, date);
-            if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
-                arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
+            if (!db.dao().getMs().contains(timestamp)){     //ms 값이 겹치지 않는 값들만 실행
+                timeInDate = new Date(timestamp);
+                String date = sdf.format(timeInDate);
+                item item = parsing(body, date, timestamp);
+                if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
+                    arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
+                }
             }
+
         }
     }
 
 
 
-    private item parsing(String body, String date){
+    private item parsing(String body, String date, long timestamp){
         String amount;              // 추출한 가격(~원)
         String place;               // 추출한 사용처
         int int_amount;             // int 형으로 변환한 가격(only 숫자)
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){int_amount = -1;}
 
-        return new item(date, place, int_amount);        // item 형태의 객체 return
+        return new item(date, place, int_amount, timestamp);        // item 형태의 객체 return
     }
 
 

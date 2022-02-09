@@ -4,11 +4,12 @@ public class item {
     private String msgDate;
     private String msgBody;
     private int msgAmount;
-
-    public item(String date, String body, int amount){
+    private long ms;
+    public item(String date, String body, int amount, long ms){
         this.msgDate = date;
         this.msgBody = body;
         this.msgAmount = amount;
+        this.ms = ms;
     }
 
     public String getMsgDate(){
@@ -28,4 +29,8 @@ public class item {
     public int getMsgAmount(){ return msgAmount; }
 
     public void setMsgAmount(){ this.msgAmount = msgAmount; }
+
+    public long getMs() { return ms; }
+
+    public void setMs(long ms) { this.ms = ms; }
 }

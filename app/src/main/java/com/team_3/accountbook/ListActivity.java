@@ -51,7 +51,7 @@ public class ListActivity extends AppCompatActivity {
 
         arrayList2= (ArrayList<Cost>) db.dao().getCostAll();        // Cost 의 모든 값을 날짜로 내림차순 정렬해 받아옴.   ※부분적으로 받아오는게 효울적일거같음. data.java 생성필요
         arrayList2.forEach(it ->
-                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount()))     // 받아온 Cost 데이터를 item 에 뿌려줌
+                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount(),it.getMs()))     // 받아온 Cost 데이터를 item 에 뿌려줌
         );
         ArrayList<String> dateArray = new ArrayList<>();            // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트.(adapter2로 넘겨주기 위함)
         for (item item : arrayList) {
