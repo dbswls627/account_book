@@ -106,13 +106,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:cursorVisible="false"
-                        android:onClick="mOnClick"/>
+                        android:onClick="mOnClick"
+                        android:focusableInTouchMode="false"/>
                     <EditText
                         android:id="@+id/sort"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:cursorVisible="false"
-                        android:onClick="mOnClick"/>
+                        android:onClick="mOnClick"
+                        android:focusableInTouchMode="false"/>
                     <EditText
                         android:id="@+id/edit_sum"
                         android:layout_width="match_parent"
