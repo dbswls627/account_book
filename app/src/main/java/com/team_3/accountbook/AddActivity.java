@@ -94,8 +94,8 @@ public class AddActivity extends AppCompatActivity {
                         Integer.parseInt(amount),                       // 금액
                         mBody.getText().toString(),                     // 내용
                         0,                                                  // 잔액 - 계산 구현 필요
-                        action,                                          // 구분
-                        ms
+                        action,                                         // 구분
+                        ms                                              // 수신시간(마이크로초)
                 );
 
                 Intent intent = new Intent(this, ListActivity.class);

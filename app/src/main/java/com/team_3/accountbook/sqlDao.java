@@ -49,8 +49,8 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC")    //날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);
 
-    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    //날짜에 맞는  amount값의 합
-    String getAmount(String date,String division);
+    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    //날짜에 맞는  amount 값의 합
+    String getAmount(String date, String division);
 
     @Query("SELECT ms FROM Cost c")    //모든 ms 값 배열
     List<Long> getMs();
