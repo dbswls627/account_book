@@ -43,6 +43,9 @@ public interface sqlDao {
     @Query("SELECT * FROM Way")
     List<Way> getWayAll();
 
+    @Query("SELECT wayName FROM way")
+    List<String> getWayName();
+
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 

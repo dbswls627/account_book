@@ -143,9 +143,9 @@ public class SqlTestActivity extends AppCompatActivity {
 
         String[] assetName = {"현금", "은행", "선불식카드"};
 
-        String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)", "현금"};
-        int[] wayBalance = {43000, 99600, 3100, 1997500, 10000};
-        int[] FK_assetId = {1 ,2 ,3, 2, 1};
+        String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)"};
+        int[] wayBalance = {43000, 99600, 3100, 1997500};
+        int[] FK_assetId = {1 ,2 ,3, 2};
 
         int[] amount = {-1000, -500, -500, -2000, 1100};
         String[] content = {"버스비", "샤프심", "볼펜", "파리바게트", "차액"};

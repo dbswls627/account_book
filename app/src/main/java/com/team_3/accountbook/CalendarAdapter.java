@@ -87,7 +87,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
                 arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount(), it.getMs()));           // 받아온 Cost 데이터를 item 에 뿌려줌
             });
             //클릭하면 나오는 리스트뷰에 넣을 리스트와 제목테스트(월/일) 매개변수로 전달
-            mCallback.onClick(arrayList,ym.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
+            mCallback.onClick(arrayList, ym.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
         });
     }
 

@@ -1,24 +1,30 @@
 package com.team_3.accountbook;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.List;
 
-public class AddActivity extends AppCompatActivity {
-    EditText mEditSum, mDate, mSort, mWay, mBody;
-    TextView mTestView, mIncome, mExpense;
+public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.touchItem{
+    List<String> WayAndSortList;
+    RecyclerView mRV_WayAndSort;
+
+    EditText mDate, mWay, mSort, mEditSum, mBody;
+    TextView mIncome, mExpense;
     AppDatabase db;
     long ms;
     boolean checkIncome = false, checkExpense = true;
@@ -38,10 +44,12 @@ public class AddActivity extends AppCompatActivity {
         mSort = findViewById(R.id.sort);            // 분류
         mEditSum = findViewById(R.id.edit_sum);     // 금액
         mBody = findViewById(R.id.body);            // 내용
-        mTestView = findViewById(R.id.testView);
+        mRV_WayAndSort = findViewById(R.id.rv_WayAndSort);
 
         mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));       // 금액 입력반응
         mExpense.setSelected(true);
+        mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
+        mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
 
         // MainActivity 에서 리스트 클릭시 실행되는 부분
         String date =getIntent().getStringExtra("date");
@@ -56,6 +64,7 @@ public class AddActivity extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void mOnClick(View v){
         String amount = mEditSum.getText().toString();
         try {                                             // null 값을 받으면 에러가 나서 예외처리 사용.
@@ -86,6 +95,18 @@ public class AddActivity extends AppCompatActivity {
                 }
                 break;
 
+            case R.id.way:
+                WayAndSortList = db.dao().getWayName();
+                mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, this));
+                mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
+                break;
+
+            case R.id.sort:
+                WayAndSortList = db.dao().getWayName();
+                mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, this));
+                mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
+                break;
+
             case R.id.save:
                 db.dao().insertCost(
                         mDate.getText().toString(),                         // 날짜 - 날짜선택박스 구현 필요
@@ -103,6 +124,11 @@ public class AddActivity extends AppCompatActivity {
 
                 break;
         }
+    }
+
+    @Override
+    public void clickItem(String itemName){
+        mWay.setText(itemName);
     }
 
 
@@ -150,8 +176,6 @@ public class AddActivity extends AppCompatActivity {
                 else {             // 커서가 맨 왼쪽으로 가게되면 맨 오른쪽으로 이동시킴
                     edit_sum.setSelection(edit_sum.getText().length());
                 }
-                    // -★ test 용 ★-
-                mTestView.setText(edit_sum.getText());
             }
             catch (NumberFormatException nfe) {
                 // do nothing?
