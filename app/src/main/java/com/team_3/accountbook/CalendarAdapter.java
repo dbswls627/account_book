@@ -72,8 +72,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         String expense = db.dao().getAmount(ym + " " + day1 + "일", "expense");      // 해당 일 총 지출값
         String income  = db.dao().getAmount(ym + " " + day1 + "일", "income");       // 해당 일 총 수입값
 
-        if (expense != null) expense = decFormat.format(Integer.parseInt(expense));       //null 일때 변환하면 팅김
-        if (income != null) income = decFormat.format(Integer.parseInt(income));          //null 일때 변환하면 팅김
+        if(expense != null) { expense = decFormat.format(Integer.parseInt(expense)); }       //null 일때 변환하면 팅김
+        if(income != null)  { income  = decFormat.format(Integer.parseInt(income)); }       //null 일때 변환하면 팅김
 
         holder.dayOfMonth.setText(daysOfMonth.get(position));
         holder.expense.setText(expense);     // 날짜의 총 지출값 출력
