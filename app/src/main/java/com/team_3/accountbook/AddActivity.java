@@ -101,11 +101,11 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
                 break;
 
-            case R.id.sort:
-                WayAndSortList = db.dao().getWayName();
-                mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, this));
-                mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
-                break;
+//            case R.id.sort:
+//                WayAndSortList = db.dao().getSortName();
+//                mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, this));
+//                mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
+//                break;
 
             case R.id.save:
                 db.dao().insertCost(
