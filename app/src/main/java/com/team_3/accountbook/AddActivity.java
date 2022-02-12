@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.touchItem{
@@ -38,8 +41,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        db = AppDatabase.getInstance(this);
-
         mIncome = findViewById(R.id.tv_income);     // 수입버튼
         mExpense = findViewById(R.id.tv_expense);   // 지출버튼
         mDate = findViewById(R.id.date);            // 날짜
@@ -48,14 +49,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mEditSum = findViewById(R.id.edit_sum);     // 금액
         mBody = findViewById(R.id.body);            // 내용
         mRV_WayAndSort = findViewById(R.id.rv_WayAndSort);
-
-        mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));       // 금액 입력반응
-        mExpense.setSelected(true);
+        db = AppDatabase.getInstance(this);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);   //키보드 내리기 힐때 필요한 객체
-
-        mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
-        mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
 
         // MainActivity 에서 리스트 클릭시 실행되는 부분
         String date =getIntent().getStringExtra("date");
@@ -65,9 +61,40 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mDate.setText(date);
         mBody.setText(body);
         mEditSum.setText(String.valueOf(amount));
+        mEditSum.addTextChangedListener(new NumberTextWatcher(mEditSum));       // 금액 입력반응
+        mExpense.setSelected(true);
+
+        Calendar c = Calendar.getInstance();      //date 가 비어 있을 경우 datePicker 가 현재 날짜를 가져오기 하기 위함
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        if (!mDate.getText().toString().equals("")) {        //edittext 의 값을 가져와서 datePicker 에 주기
+            year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
+            month = Integer.parseInt(mDate.getText().toString().substring(6, 8))-1;
+            day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
+        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, y, m, d)-> {
+            String mm = Integer.toString(m+1);
+            String dd = Integer.toString(d);
+            if (m<9) { mm="0" + (m+1);}     //한자리 일시 앞에 0추가
+            if (d<10) { dd="0" + d;}        //한자리 일시 앞에 0추가
+            mDate.setText(y+"년 "+mm+"월 "+dd+"일 00:00");     //y m d 피커에서 받아온 년월일을 edittext 에 설정
+        }, year,month,day);     //datePicker 초기 값
+
+        mDate.setOnClickListener((view)-> {
+
+
+        });
+        mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
+        mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
+
+
 
         mDate.setOnTouchListener((view, motionEvent) -> {       //터치즉시 이벤트 발생(mOnClick 시 2번 터치)
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
+            datePickerDialog.show();
             return false;
         });
         mWay.setOnTouchListener((view, motionEvent) -> {
