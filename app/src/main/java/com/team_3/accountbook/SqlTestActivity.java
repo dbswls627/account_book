@@ -31,8 +31,7 @@ public class SqlTestActivity extends AppCompatActivity {
         mFKAssetsId = findViewById(R.id.et_FK_assetsId);
 
         db = AppDatabase.getInstance(this);
-
-        //buildTableData();           // ★!!! <앱 첫 실행시에만 실행시킬것> !!!★    첫실행 후 주석처리 하기.
+        if(db.dao().getWayAll().toString()=="[]")   {buildTableData();}           // 비어있으면 추가  초기설정!
     }
 
 
