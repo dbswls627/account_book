@@ -73,9 +73,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-
-
-        if (!mDate.getText().toString().equals("")) {        //edittext 의 값을 가져와서 datePicker 에 주기
+        if (!mDate.getText().toString().equals("")) {//date 이 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
             year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
             month = Integer.parseInt(mDate.getText().toString().substring(6, 8))-1;
             day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
@@ -83,12 +81,12 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             minute = Integer.parseInt(mDate.getText().toString().substring(17, 19));
         }
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, h, min)-> {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, h, m)-> {
             //확인 눌렀을때 실행되는 곳
             String hh = Integer.toString(h);
-            String mm = Integer.toString(min);
+            String mm = Integer.toString(m);
             if (h<9) { hh="0" + h;}           //한자리 일시 앞에 0추가
-            if (min<10) { mm="0" + min;}      //한자리 일시 앞에 0추가
+            if (m<10) { mm="0" + m;}      //한자리 일시 앞에 0추가
             mDate.setText(mDate.getText().toString().substring(0,14)+hh+":"+mm);
         }, hour,minute,true);     //TimePicker 초기 값 현재 시각 or edittext 값 받아와서
 
@@ -99,7 +97,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (m<9) { mm="0" + (m+1);}     //한자리 일시 앞에 0추가
             if (d<10) { dd="0" + d;}        //한자리 일시 앞에 0추가
             mDate.setText(y+"년 "+mm+"월 "+dd+"일 00:00");     //y m d 피커에서 받아온 년월일을 edittext 에 설정
-            timePickerDialog.show();
+            timePickerDialog.show();    //타임피커 띠우기
         }, year,month,day);     //datePicker 초기 값  현재 년 월 일 or edittext 값 받아와서
 
 
@@ -111,7 +109,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mDate.setOnTouchListener((view, motionEvent) -> {       //터치즉시 이벤트 발생(mOnClick 시 2번 터치)
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      //키보드 내리기 (다른 edittext 누른후 누른면 키보드가 뜸)
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
-            datePickerDialog.show();
+            datePickerDialog.show();    //데이트피커 띠우기
             return false;
         });
         mWay.setOnTouchListener((view, motionEvent) -> {
