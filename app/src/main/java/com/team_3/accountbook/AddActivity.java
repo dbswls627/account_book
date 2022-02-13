@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         // MainActivity 에서 리스트 클릭시 실행되는 부분
         String date =getIntent().getStringExtra("date");
         String body =getIntent().getStringExtra("body");
+
         int amount =getIntent().getIntExtra("amount",0);
         ms =getIntent().getLongExtra("ms",0);
         mDate.setText(date);
@@ -68,31 +70,46 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+
 
         if (!mDate.getText().toString().equals("")) {        //edittext 의 값을 가져와서 datePicker 에 주기
             year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
             month = Integer.parseInt(mDate.getText().toString().substring(6, 8))-1;
             day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
+            hour = Integer.parseInt(mDate.getText().toString().substring(14, 16));
+            minute = Integer.parseInt(mDate.getText().toString().substring(17, 19));
         }
 
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, h, min)-> {
+            //확인 눌렀을때 실행되는 곳
+            String hh = Integer.toString(h);
+            String mm = Integer.toString(min);
+            if (h<9) { hh="0" + h;}           //한자리 일시 앞에 0추가
+            if (min<10) { mm="0" + min;}      //한자리 일시 앞에 0추가
+            mDate.setText(mDate.getText().toString().substring(0,14)+hh+":"+mm);
+        }, hour,minute,true);     //TimePicker 초기 값 현재 시각 or edittext 값 받아와서
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, y, m, d)-> {
+            //확인 눌렀을때 실행되는 곳
             String mm = Integer.toString(m+1);
             String dd = Integer.toString(d);
             if (m<9) { mm="0" + (m+1);}     //한자리 일시 앞에 0추가
             if (d<10) { dd="0" + d;}        //한자리 일시 앞에 0추가
             mDate.setText(y+"년 "+mm+"월 "+dd+"일 00:00");     //y m d 피커에서 받아온 년월일을 edittext 에 설정
-        }, year,month,day);     //datePicker 초기 값
+            timePickerDialog.show();
+        }, year,month,day);     //datePicker 초기 값  현재 년 월 일 or edittext 값 받아와서
 
-        mDate.setOnClickListener((view)-> {
 
-
-        });
         mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
         mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
 
 
 
         mDate.setOnTouchListener((view, motionEvent) -> {       //터치즉시 이벤트 발생(mOnClick 시 2번 터치)
+            imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      //키보드 내리기 (다른 edittext 누른후 누른면 키보드가 뜸)
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
             datePickerDialog.show();
             return false;
