@@ -50,7 +50,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         holder.amt.setText(arrayList.get(position).getMsgAmount() + "원");
 
         // 리스트 항목 클릭시~
-        if (context instanceof MainActivity) {  //호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
+        if (context instanceof MainActivity) {      // 호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
             holder.itemView.setOnClickListener((view -> {
                 Intent intent = new Intent(context, AddActivity.class);
                 intent.putExtra("amount", arrayList.get(position).getMsgAmount());

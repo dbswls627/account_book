@@ -12,13 +12,15 @@ import java.util.List;
 
 public class WayAndSortAdapter extends RecyclerView.Adapter<WayAndSortAdapter.CumstomViewHolder>{
     private List<String> wayList;
+    private String flag;
     private touchItem mTouchItem;
     public interface touchItem{
-        void clickItem(String itemName);
+        void clickItem(String itemName, String flag);
     }
 
-    public WayAndSortAdapter(List<String> wayList, touchItem mTouchItem) {
+    public WayAndSortAdapter(List<String> wayList, String flag, touchItem mTouchItem) {
         this.wayList = wayList;
+        this.flag = flag;
         this.mTouchItem = mTouchItem;
     }
 
@@ -37,7 +39,7 @@ public class WayAndSortAdapter extends RecyclerView.Adapter<WayAndSortAdapter.Cu
         holder.mWayName.setText(wayList.get(position));
 
         holder.itemView.setOnClickListener((view -> {
-            mTouchItem.clickItem(wayList.get(position));
+            mTouchItem.clickItem(wayList.get(position), flag);
         }));
     }
 

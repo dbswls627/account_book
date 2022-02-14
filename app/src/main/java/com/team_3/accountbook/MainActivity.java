@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRecyclerView = (RecyclerView)findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context, arrayList,dateArray));
+        mRecyclerView.setAdapter(new adapter2(context, arrayList, dateArray));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 

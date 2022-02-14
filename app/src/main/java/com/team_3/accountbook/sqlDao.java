@@ -18,6 +18,9 @@ public interface sqlDao {
     @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId) VALUES(:name, :balance, :id)")
     void insertWay(String name, int balance, int id);
 
+    @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
+    void insertSort(String name, String division);
+
     @Query("INSERT INTO Cost(useDate, FK_wayId, sortName, amount, content, balance, division, ms) VALUES(:date, :FK_wayID, :sortName, :amount, :content, :balance, :division, :ms)")
     void insertCost(String date, int FK_wayID, String sortName, int amount, String content, int balance, String division, long ms);
 
@@ -44,15 +47,18 @@ public interface sqlDao {
     List<Way> getWayAll();
 
     @Query("SELECT wayName FROM way")
-    List<String> getWayName();
+    List<String> getWayNames();
+
+    @Query("SELECT sortName FROM Sort WHERE sortDivision = :division")
+    List<String> getSortNames(String division);
 
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 
-    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC")    //날짜에 맞는 값을 정렬하여 리턴
+    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC")        // 날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);
 
-    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    //날짜에 맞는  amount 값의 합
+    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    // 날짜에 맞는  amount 값의 합
     String getAmount(String date, String division);
 
     @Query("SELECT ms FROM Cost c")    //모든 ms 값 배열

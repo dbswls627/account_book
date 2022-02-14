@@ -31,7 +31,7 @@ public class SqlTestActivity extends AppCompatActivity {
         mFKAssetsId = findViewById(R.id.et_FK_assetsId);
 
         db = AppDatabase.getInstance(this);
-        if(db.dao().getWayAll().toString()=="[]")   {buildTableData();}           // 비어있으면 추가  초기설정!
+
     }
 
 
@@ -136,34 +136,4 @@ public class SqlTestActivity extends AppCompatActivity {
     }
 
 
-
-    private void buildTableData(){
-        Asset asset = new Asset();
-
-        String[] assetName = {"현금", "은행", "선불식카드"};
-
-        String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)"};
-        int[] wayBalance = {43000, 99600, 3100, 1997500};
-        int[] FK_assetId = {1 ,2 ,3, 2};
-
-        int[] amount = {-1000, -500, -500, -2000, 1100};
-        String[] content = {"버스비", "샤프심", "볼펜", "파리바게트", "차액"};
-        String[] date = {"01월 02일", "01월 10일", "01월 04일", "01월 03일", "01월 20일"};
-        int[] balance = {99000, 98500, 1997500, 1998000, 99600};
-        String[] sortName = {"교통/차량", "생활용품", "생활용품", "식비", "잔액수정"};
-        String[] division = {"expense", "expense", "expense", "expense", null};
-        int[] FK_wayId = {2, 2, 4, 4, 2};
-
-
-        for (int i = 0; i < assetName.length; i++) {
-            asset.setAssetName(assetName[i]);
-            db.dao().insertAsset(asset);
-        }
-        for (int i = 0; i < wayName.length; i++) {
-            db.dao().insertWay(wayName[i], wayBalance[i], FK_assetId[i]);
-        }
-      /*  for (int i = 0; i < amount.length; i++) {
-            db.dao().insertCost(amount[i], content[i], date[i], balance[i], sortName[i], division[i], FK_wayId[i]);
-        }*/
-    }
 }
