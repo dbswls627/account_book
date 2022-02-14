@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,20 +31,70 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     List<String> WayAndSortList;
     RecyclerView mRV_WayAndSort;
 
+    LinearLayout mLayout;
     EditText mDate, mWay, mSort, mSum, mBody;
-    TextView mIncome, mExpense;
+    TextView mIncome, mExpense, mSave, mFlag;
     AppDatabase db;
     long ms;
     boolean checkIncome = false, checkExpense = true;
     String action = "expense";
     String focus = "";
+    int cursorPosition = -1;
+
+    InputMethodManager imm;
+    Calendar c;
+    int year, month, day, hour, minute;
+    TimePickerDialog timePickerDialog;
+    DatePickerDialog datePickerDialog;
+    String hh, mm, dd;
+
+    String preDate = "", preWay = "", preSum = "", preBody = "";
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.editText_expense);
         setContentView(R.layout.activity_add);
 
+        reRun(preDate, preWay, preSum, preBody);
+
+        // MainActivity 에서 리스트 클릭시 실행되는 부분
+        String date = getIntent().getStringExtra("date");
+        String body = getIntent().getStringExtra("body");
+        int amount = getIntent().getIntExtra("amount",0);
+        ms = getIntent().getLongExtra("ms",0);
+        mDate.setText(date);
+        mBody.setText(body);
+        mSum.setText(String.valueOf(amount));
+
+        mExpense.setSelected(true);
+        mSave.setSelected(true);
+    }
+
+
+
+    private void setWayAndSortRV(String focus){
+        if(!focus.equals("")){      // way 랑 sort 를 입력할 때만 실행
+            if(focus.equals("way")) {
+                WayAndSortList = db.dao().getWayNames();
+                mFlag.setText(" [ 자산 ] ");
+            }
+            else if (focus.equals("sort")) {
+                WayAndSortList = db.dao().getSortNames(action);
+                mFlag.setText(" [ 분류 ] ");
+            }
+
+            mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, focus, this));
+            mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
+            mRV_WayAndSort.setVisibility(View.VISIBLE);     // 리스트 보이기
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void reRun(String predate, String preWay, String preSum, String preBody){
+        mLayout = findViewById(R.id.l_layout);      // RV 상단바
+        mFlag = findViewById(R.id.tv_flag);         // RV 상단바 내부 text
         mIncome = findViewById(R.id.tv_income);     // 수입버튼
         mExpense = findViewById(R.id.tv_expense);   // 지출버튼
         mDate = findViewById(R.id.date);            // 날짜
@@ -50,31 +102,33 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mSort = findViewById(R.id.sort);            // 분류
         mSum = findViewById(R.id.edit_sum);         // 금액
         mBody = findViewById(R.id.body);            // 내용
+        mSave = findViewById(R.id.tv_save);         // 저장버튼
         mRV_WayAndSort = findViewById(R.id.rv_WayAndSort);
+
         db = AppDatabase.getInstance(this);
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);   //키보드 내리기 힐때 필요한 객체
+        imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);   //키보드 내리기 할 때 필요한 객체
+        mSum.addTextChangedListener(new NumberTextWatcher(mSum));            // 금액 입력반응
 
-        // MainActivity 에서 리스트 클릭시 실행되는 부분
-        String date =getIntent().getStringExtra("date");
-        String body =getIntent().getStringExtra("body");
+        // 다시 그리며 이전 값들 들고오기
+        mDate.setText(predate);
+        mWay.setText(preWay);
+        mSum.setText(preSum);
+        mBody.setText(preBody);
+        if(cursorPosition == 1){ mWay.requestFocus(); }
+        else if(cursorPosition == 2){ mSort.requestFocus(); }
+        else if(cursorPosition == 3){ mSum.requestFocus(); }
+        else if(cursorPosition == 4){ mBody.requestFocus(); }
+        if(cursorPosition == 3 || cursorPosition == 4 || cursorPosition == -1){ mLayout.setVisibility(View.GONE); }
 
-        int amount =getIntent().getIntExtra("amount",0);
-        ms =getIntent().getLongExtra("ms",0);
-        mDate.setText(date);
-        mBody.setText(body);
-        mSum.setText(String.valueOf(amount));
-        mSum.addTextChangedListener(new NumberTextWatcher(mSum));       // 금액 입력반응
-        mExpense.setSelected(true);
+        c = Calendar.getInstance();        // date 가 비어 있을 경우 datePicker 가 현재 날짜를 가져오기 하기 위함
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
 
-        Calendar c = Calendar.getInstance();      //date 가 비어 있을 경우 datePicker 가 현재 날짜를 가져오기 하기 위함
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-
-        if (!mDate.getText().toString().equals("")) {//date 이 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
+        if (!mDate.getText().toString().equals("")) {   // date 가 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
             year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
             month = Integer.parseInt(mDate.getText().toString().substring(6, 8))-1;
             day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
@@ -82,19 +136,19 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             minute = Integer.parseInt(mDate.getText().toString().substring(17, 19));
         }
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, h, m)-> {
-            //확인 눌렀을때 실행되는 곳
-            String hh = Integer.toString(h);
-            String mm = Integer.toString(m);
+        timePickerDialog = new TimePickerDialog(this, (view, h, m)-> {
+            // 확인 눌렀을때 실행되는 곳
+            hh = Integer.toString(h);
+            mm = Integer.toString(m);
             if(h < 9) { hh = "0" + h; }          // 한자리 일시 앞에 0추가
             if(m < 10) { mm = "0" + m; }          // 한자리 일시 앞에 0추가
             mDate.setText(mDate.getText().toString().substring(0,14)+ hh + ":" + mm);
         }, hour, minute, true);                    // TimePicker 초기 값 현재 시각 or edittext 값 받아와서
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, y, m, d)-> {
-            //확인 눌렀을때 실행되는 곳
-            String mm = Integer.toString(m+1);
-            String dd = Integer.toString(d);
+        datePickerDialog = new DatePickerDialog(this, (view, y, m, d)-> {
+            // 확인 눌렀을때 실행되는 곳
+            mm = Integer.toString(m+1);
+            dd = Integer.toString(d);
             if(m < 9) { mm = "0" + (m+1); }       // 한자리 일시 앞에 0추가
             if(d < 10) { dd = "0" + d; }          // 한자리 일시 앞에 0추가
             mDate.setText(y+"년 "+mm+"월 "+dd+"일 00:00");     // y m d 피커에서 받아온 년월일을 edittext 에 설정
@@ -107,6 +161,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
         mDate.setOnTouchListener((view, motionEvent) -> {       // 터치즉시 이벤트 발생(mOnClick 시 2번 터치)
             focus = "";
+            mLayout.setVisibility(View.GONE);
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기 (다른 edittext 누른후 누른면 키보드가 뜸)
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
             datePickerDialog.show();        // 데이트피커 띠우기
@@ -114,55 +169,66 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         });
         mWay.setOnTouchListener((view, motionEvent) -> {
             focus = "way";
+            cursorPosition = 1;
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
+            mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
             setWayAndSortRV(focus);
             return false;
         });
         mSort.setOnTouchListener((view, motionEvent) -> {
             focus = "sort";
+            cursorPosition = 2;
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
+            mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
             setWayAndSortRV(focus);
             return false;
         });
         mSum.setOnTouchListener((view, motionEvent) -> {
             focus = "";
+            cursorPosition = 3;
+            mLayout.setVisibility(View.GONE);
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
             return false;
         });
         mBody.setOnTouchListener((view, motionEvent) -> {
             focus = "";
+            cursorPosition = 4;
+            mLayout.setVisibility(View.GONE);
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
             return false;
         });
-
     }
 
+    private void setThemeColor(String actionFlag){
+        preDate = mDate.getText().toString();
+        preWay = mWay.getText().toString();
+        preSum = mSum.getText().toString();
+        preBody = mBody.getText().toString();
 
+        if(actionFlag.equals("income")){ setTheme(R.style.editText_income); }
+        else if(actionFlag.equals("expense")){ setTheme(R.style.editText_expense); }
+        setContentView(R.layout.activity_add);
 
-    public void setWayAndSortRV(String focus){
-        if(!focus.equals("")){      // way 랑 sort 를 입력할 때만 실행
-            if(focus.equals("way")) { WayAndSortList = db.dao().getWayNames(); }
-            else if (focus.equals("sort")) { WayAndSortList = db.dao().getSortNames(action); }
-
-            mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, focus, this));
-            mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
-            mRV_WayAndSort.setVisibility(View.VISIBLE);     // 리스트 보이기
-        }
+        reRun(preDate, preWay, preSum, preBody);
     }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void mOnClick(View v){
         switch (v.getId()){
             case R.id.tv_income:
                 if(!checkIncome){
+                    action = "income";
+                    setThemeColor(action);
+
                     checkIncome = true;
                     checkExpense = false;
-                    action = "income";
 
                     mIncome.setSelected(true);
                     mExpense.setSelected(false);
+                    mSave.setSelected(false);
+                    mIncome.setTextColor(Color.parseColor("#5DDE62"));      // 초록색
+                    mExpense.setTextColor(Color.parseColor("#757575"));     // 진회색
+                    mSave.setTextColor(Color.parseColor("#5DDE62"));        // 초록색
                     mSort.setText("");
 
                     setWayAndSortRV(focus);
@@ -172,19 +238,25 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             case R.id.tv_expense:
                 //mRV_WayAndSort.setVisibility(View.GONE);    // 자산 리스트 제거 <-- 입력하던 곳 rv는 띄워줘야 한다고 생각
                 if(!checkExpense){
+                    action = "expense";
+                    setThemeColor(action);
+
                     checkIncome = false;
                     checkExpense = true;
-                    action = "expense";
 
                     mIncome.setSelected(false);
                     mExpense.setSelected(true);
+                    mSave.setSelected(true);
+                    mIncome.setTextColor(Color.parseColor("#757575"));      // 진회색
+                    mExpense.setTextColor(Color.parseColor("#FF5252"));     // 빨간색
+                    mSave.setTextColor(Color.parseColor("#FF5252"));        // 빨간색
                     mSort.setText("");
 
                     setWayAndSortRV(focus);
                 }
                 break;
 
-            case R.id.save:
+            case R.id.tv_save:
                 String amount = mSum.getText().toString();
                 try {                                             // null 값을 받으면 에러가 나서 예외처리 사용.
                     amount = amount.replaceAll(",", "");          // 금액의 쉼표(,) 제거
@@ -226,7 +298,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
 
 
-    class NumberTextWatcher implements TextWatcher {
+    private class NumberTextWatcher implements TextWatcher {
         private DecimalFormat dfnd;        // ~ ~ DecimalFormat 클래스 객체 dfnd
         private EditText edit_sum;
 

@@ -7,6 +7,7 @@
 
 
     <ScrollView
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5"
@@ -27,9 +28,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="3dp"
                     android:layout_weight="1"
-                    android:background="@drawable/select_state"
+                    android:background="@drawable/select_state_income"
                     android:text="수입"
-                    android:textColor="@color/black"
+                    android:textColor="#757575"
                     android:textSize="14dp"
                     android:gravity="center"
                     android:onClick="mOnClick"
@@ -42,9 +43,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="12dp"
                     android:layout_weight="1"
-                    android:background="@drawable/select_state"
+                    android:background="@drawable/select_state_expense"
                     android:text="지출"
-                    android:textColor="@color/black"
+                    android:textColor="#FF4040"
                     android:textSize="14dp"
                     android:gravity="center"
                     android:onClick="mOnClick"
@@ -96,11 +97,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_marginTop="3dp"
                     android:layout_marginLeft="20dp">
                     <EditText
                         android:id="@+id/date"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                     <EditText
                         android:id="@+id/way"
                         android:layout_width="match_parent"
@@ -113,41 +115,54 @@
                         android:id="@+id/edit_sum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="date"/>
+                        android:inputType="date" />
                     <EditText
                         android:id="@+id/body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:selectAllOnFocus="true"/>
+                        android:selectAllOnFocus="true" />
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/save"
+            <TextView
+                android:id="@+id/tv_save"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:onClick="mOnClick"
-                android:background="@drawable/normal"
+                android:background="@drawable/save_state"
                 app:backgroundTint="@null"
                 android:text="저장"
-                android:textColor="@color/black"/>
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="#FF5252"/>
         </LinearLayout>
 
     </ScrollView>
 
-    <View
+    <LinearLayout
+        android:id="@+id/l_layout"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#ABABAB"/>
+        android:layout_height="35dp"
+        android:background="#3B3B3B">
+        <TextView
+            android:id="@+id/tv_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/white"
+            android:text="자산분류"/>
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="3dp">
+        android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_WayAndSort"
