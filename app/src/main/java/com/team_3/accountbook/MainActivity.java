@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){int_amount = -1;}
 
-        return new item(date, place, int_amount, timestamp);        // item 형태의 객체 return
+        return new item(date, place, int_amount, timestamp,0);        // item 형태의 객체 return
     }
 
 

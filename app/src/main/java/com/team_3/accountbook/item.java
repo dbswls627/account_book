@@ -5,11 +5,14 @@ public class item {
     private String msgBody;
     private int msgAmount;
     private long ms;
-    public item(String date, String body, int amount, long ms){
+    private int costId;
+
+    public item(String date, String body, int amount, long ms , int costId){
         this.msgDate = date;
         this.msgBody = body;
         this.msgAmount = amount;
         this.ms = ms;
+        this.costId = costId;
     }
 
     public String getMsgDate(){
@@ -33,4 +36,8 @@ public class item {
     public long getMs() { return ms; }
 
     public void setMs(long ms) { this.ms = ms; }
+
+    public int getCostId() { return costId; }
+
+    public void setCostId(int pk) { this.costId = pk; }
 }
