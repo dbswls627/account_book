@@ -32,6 +32,7 @@
             android:exported="true"
             android:launchMode="singleTask" />
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".AddActivity"
             android:exported="false" />
         <activity
