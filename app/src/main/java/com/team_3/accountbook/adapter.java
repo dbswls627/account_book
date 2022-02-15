@@ -3,7 +3,6 @@ package com.team_3.accountbook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,17 +44,17 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        holder.dt.setText((CharSequence) arrayList.get(position).getMsgDate().substring(14, 19));
-        holder.bd.setText((CharSequence) arrayList.get(position).getMsgBody());
-        holder.amt.setText(arrayList.get(position).getMsgAmount() + "원");
+        holder.dt.setText((CharSequence) arrayList.get(position).getUseDate().substring(14, 19));
+        holder.bd.setText((CharSequence) arrayList.get(position).getContent());
+        holder.amt.setText(arrayList.get(position).getAmount() + "원");
 
         // 리스트 항목 클릭시~
         if (context instanceof MainActivity) {      // 호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
             holder.itemView.setOnClickListener((view -> {
                 Intent intent = new Intent(context, AddActivity.class);
-                intent.putExtra("amount", arrayList.get(position).getMsgAmount());
-                intent.putExtra("date", arrayList.get(position).getMsgDate());
-                intent.putExtra("body", arrayList.get(position).getMsgBody());
+                intent.putExtra("amount", arrayList.get(position).getAmount());
+                intent.putExtra("date", arrayList.get(position).getUseDate());
+                intent.putExtra("body", arrayList.get(position).getContent());
                 intent.putExtra("ms", arrayList.get(position).getMs());
 
                 context.startActivity(intent);      // ~AddActivity 로 넘어감

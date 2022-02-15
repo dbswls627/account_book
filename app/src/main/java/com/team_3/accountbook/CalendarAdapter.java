@@ -26,7 +26,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         void onClick (ArrayList<item> arrayList, String md);
     }
     ArrayList<item> arrayList = new ArrayList<>();      // arrayList2에서 item 으로 추린 리스트
-    ArrayList<Cost> arrayList2 = new ArrayList<>();     // 클릭한 날의 Cost 테이블 전체 정보
+
     Context context;
     String ym;                  // yyyy년 MM월
     AppDatabase db;
@@ -82,10 +82,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
             arrayList.clear();
             Log.d("test", ym.toString());
-            arrayList2 = (ArrayList<Cost>) db.dao().getDate(ym + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
-            arrayList2.forEach(it -> {
-                arrayList.add(new item(it.getUseDate(), it.getContent(), it.getAmount(), it.getMs(), it.getCostId()));           // 받아온 Cost 데이터를 item 에 뿌려줌
-            });
+            arrayList = (ArrayList<item>) db.dao().getItemList(ym + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+
             //클릭하면 나오는 리스트뷰에 넣을 리스트와 제목테스트(월/일) 매개변수로 전달
             mCallback.onClick(arrayList, ym.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
         });

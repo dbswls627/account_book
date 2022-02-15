@@ -1,37 +1,37 @@
 package com.team_3.accountbook;
 
 public class item {
-    private String msgDate;
-    private String msgBody;
-    private int msgAmount;
-    private long ms;
     private int costId;
+    private int amount;
+    private String content;
+    private String useDate;
+    private long ms;
 
-    public item(String date, String body, int amount, long ms , int costId){
-        this.msgDate = date;
-        this.msgBody = body;
-        this.msgAmount = amount;
+    public item(String useDate, String content, int amount, long ms , int costId){
+        this.useDate = useDate;
+        this.content = content;
+        this.amount = amount;
         this.ms = ms;
         this.costId = costId;
     }
 
-    public String getMsgDate(){
-        return msgDate;
+    public String getUseDate(){
+        return useDate;
     }
 
-    public void setMsgDate(){
-        this.msgDate = msgDate;
+    public void setUseDate(){
+        this.useDate = useDate;
     }
 
-    public String getMsgBody(){
-        return msgBody;
+    public String getContent(){
+        return content;
     }
 
-    public void setMsgBody(){ this.msgBody = msgBody; }
+    public void setContent(){ this.content = content; }
 
-    public int getMsgAmount(){ return msgAmount; }
+    public int getAmount(){ return amount; }
 
-    public void setMsgAmount(){ this.msgAmount = msgAmount; }
+    public void setAmount(){ this.amount = amount; }
 
     public long getMs() { return ms; }
 

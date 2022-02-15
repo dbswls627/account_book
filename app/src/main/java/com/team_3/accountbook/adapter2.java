@@ -50,7 +50,7 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
         ArrayList<item> Array = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
 
         for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
-            if(item.getMsgDate().substring(0, 14).equals(dateArray.get(position))){
+            if(item.getUseDate().substring(0, 14).equals(dateArray.get(position))){
                 Array.add(item);
             }
         }

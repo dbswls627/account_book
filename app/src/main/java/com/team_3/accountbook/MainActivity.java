@@ -9,19 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
         for (item item : arrayList) {
-            if(!dateArray.contains(item.getMsgDate().substring(0, 14))) {
-                dateArray.add(item.getMsgDate().substring(0, 14));
+            if(!dateArray.contains(item.getUseDate().substring(0, 14))) {
+                dateArray.add(item.getUseDate().substring(0, 14));
             }
         }
 
@@ -87,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 timeInDate = new Date(timestamp);
                 String date = sdf.format(timeInDate);
                 item item = parsing(body, date, timestamp);
-                if (item.getMsgAmount()!=-1 && item.getMsgBody()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
+                if (item.getAmount()!=-1 && item.getContent()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
                     arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
                 }
             }
