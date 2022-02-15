@@ -185,20 +185,17 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
 
     private void setWayAndSortRV(String focus){
-        if(!focus.equals("")){      // way 랑 sort 를 입력할 때만 실행
-            if(focus.equals("way")) {
+            if (focus.equals("way")) {
                 WayAndSortList = db.dao().getWayNames();
                 mFlag.setText(" [ 자산 ] ");
-            }
-            else if (focus.equals("sort")) {
+            } else if (focus.equals("sort")) {
                 WayAndSortList = db.dao().getSortNames(action);
                 mFlag.setText(" [ 분류 ] ");
             }
 
-            mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, focus, this));
+            mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, this));
             mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
             mRV_WayAndSort.setVisibility(View.VISIBLE);     // 리스트 보이기
-        }
     }
 
 
@@ -293,11 +290,11 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
     @Override
-    public void clickItem(String itemName, String flag){
-        if(flag.equals("way")){
+    public void clickItem(String itemName){
+        if(focus.equals("way")){
             mWay.setText(itemName);
         }
-        else if(flag.equals("sort")){
+        else if(focus.equals("sort")){
             mSort.setText(itemName);
         }
     }

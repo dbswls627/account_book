@@ -13,8 +13,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginBottom="15dp"
         android:textSize="15dp"
-        android:text="수단명"
-        android:textColor="@color/black"/>
+        android:text="수단명"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

@@ -15,10 +15,10 @@ public class WayAndSortAdapter extends RecyclerView.Adapter<WayAndSortAdapter.Cu
     private String flag;
     private touchItem mTouchItem;
     public interface touchItem{
-        void clickItem(String itemName, String flag);
+        void clickItem(String itemName);
     }
 
-    public WayAndSortAdapter(List<String> wayList, String flag, touchItem mTouchItem) {
+    public WayAndSortAdapter(List<String> wayList, touchItem mTouchItem) {
         this.wayList = wayList;
         this.flag = flag;
         this.mTouchItem = mTouchItem;
@@ -39,7 +39,7 @@ public class WayAndSortAdapter extends RecyclerView.Adapter<WayAndSortAdapter.Cu
         holder.mWayName.setText(wayList.get(position));
 
         holder.itemView.setOnClickListener((view -> {
-            mTouchItem.clickItem(wayList.get(position), flag);
+            mTouchItem.clickItem(wayList.get(position));
         }));
     }
 
