@@ -185,6 +185,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
 
     private void setWayAndSortRV(String focus){
+        if (!focus.equals("")) {
             if (focus.equals("way")) {
                 WayAndSortList = db.dao().getWayNames();
                 mFlag.setText(" [ 자산 ] ");
@@ -196,6 +197,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mRV_WayAndSort.setAdapter(new WayAndSortAdapter(WayAndSortList, this));
             mRV_WayAndSort.setLayoutManager(new LinearLayoutManager(this));
             mRV_WayAndSort.setVisibility(View.VISIBLE);     // 리스트 보이기
+        }
     }
 
 
