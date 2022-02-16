@@ -18,7 +18,7 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
     private Context context;
     private ArrayList<String> dateArray;
 
-    public adapter2(Context context, ArrayList<item> arrayList,ArrayList<String> dateArray) {
+    public adapter2(Context context, ArrayList<item> arrayList, ArrayList<String> dateArray) {
         this.context = context;
         this.arrayList = arrayList;
         this.dateArray = dateArray;
@@ -46,7 +46,6 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter2.CumstomViewHolder holder, int position) {
-
         ArrayList<item> Array = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
 
         for (item item : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함

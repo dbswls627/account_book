@@ -114,6 +114,12 @@
             android:textAllCaps="false"
             android:text="refer\nWayWithCosts"/>
     </LinearLayout>
+    <Button
+        android:id="@+id/AssetNameWayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="mOnClick"
+        android:text="자산명/수단명"/>
 
 
 </LinearLayout>

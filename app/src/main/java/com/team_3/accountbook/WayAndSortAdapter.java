@@ -12,7 +12,6 @@ import java.util.List;
 
 public class WayAndSortAdapter extends RecyclerView.Adapter<WayAndSortAdapter.CumstomViewHolder>{
     private List<String> wayList;
-    private String flag;
     private touchItem mTouchItem;
     public interface touchItem{
         void clickItem(String itemName);
@@ -20,14 +19,13 @@ public class WayAndSortAdapter extends RecyclerView.Adapter<WayAndSortAdapter.Cu
 
     public WayAndSortAdapter(List<String> wayList, touchItem mTouchItem) {
         this.wayList = wayList;
-        this.flag = flag;
         this.mTouchItem = mTouchItem;
     }
 
     @NonNull
     @Override
     public WayAndSortAdapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_way, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_wayorsort, parent, false);
         CumstomViewHolder holder = new CumstomViewHolder(view);
 
         return holder;

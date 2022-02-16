@@ -44,8 +44,8 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        holder.dt.setText((CharSequence) arrayList.get(position).getUseDate().substring(14, 19));
-        holder.bd.setText((CharSequence) arrayList.get(position).getContent());
+        holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
+        holder.bd.setText(arrayList.get(position).getContent());
         holder.amt.setText(arrayList.get(position).getAmount() + "원");
 
         // 리스트 항목 클릭시~

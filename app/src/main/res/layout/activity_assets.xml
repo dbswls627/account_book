@@ -11,11 +11,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        <TextView
-            android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="자산 액티비티액"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="1dp"
+                android:textSize="12dp"
+                android:text="자산 총액"/>
+            <TextView
+                android:id="@+id/none2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:textSize="15dp"
+                android:text="액수"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/darkGray"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_AssetAndWay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
 
@@ -30,8 +60,6 @@
             android:layout_gravity="bottom"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_menu" />
-
-
     </LinearLayout>
 
 

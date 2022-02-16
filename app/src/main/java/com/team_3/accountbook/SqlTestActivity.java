@@ -2,7 +2,6 @@ package com.team_3.accountbook;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SqlTestActivity extends AppCompatActivity {
@@ -131,6 +129,15 @@ public class SqlTestActivity extends AppCompatActivity {
                 List<WayWithCost> list_WC = db.dao().getWayWithCosts();
                 list_WC.forEach(it ->Log.d("WayWithCost", it.getUseDate() + " " + it.getWayName() + " " +
                         it.getAmount() + " " + it.getDivision()));
+                break;
+
+            case R.id.AssetNameWayName:
+                List<AssetNameWayNameAndBalance> list_AnWnWb = db.dao().getAnWnWb();
+                for (int i = 0; i < list_AnWnWb.size(); i++) {
+                    Log.d("AssetNameWayName", list_AnWnWb.get(i).getAssetName() + "/" + list_AnWnWb.get(i).getWayName() + "/"
+                                                + list_AnWnWb.get(i).getWayBalance());
+                }
+
                 break;
         }
     }
