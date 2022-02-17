@@ -1,11 +1,11 @@
 package com.team_3.accountbook;
 
 public class item {
-    private int costId;
-    private int amount;
-    private String content;
-    private String useDate;
-    private long ms;
+    private int costId;         // Cost 테이블 PK
+    private int amount;         // 금액
+    private String content;     // 내용
+    private String useDate;     // 날짜
+    private long ms;            //
 
     public item(String useDate, String content, int amount, long ms , int costId){
         this.useDate = useDate;

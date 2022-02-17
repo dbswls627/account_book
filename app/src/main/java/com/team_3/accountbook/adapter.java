@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
-    private ArrayList<item> arrayList;
+    private ArrayList<Cost> arrayList;
     private Context context;
 
-    public adapter(ArrayList<item> arrayList) {
+    public adapter(ArrayList<Cost> arrayList) {
         this.arrayList = arrayList;
     }
 

@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
     @Override
-    public void onClick(ArrayList<item> arrayList, String md) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
+    public void onClick(ArrayList<Cost> arrayList, String md) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
         listRv.setAdapter(new adapter(arrayList));
         listRv.setLayoutManager(new LinearLayoutManager(this));
         if (md.length()==7) { date.setText(md); }       // 빈칸 클릭시 02월일 로 빈칸인 부분도 출력되어 안되도록

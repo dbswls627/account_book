@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
 
     AppDatabase db;
-    ArrayList<item> arrayList = new ArrayList<>();
+    ArrayList<Cost> arrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
     Context context;
 
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
         readSMSMessage();
 
         ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
-        for (item item : arrayList) {
-            if(!dateArray.contains(item.getUseDate().substring(0, 14))) {
-                dateArray.add(item.getUseDate().substring(0, 14));
+        for (Cost cost : arrayList) {
+            if(!dateArray.contains(cost.getUseDate().substring(0, 14))) {
+                dateArray.add(cost.getUseDate().substring(0, 14));
             }
         }
 
@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
             if (!db.dao().getMs().contains(timestamp)){     //ms 값이 겹치지 않는 값들만 실행
                 timeInDate = new Date(timestamp);
                 String date = sdf.format(timeInDate);
-                item item = parsing(body, date, timestamp);
-                if (item.getAmount()!=-1 && item.getContent()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
-                    arrayList.add(item);    // 리턴 받은 값 바로 리스트에 저장
+                Cost cost = parsing(body, date, timestamp);
+                if (cost.getAmount()!=-1 && cost.getContent()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
+                    arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                 }
             }
 
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private item parsing(String body, String date, long timestamp){
+    private Cost parsing(String body, String date, long timestamp){
         String amount;              // 추출한 가격(~원)
         String place;               // 추출한 사용처
         int int_amount;             // int 형으로 변환한 가격(only 숫자)
@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){int_amount = -1;}
 
-        return new item(date, place, int_amount, timestamp,0);        // item 형태의 객체 return
+        return new Cost(0, int_amount, place, date, 0, "", "", 0, 0);
+        //return new Cost(date, place, int_amount, timestamp, 0);        // item 형태의 객체 return
     }
 
 

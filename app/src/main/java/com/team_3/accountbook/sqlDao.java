@@ -55,11 +55,11 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
 
-    @Query("SELECT useDate, amount, ms, content, costId FROM Cost c ORDER BY useDate desc")
-    List<item> getItemList();
+    @Query("SELECT * FROM Cost c ORDER BY useDate desc")
+    List<Cost> getItemList();
 
-    @Query("SELECT useDate, amount, ms, content, costId FROM Cost c  WHERE substr(useDate,0,14) = :date ORDER BY useDate DESC")        // 날짜에 맞는 값을 정렬하여 리턴
-    List<item> getItemList(String date);
+    @Query("SELECT * FROM Cost c  WHERE substr(useDate,0,14) = :date ORDER BY useDate DESC")        // 날짜에 맞는 값을 정렬하여 리턴
+    List<Cost> getItemList(String date);
 
     @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC")        // 날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);

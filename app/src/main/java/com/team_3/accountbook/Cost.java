@@ -26,7 +26,17 @@ public class Cost {
     private int FK_wayId;           // 수단 외래키
     private long ms;
 
-//private int FK_sortId;          // 분류 외래키
+    public Cost(int costId, int amount, String content, String useDate, int balance, String sortName, String division, int FK_wayId, long ms) {
+        this.costId = costId;
+        this.amount = amount;
+        this.content = content;
+        this.useDate = useDate;
+        this.balance = balance;
+        this.sortName = sortName;
+        this.division = division;
+        this.FK_wayId = FK_wayId;
+        this.ms = ms;
+    }
 
     public int getCostId() {
         return costId;
