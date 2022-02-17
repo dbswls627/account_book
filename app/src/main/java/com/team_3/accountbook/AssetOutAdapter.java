@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.CumstomViewHolder> {
+public class AssetOutAdapter extends RecyclerView.Adapter<AssetOutAdapter.CumstomViewHolder> {
     private List<AssetNameWayNameAndBalance> ANWNList;
     private ArrayList<String> assetNameList;
     private Context context;
     private ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances = new ArrayList<>();
 
 
-    public AssetAdapter(List<AssetNameWayNameAndBalance> ANWNList, ArrayList<String> assetNameList, Context context) {
+    public AssetOutAdapter(List<AssetNameWayNameAndBalance> ANWNList, ArrayList<String> assetNameList, Context context) {
         this.ANWNList = ANWNList;
         this.assetNameList = assetNameList;
         this.context = context;
@@ -29,7 +29,7 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.CumstomViewH
 
     @NonNull
     @Override
-    public AssetAdapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AssetOutAdapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_assetrv, parent, false);
         CumstomViewHolder holder = new CumstomViewHolder(view);
 
@@ -38,7 +38,7 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.CumstomViewH
 
 
     @Override
-    public void onBindViewHolder(@NonNull AssetAdapter.CumstomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AssetOutAdapter.CumstomViewHolder holder, int position) {
         wayNameAndBalances.clear();
         for (int i = 0; i < ANWNList.size(); i++) {
             if(assetNameList.get(position).equals(ANWNList.get(i).getAssetName())){
@@ -46,15 +46,15 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.CumstomViewH
                         assetNameList.get(position), ANWNList.get(i).getWayName(), ANWNList.get(i).getWayBalance()));
             }
         }
-//        for (AssetNameWayNameAndBalance AssetNameWayNameAndBalance : ANWNList) {
-//            if(AssetNameWayNameAndBalance.getAssetName().equals(assetNameList.get(position))){
-//                wayNameAndBalances.add(AssetNameWayNameAndBalance);
+//        for (AssetNameWayNameAndBalance AnWnb : ANWNList) {
+//            if(AnWnb.getAssetName().equals(assetNameList.get(position))){
+//                wayNameAndBalances.add(AnWnb);
 //            }
 //        }
 
         holder.mAssetNameInRV.setText(assetNameList.get(position));
 
-        holder.mSortInWay.setAdapter(new WayInAssetAdapter(wayNameAndBalances));
+        holder.mSortInWay.setAdapter(new AssetInAdapter(wayNameAndBalances));
         holder.mSortInWay.setLayoutManager(new LinearLayoutManager(context));
     }
 

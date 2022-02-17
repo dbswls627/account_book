@@ -70,7 +70,7 @@ public class AssetsActivity extends AppCompatActivity {
             }
         }
 
-        mAssetAndWay.setAdapter(new AssetAdapter(ANWNList, assetNameList, this));
+        mAssetAndWay.setAdapter(new AssetOutAdapter(ANWNList, assetNameList, this));
         mAssetAndWay.setLayoutManager(new LinearLayoutManager(this));
     }
 

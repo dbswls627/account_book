@@ -10,27 +10,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class WayInAssetAdapter extends RecyclerView.Adapter<WayInAssetAdapter.CumstomViewHolder>{
+public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomViewHolder>{
     private ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances;
 
 
-    public WayInAssetAdapter(ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances) {
+    public AssetInAdapter(ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances) {
         this.wayNameAndBalances = wayNameAndBalances;
     }
 
 
     @NonNull
     @Override
-    public WayInAssetAdapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AssetInAdapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_wayinasset, parent, false);
-        WayInAssetAdapter.CumstomViewHolder holder = new WayInAssetAdapter.CumstomViewHolder(view);
+        AssetInAdapter.CumstomViewHolder holder = new AssetInAdapter.CumstomViewHolder(view);
 
         return holder;
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull WayInAssetAdapter.CumstomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AssetInAdapter.CumstomViewHolder holder, int position) {
         holder.mWayName.setText(wayNameAndBalances.get(position).getWayName());
         holder.mWayBalance.setText(wayNameAndBalances.get(position).getWayBalance() + "원");
     }
