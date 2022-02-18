@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
     private TextView monthYearText, date;
     private RecyclerView calendarRecyclerView, listRv;
+    private LinearLayout mDateLayout;
     AppDatabase db;
 
     BottomNavigationView bottom_menu;
@@ -49,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         listRv = findViewById(R.id.listRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
+        mDateLayout = findViewById(R.id.homeLayout_data);
         date = findViewById(R.id.date);
 
         db = AppDatabase.getInstance(this);
@@ -78,6 +81,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         setMonthView();
+        mDateLayout.setVisibility(View.GONE);
 
         if(db.dao().getSortNames("income").toString() == "[]") {     // 비어있으면 추가.  초기설정!
             buildTableData();
@@ -157,9 +161,12 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
     @Override
     public void onClick(ArrayList<Cost> arrayList, String md) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
-        listRv.setAdapter(new adapter(arrayList));
-        listRv.setLayoutManager(new LinearLayoutManager(this));
-        if (md.length()==7) { date.setText(md); }       // 빈칸 클릭시 02월일 로 빈칸인 부분도 출력되어 안되도록
+        if (md.length() == 7) {        // 빈칸 클릭시 02월일 로 빈칸인 부분도 출력되어 안되도록
+            listRv.setAdapter(new adapter(arrayList));
+            listRv.setLayoutManager(new LinearLayoutManager(this));
+            mDateLayout.setVisibility(View.VISIBLE);
+            date.setText(md);
+        }
     }
 
 

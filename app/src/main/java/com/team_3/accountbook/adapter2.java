@@ -68,7 +68,6 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
-
             dt = itemView.findViewById(R.id.dt2);
             rv = itemView.findViewById(R.id.item_rv);
         }

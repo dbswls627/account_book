@@ -1,6 +1,7 @@
 package com.team_3.accountbook;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -33,20 +34,36 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     @NonNull
     @Override
     public adapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
-        CumstomViewHolder holder = new CumstomViewHolder(view);
         context = parent.getContext();
+        CumstomViewHolder holder = null;
+        if (context instanceof HomeActivity){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forhome, parent, false);
+            holder = new CumstomViewHolder(view);
+        }
+        else{
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
+            holder = new CumstomViewHolder(view);
+        }
 
         return holder;
     }
 
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
-        holder.bd.setText(arrayList.get(position).getContent());
-        holder.amt.setText(arrayList.get(position).getAmount() + "원");
+        if (context instanceof HomeActivity){
+            holder.mSortName_dh.setText(arrayList.get(position).getSortName());
+            holder.mBody_dh.setText(arrayList.get(position).getContent());
+            holder.mTime_dh.setText(arrayList.get(position).getUseDate().substring(14, 19));
+            holder.mAmount_dh.setText(arrayList.get(position).getAmount() + "원");
+        }
+        else{
+            holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
+            holder.bd.setText(arrayList.get(position).getContent());
+            holder.amt.setText(arrayList.get(position).getAmount() + "원");
+        }
 
         // 리스트 항목 클릭시~
         if (context instanceof MainActivity) {      // 호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
@@ -69,12 +86,25 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         TextView bd;        // 내용
         TextView amt;       // 금액
 
+        TextView mSortName_dh, mBody_dh, mTime_dh, mAmount_dh;
+        TextView mSortName_da, mBody_da, mTime_da, mAmount_da, mBalance_da;
+
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
-
             dt = itemView.findViewById(R.id.dt);
             bd = itemView.findViewById(R.id.bd);
             amt = itemView.findViewById(R.id.amt);
+
+            mSortName_dh = itemView.findViewById(R.id.detailHome_sortName);
+            mBody_dh = itemView.findViewById(R.id.detailHome_body);
+            mTime_dh = itemView.findViewById(R.id.detailHome_time);
+            mAmount_dh = itemView.findViewById(R.id.detailHome_amount);
+
+            mSortName_da = itemView.findViewById(R.id.detailAsset_sortName);
+            mBody_da = itemView.findViewById(R.id.detailAsset_body);
+            mTime_da = itemView.findViewById(R.id.detailAsset_time);
+            mAmount_da = itemView.findViewById(R.id.detailAsset_amount);
+            mBalance_da = itemView.findViewById(R.id.detailAsset_balance);
         }
     }
 }

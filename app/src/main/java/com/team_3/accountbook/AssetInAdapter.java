@@ -33,6 +33,10 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
     public void onBindViewHolder(@NonNull AssetInAdapter.CumstomViewHolder holder, int position) {
         holder.mWayName.setText(wayNameAndBalances.get(position).getWayName());
         holder.mWayBalance.setText(wayNameAndBalances.get(position).getWayBalance() + "원");
+
+        holder.itemView.setOnClickListener(View -> {
+            
+        });
     }
 
 
