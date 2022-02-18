@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,9 +21,18 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     private ArrayList<Cost> arrayList;
     private Context context;
     private String formatAmount = "";
+    private OnItemClickInListInAsset mOnItemClick;
+    public interface OnItemClickInListInAsset {
+        void onClick (Cost cost);
+    }
 
     public adapter(ArrayList<Cost> arrayList) {
         this.arrayList = arrayList;
+    }
+
+    public adapter(ArrayList<Cost> arrayList, OnItemClickInListInAsset OnItemClick) {
+        this.arrayList = arrayList;
+        this.mOnItemClick = OnItemClick;
     }
 
 
@@ -76,6 +86,14 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mAmount_da.setText(formatAmount + "원");
             formatAmount = myFormatter.format(arrayList.get(position).getBalance());
             holder.mBalance_da.setText("("+formatAmount+")");
+
+            holder.itemView.setOnClickListener((View -> {
+                Cost cost = arrayList.get(position);
+                mOnItemClick.onClick(cost);
+//                Intent intent = new Intent(context, AddActivity.class);
+//                intent.putExtra("costId", arrayList.get(position).getCostId());
+//                context.startActivity(intent);
+            }));
         }
         else{       // 그 외 세팅
             holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));

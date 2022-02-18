@@ -1,19 +1,26 @@
 package com.team_3.accountbook;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListInAssetActivity extends AppCompatActivity {
+@SuppressWarnings("deprecation")
+public class ListInAssetActivity extends AppCompatActivity implements adapter.OnItemClickInListInAsset{
     List<Cost> costList = new ArrayList<>();
     ArrayList<String> dateList = new ArrayList<>();
     RecyclerView mRV_listInAsset;
+    adapter2 adapter2;
     AppDatabase db;
+    String wayName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +31,13 @@ public class ListInAssetActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
 
 
-        String wayName = getIntent().getStringExtra("wayName");
+        wayName = getIntent().getStringExtra("wayName");
+        setList();
+    }
+
+
+
+    private void setList(){
         costList = db.dao().getCostInWayName(wayName);
         for (int i = 0; i < costList.size(); i++) {
             if(!dateList.contains(costList.get(i).getUseDate().substring(0, 14))){
@@ -32,7 +45,32 @@ public class ListInAssetActivity extends AppCompatActivity {
             }
         }
 
-        mRV_listInAsset.setAdapter(new adapter2(this, (ArrayList<Cost>) costList, dateList));
+        adapter2 = new adapter2(this, (ArrayList<Cost>) costList, dateList);
+        mRV_listInAsset.setAdapter(adapter2);
         mRV_listInAsset.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 0){
+            if(resultCode == RESULT_OK){
+                setList();      // adapter2.NotifyDataSetChanged();를 해도 새로고침이 안되어있어 그냥 다시 연결해버림.
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onClick(Cost cost) {
+        Intent intent = new Intent(this, AddActivity.class);
+        intent.putExtra("costId", cost.getCostId());
+        intent.putExtra("flag", 1);
+        startActivityForResult(intent, 0);
     }
 }

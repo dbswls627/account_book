@@ -120,6 +120,12 @@
         android:layout_height="wrap_content"
         android:onClick="mOnClick"
         android:text="자산명/수단명"/>
+    <Button
+        android:id="@+id/deleteCostAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="mOnClick"
+        android:text="Cost 테이블 비우기"/>
 
 
 </LinearLayout>

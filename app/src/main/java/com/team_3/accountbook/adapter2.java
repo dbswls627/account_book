@@ -56,7 +56,7 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
         holder.dt.setText(dateArray.get(position));
 
-        holder.rv.setAdapter(new adapter(Array)); // 년도 부터 일까지 매개변수로 넘김
+        holder.rv.setAdapter(new adapter(Array, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
         holder.rv.setLayoutManager(new LinearLayoutManager(context));
     }
 

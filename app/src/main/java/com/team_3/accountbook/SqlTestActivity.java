@@ -137,6 +137,11 @@ public class SqlTestActivity extends AppCompatActivity {
                 }
 
                 break;
+
+            case R.id.deleteCostAll:
+                db.dao().deleteCostAll();
+
+                break;
         }
     }
 
