@@ -9,15 +9,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AssetsActivity extends AppCompatActivity {
     private List<AssetNameWayNameAndBalance> ANWNList;
     private ArrayList<String> assetNameList = new ArrayList<>();
+    private DecimalFormat myFormatter = new DecimalFormat("###,###");
+    TextView mTotalMoney;
     RecyclerView mAssetAndWay;
     AppDatabase db;
 
@@ -58,15 +62,17 @@ public class AssetsActivity extends AppCompatActivity {
             return true;
         });
 
+        mTotalMoney = findViewById(R.id.totalMoney);
         mAssetAndWay = findViewById(R.id.rv_AssetAndWay);
         db = AppDatabase.getInstance(this);
 
+        String formatPrice = myFormatter.format(db.dao().getTotalBalance());
+        mTotalMoney.setText(formatPrice + "원");
 
         ANWNList = db.dao().getAnWnWb();
         for (int i = 0; i < ANWNList.size(); i++) {
             if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
                 assetNameList.add(ANWNList.get(i).getAssetName());
-                Log.d("LEEhj", ANWNList.get(i).getAssetName());
             }
         }
 

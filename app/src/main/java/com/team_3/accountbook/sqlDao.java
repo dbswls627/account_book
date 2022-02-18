@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,8 +22,8 @@ public interface sqlDao {
     @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
     void insertSort(String name, String division);
 
-    @Query("INSERT INTO Cost(useDate, FK_wayId, sortName, amount, content, balance, division, ms) VALUES(:date, :FK_wayID, :sortName, :amount, :content, :balance, :division, :ms)")
-    void insertCost(String date, int FK_wayID, String sortName, int amount, String content, int balance, String division, long ms);
+    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms) VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms)")
+    void insertCost(String date, String FK_wayName, String sortName, int amount, String content, int balance, String division, long ms);
 
 
 
@@ -36,9 +37,6 @@ public interface sqlDao {
 
     @Query("DELETE FROM Asset")
     void deleteAssetAll();
-
-    @Query("SELECT wayId FROM Way WHERE wayName = :name ")
-    int getFk(String name);
 
     @Query("SELECT * FROM Asset")
     List<Asset> getAssetAll();
@@ -54,6 +52,9 @@ public interface sqlDao {
 
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getCostAll();
+
+    @Query("SELECT sum(w.wayBalance) FROM Way w")
+    Integer getTotalBalance();
 
     @Query("SELECT * FROM Cost c ORDER BY useDate desc")
     List<Cost> getItemList();
@@ -73,12 +74,15 @@ public interface sqlDao {
     @Query("SELECT ms FROM Cost c")    //모든 ms 값 배열
     List<Long> getMs();
 
+    @Query("SELECT * FROM Cost c WHERE c.FK_wayName = :wayName ORDER BY c.useDate DESC")
+    List<Cost> getCostInWayName(String wayName);
+
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
     List<AssetWithWay> getAssetWithWays();
 
     @Transaction
-    @Query("SELECT * FROM Cost c INNER JOIN Way w ON c.FK_wayId = w.wayId")
+    @Query("SELECT * FROM Cost c INNER JOIN Way w ON c.FK_wayName = w.wayName")
     List<WayWithCost> getWayWithCosts();
 
 }

@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Accountbook">
         <activity
+            android:name=".ListInAssetActivity"
+            android:exported="false" />
+        <activity
             android:name=".ListActivity"
             android:exported="true" />
         <activity
@@ -32,9 +35,9 @@
             android:exported="true"
             android:launchMode="singleTask" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".AddActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".HomeActivity"
             android:exported="true"

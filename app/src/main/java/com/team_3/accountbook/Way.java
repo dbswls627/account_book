@@ -2,6 +2,8 @@ package com.team_3.accountbook;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -14,20 +16,12 @@ import androidx.room.PrimaryKey;
         onDelete = CASCADE,
         onUpdate = CASCADE))
 public class Way {
-    @PrimaryKey(autoGenerate = true) private int wayId;
-    private String wayName;        // 수단명
+    @NonNull
+    @PrimaryKey private String wayName;        // 수단명
     private int wayBalance;        // 잔액
     private int FK_assetId;        // 자산 외래키
 
 
-
-    public int getWayId() {
-        return wayId;
-    }
-
-    public void setWayId(int wayId) {
-        this.wayId = wayId;
-    }
 
     public String getWayName() {
         return wayName;

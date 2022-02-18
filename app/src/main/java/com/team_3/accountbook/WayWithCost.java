@@ -1,7 +1,6 @@
 package com.team_3.accountbook;
 
 public class WayWithCost {
-    private int wayId;
     private String wayName;        // 수단명
     private int wayBalance;        // 잔액
     private int FK_assetId;        // 자산 외래키
@@ -12,15 +11,8 @@ public class WayWithCost {
     private int balance;            // 잔액
     private String sortName;        // 분류명
     private String division;        // 구분
-    private int FK_wayId;           // 수단 외래키
+    private int FK_wayName;           // 수단 외래키
 
-    public int getWayId() {
-        return wayId;
-    }
-
-    public void setWayId(int wayId) {
-        this.wayId = wayId;
-    }
 
     public String getWayName() {
         return wayName;
@@ -102,12 +94,13 @@ public class WayWithCost {
         this.division = division;
     }
 
-    public int getFK_wayId() {
-        return FK_wayId;
+    public int getFK_wayName() {
+        return FK_wayName;
     }
 
-    public void setFK_wayId(int FK_wayId) {
-        this.FK_wayId = FK_wayId;
+    public void setFK_wayName(int FK_wayName) {
+        this.FK_wayName = FK_wayName;
     }
-//private int FK_sortId;          // 분류 외래키
+
+    //private int FK_sortId;          // 분류 외래키
 }

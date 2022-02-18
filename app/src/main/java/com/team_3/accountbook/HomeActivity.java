@@ -180,7 +180,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         int[] wayBalance = {43000, 99600, 3100, 1997500};
         int[] FK_assetId = {1 ,2 ,3, 2};
 
-        String[] sortName = {"식비", "교통/차량", "문화생활", "패션/미용", "생활용품", "건강", "교육", "월급", "용돈", "부수입", "금융소득", "기타"};
+        String[] sortName = {"식비", "교통/차량", "문화생활", "패션/미용", "생활용품", "경조사/회비", "건강", "교육", "월급", "용돈", "부수입", "금융소득", "기타"};
 
 //        int[] amount = {-1000, -500, -500, -2000, 1100};
 //        String[] content = {"버스비", "샤프심", "볼펜", "파리바게트", "차액"};
@@ -199,7 +199,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             db.dao().insertWay(wayName[i], wayBalance[i], FK_assetId[i]);
         }
         for (int i = 0; i < sortName.length; i++) {
-            if(i < 7){ db.dao().insertSort(sortName[i], "expense"); }
+            if(i < 8){ db.dao().insertSort(sortName[i], "expense"); }
             else { db.dao().insertSort(sortName[i], "income"); }
         }
       /*  for (int i = 0; i < amount.length; i++) {

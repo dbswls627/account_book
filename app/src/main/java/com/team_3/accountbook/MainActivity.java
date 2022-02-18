@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){int_amount = -1;}
 
-        return new Cost(0, int_amount, place, date, 0, "", "", 0, 0);
+        return new Cost(0, int_amount, place, date, 0, "", "", "", 0);
         //return new Cost(date, place, int_amount, timestamp, 0);        // item 형태의 객체 return
     }
 

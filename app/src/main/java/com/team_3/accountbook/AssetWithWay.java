@@ -1,20 +1,12 @@
 package com.team_3.accountbook;
 
 public class AssetWithWay {
-    private int wayId;
     private String wayName;        // 수단명
     private int wayBalance;        // 잔액
     private int FK_assetId;        // 자산 외래키
     private int assetId;
     private String assetName;     // 자산명
 
-    public int getWayId() {
-        return wayId;
-    }
-
-    public void setWayId(int wayId) {
-        this.wayId = wayId;
-    }
 
     public String getWayName() {
         return wayName;

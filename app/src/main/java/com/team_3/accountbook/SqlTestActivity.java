@@ -81,7 +81,7 @@ public class SqlTestActivity extends AppCompatActivity {
             case R.id.bt_referWay:
                 List<Way> list_way = db.dao().getWayAll();
                 for (int i = 0; i < list_way.size(); i++) {
-                    Log.d("Way", "ID:" + list_way.get(i).getWayId() + ", name:" + list_way.get(i).getWayName()
+                    Log.d("Way", "name:" + list_way.get(i).getWayName()
                             + ", FK:" + list_way.get(i).getFK_assetId());
                 }
                 break;
@@ -94,8 +94,7 @@ public class SqlTestActivity extends AppCompatActivity {
                             "amount:" + list_cost.get(i).getAmount() + ", " +
                             "content:" + list_cost.get(i).getContent() + ", " +
                             "date:" + list_cost.get(i).getUseDate() + ", " +
-                            "balance:" + list_cost.get(i).getBalance() + ", " +
-                            "FK_wayId:" + list_cost.get(i).getFK_wayId());
+                            "balance:" + list_cost.get(i).getBalance());
                 }
                 break;
 
@@ -116,7 +115,6 @@ public class SqlTestActivity extends AppCompatActivity {
             case R.id.bt_referAssetWithWays:
                 List<AssetWithWay> list_AW = db.dao().getAssetWithWays();
                 list_AW.forEach(it-> Log.d("ways :",
-                        " wayID :"+it.getWayId()+
                                 " wayName :"+it.getWayName()+
                                 " wayBalance :"+it.getWayBalance()+
                                 " FK_assetId :"+it.getFK_assetId()+

@@ -270,9 +270,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                 if(mDate.length() > 0 && mWay.length() > 0 && mSort.length() > 0 && mSum.length() > 0){
                     db.dao().insertCost(
-                            mDate.getText().toString(),                         // 날짜 - 날짜선택박스 구현 필요
-                            db.dao().getFk(mWay.getText().toString()),          // 수단 - 리스트 구현 필요
-                            mSort.getText().toString(),                         // 분류 - 리스트 구현 필요
+                            mDate.getText().toString(),                     // 날짜
+                            mWay.getText().toString(),                      // 수단
+                            mSort.getText().toString(),                     // 분류
                             Integer.parseInt(amount),                       // 금액
                             mBody.getText().toString(),                     // 내용
                             0,                                                  // 잔액 - 계산 구현 필요

@@ -10,8 +10,8 @@ import androidx.room.PrimaryKey;
 @Entity(
         foreignKeys = {
                 @ForeignKey(entity = Way.class,
-                        parentColumns = "wayId",
-                        childColumns = "FK_wayId",
+                        parentColumns = "wayName",
+                        childColumns = "FK_wayName",
                         onUpdate = CASCADE)
         }
 )
@@ -23,10 +23,10 @@ public class Cost {
     private int balance;            // 잔액
     private String sortName;        // 분류명
     private String division;        // 구분
-    private int FK_wayId;           // 수단 외래키
+    private String FK_wayName;      // 수단명(외래키)
     private long ms;
 
-    public Cost(int costId, int amount, String content, String useDate, int balance, String sortName, String division, int FK_wayId, long ms) {
+    public Cost(int costId, int amount, String content, String useDate, int balance, String sortName, String division, String FK_wayName, long ms) {
         this.costId = costId;
         this.amount = amount;
         this.content = content;
@@ -34,7 +34,7 @@ public class Cost {
         this.balance = balance;
         this.sortName = sortName;
         this.division = division;
-        this.FK_wayId = FK_wayId;
+        this.FK_wayName = FK_wayName;
         this.ms = ms;
     }
 
@@ -94,12 +94,12 @@ public class Cost {
         this.division = division;
     }
 
-    public int getFK_wayId() {
-        return FK_wayId;
+    public String getFK_wayName() {
+        return FK_wayName;
     }
 
-    public void setFK_wayId(int FK_wayId) {
-        this.FK_wayId = FK_wayId;
+    public void setFK_wayName(String FK_wayName) {
+        this.FK_wayName = FK_wayName;
     }
 
     public long getMs() { return ms; }

@@ -12,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
+    private DecimalFormat myFormatter = new DecimalFormat("###,###");
     private ArrayList<Cost> arrayList;
     private Context context;
+    private String formatAmount = "";
 
     public adapter(ArrayList<Cost> arrayList) {
         this.arrayList = arrayList;
@@ -36,8 +39,13 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     public adapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         CumstomViewHolder holder = null;
+
         if (context instanceof HomeActivity){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forhome, parent, false);
+            holder = new CumstomViewHolder(view);
+        }
+        else if (context instanceof ListInAssetActivity){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forasset, parent, false);
             holder = new CumstomViewHolder(view);
         }
         else{
@@ -53,16 +61,27 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        if (context instanceof HomeActivity){
+        if (context instanceof HomeActivity){       // HomeActivity 에서의 세팅
             holder.mSortName_dh.setText(arrayList.get(position).getSortName());
             holder.mBody_dh.setText(arrayList.get(position).getContent());
             holder.mTime_dh.setText(arrayList.get(position).getUseDate().substring(14, 19));
-            holder.mAmount_dh.setText(arrayList.get(position).getAmount() + "원");
+            formatAmount = myFormatter.format(arrayList.get(position).getAmount());
+            holder.mAmount_dh.setText(formatAmount + "원");
         }
-        else{
+        else if (context instanceof ListInAssetActivity){   // ListInAssetActivity 에서의 세팅
+            holder.mSortName_da.setText(arrayList.get(position).getSortName());
+            holder.mBody_da.setText(arrayList.get(position).getContent());
+            holder.mTime_da.setText(arrayList.get(position).getUseDate().substring(14, 19));
+            formatAmount = myFormatter.format(arrayList.get(position).getAmount());
+            holder.mAmount_da.setText(formatAmount + "원");
+            formatAmount = myFormatter.format(arrayList.get(position).getBalance());
+            holder.mBalance_da.setText("("+formatAmount+")");
+        }
+        else{       // 그 외 세팅
             holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
             holder.bd.setText(arrayList.get(position).getContent());
-            holder.amt.setText(arrayList.get(position).getAmount() + "원");
+            formatAmount = myFormatter.format(arrayList.get(position).getAmount());
+            holder.amt.setText(formatAmount + "원");
         }
 
         // 리스트 항목 클릭시~
