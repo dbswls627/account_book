@@ -16,12 +16,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="그래프 액티비티"/>
-        <Button
-            android:text="SqlTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sql"/>
-
     </LinearLayout>
 
 
