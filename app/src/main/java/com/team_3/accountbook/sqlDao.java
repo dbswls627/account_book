@@ -7,7 +7,6 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +37,18 @@ public interface sqlDao {
     @Query("UPDATE Way SET wayBalance = wayBalance + :amount  WHERE wayName = :wayName")
     void updateWayBalanceOfIn(String wayName, int amount);
 
-    @Query("UPDATE Way SET wayBalance = :balance  WHERE wayName = :wayName")
-    void updateWayBal(int balance, String wayName);
+
+    // AddActivity 에서 사용
+    @Query("UPDATE Way SET wayBalance = :bal  WHERE wayName = :wayName")
+    void updateWayBal(int bal, String wayName);
+
+    @Query("UPDATE Cost SET balance = balance - :amount  WHERE costId = :costId")
+    void update_NextCostBal_minus(int amount, int costId);
+
+    @Query("UPDATE Cost SET balance = balance + :amount  WHERE costId = :costId")
+    void update_NextCostBal_plus(int amount, int costId);
+
+
 
     @Query("UPDATE Cost " +
             "SET division = :division, useDate = :useDate, FK_wayName = :wayName, sortName = :sortName, amount = :amount, content = :content " +
@@ -88,17 +97,34 @@ public interface sqlDao {
 
 
 
-    @Query("SELECT c.balance FROM Cost c WHERE c.useDate = :useDate")
-    Integer getBalance(String useDate);
+    @Query("SELECT c.balance FROM Cost c WHERE c.costId = :costId")
+    Integer getCostBalance(int costId);
+
+    @Query("SELECT w.wayBalance FROM Way w WHERE w.wayName = :wayName")
+    Integer getWayBalance(String wayName);
 
     @Query("SELECT c.balance FROM Cost c WHERE c.FK_wayName = :wayName AND usedate = :useDate AND c.content = :content ")
     Integer getCostBal(String wayName, String useDate, String content);
 
-    @Query("SELECT * FROM Cost c WHERE c.useDate > :date AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC")
-    List<Cost> getUseDateAfter(String date, String wayName);
 
-    @Query("SELECT * FROM Cost c WHERE c.useDate <= :date AND c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC")
-    List<Cost> getUseDatePre(String date, String wayName);
+
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date < c.useDate AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getCostDataAfter(String date, String wayName);
+
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date > c.useDate AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getCostDataPre(String date, String wayName);
+
+    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content >= c.content AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter(String date, String content, String wayName);
+
+    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content < c.content AND c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getNowPre(String date, String content, String wayName);
+
+
 
     @Query("SELECT * FROM Asset")
     List<Asset> getAssetAll();
@@ -112,7 +138,7 @@ public interface sqlDao {
     @Query("SELECT sortName FROM Sort WHERE sortDivision = :division")
     List<String> getSortNames(String division);
 
-    @Query("SELECT * FROM Cost c ORDER BY useDate desc, c.content ASC")
+    @Query("SELECT * FROM Cost c ORDER BY useDate desc, c.content ASC, c.costId ASC")
     List<Cost> getCostAll();
 
     @Query("SELECT * FROM Cost c WHERE c.costId = :costId")
@@ -130,10 +156,10 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c ORDER BY useDate desc, c.content ASC")
     List<Cost> getItemList();
 
-    @Query("SELECT * FROM Cost c  WHERE substr(useDate,0,14) = :date ORDER BY useDate DESC, c.content ASC")        // 날짜에 맞는 값을 정렬하여 리턴
+    @Query("SELECT * FROM Cost c  WHERE substr(useDate,0,14) = :date ORDER BY useDate DESC, c.content ASC, c.costId ASC")        // 날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getItemList(String date);
 
-    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC, c.content ASC")        // 날짜에 맞는 값을 정렬하여 리턴
+    @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC, c.content ASC, c.costId ASC")        // 날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);
 
     @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    // 날짜에 맞는  amount 값의 합
@@ -145,7 +171,7 @@ public interface sqlDao {
     @Query("SELECT ms FROM Cost c")    //모든 ms 값 배열
     List<Long> getMs();
 
-    @Query("SELECT * FROM Cost c WHERE c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC")
+    @Query("SELECT * FROM Cost c WHERE c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getCostInWayName(String wayName);
 
     @Query("SELECT sum(amount) amount,sortName FROM Cost c WHERE substr(c.useDate,0,10) = :date group by sortName  ")
