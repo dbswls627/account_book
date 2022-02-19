@@ -7,6 +7,8 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.github.mikephil.charting.data.PieEntry;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +147,10 @@ public interface sqlDao {
 
     @Query("SELECT * FROM Cost c WHERE c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC")
     List<Cost> getCostInWayName(String wayName);
+
+    @Query("SELECT sum(amount) amount,sortName FROM Cost c WHERE substr(c.useDate,0,10) = :date group by sortName  ")
+    List<graphDate> getGraphDate(String date);
+
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
