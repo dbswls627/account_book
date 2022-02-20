@@ -18,7 +18,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -54,6 +56,17 @@ public class GraphActivity extends AppCompatActivity {
         preButton = findViewById(R.id.preButton);
         nextButton = findViewById(R.id.nextButton);
 
+        pieChart.setEntryLabelColor(Color.WHITE);   //sortName 색갈
+        pieChart.setRotationEnabled(false);//그래프 돌리면 돌아감 (true 일시)
+        pieChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
+        pieChart.setNoDataText("A");
+        pieChart.setDrawHoleEnabled(false); //가운데 구멍 유무
+        pieChart.setDrawCenterText(false); //가운데 글씨 유무
+        Legend l = pieChart.getLegend();
+        l.setEnabled(false);       //그래프 목록 표시 비활성화
+        //pieChart.setCenterText("TEST");   //가운데 글씨
+        //pieChart.setHoleColor(Color.WHITE);//가운데 구멍 색
+        //pieChart.setExtraOffsets(5, 0, 5, 5);//??
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         monthYearText.setText(monthYearFromDate(selectedDate));
         setChart();
@@ -102,15 +115,18 @@ public class GraphActivity extends AppCompatActivity {
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
         dataSet.setSliceSpace(3f);      //그래프 사이 빈공간
-        dataSet.setSelectionShift(5f);  //??
+        dataSet.setSelectionShift(5);  //그래프 클릭시 해당 파이 커지는 크기 설정
+
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);   //색 조합
         PieData data = new PieData((dataSet));
         data.setValueTextSize(10f);
-        data.setValueTextColor(Color.rgb(0,0,0));//그래프의 글자 색갈
-        pieChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
-        pieChart.setExtraOffsets(5, 10, 5, 5);//??
+        data.setValueTextColor(Color.rgb(0,0,0));//amount 글자 색갈
+
+
         pieChart.setData(data);
         pieChart.invalidate();  //다시그리기
+
+
 
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
