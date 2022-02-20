@@ -48,6 +48,10 @@ public interface sqlDao {
     @Query("UPDATE Cost SET balance = balance + :amount  WHERE costId = :costId")
     void update_NextCostBal_plus(int amount, int costId);
 
+    @Query("UPDATE Cost SET useDate = :useDate, FK_wayName = :wayName, sortName = :sortName, " +
+                            "amount = :amount, balance = :balance, content = :content WHERE costId = :costId")
+    void update_CostData(String useDate, String wayName, String sortName, int amount, int balance, String content, int costId);
+
 
 
     @Query("UPDATE Cost " +
@@ -95,6 +99,9 @@ public interface sqlDao {
     @Query("DELETE FROM Cost")
     void deleteCostAll();
 
+    @Query("DELETE FROM Cost WHERE costId = :costId")
+    void deleteCostData(int costId);
+
 
 
     @Query("SELECT c.balance FROM Cost c WHERE c.costId = :costId")
@@ -123,6 +130,13 @@ public interface sqlDao {
 
     @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content < c.content AND c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getNowPre(String date, String content, String wayName);
+
+
+    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content > c.content AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter2(String date, String content, String wayName);
+
+    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content = c.content AND :costId > c.costId AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter_hard(String date, String content, int costId, String wayName);
 
 
 
