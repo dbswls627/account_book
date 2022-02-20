@@ -441,6 +441,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         }
     }
 
+    
 
     private void updateBalanceOnByNewData(List<Cost> afterData, int preCostId, int afterCostId, int int_amount, String wayName) {
         int A = -1;
