@@ -3,7 +3,7 @@ package com.team_3.accountbook;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -13,17 +13,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -32,13 +32,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphActivity extends AppCompatActivity {
+public class GraphActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     BottomNavigationView bottom_menu;
     Button preButton,nextButton;
-    private TextView monthYearText;
+    private TextView monthYearText,sortName;
     PieChart pieChart;
+    RecyclerView rv;
     AppDatabase db;
     LocalDate selectedDate;
+    List<PieEntry> pieEntries;
+    List<graphDate> graphDateList;
+    Context context;
     @Override
     protected void onStart() {
         super.onStart();
@@ -55,6 +59,10 @@ public class GraphActivity extends AppCompatActivity {
         monthYearText = findViewById(R.id.monthYearTV);
         preButton = findViewById(R.id.preButton);
         nextButton = findViewById(R.id.nextButton);
+        rv = findViewById(R.id.rv);
+        sortName = findViewById(R.id.sortName);
+
+        selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
 
         pieChart.setEntryLabelColor(Color.WHITE);   //sortName 색갈
         pieChart.setRotationEnabled(false);//그래프 돌리면 돌아감 (true 일시)
@@ -67,7 +75,8 @@ public class GraphActivity extends AppCompatActivity {
         //pieChart.setCenterText("TEST");   //가운데 글씨
         //pieChart.setHoleColor(Color.WHITE);//가운데 구멍 색
         //pieChart.setExtraOffsets(5, 0, 5, 5);//??
-        selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
+        pieChart.setOnChartValueSelectedListener(this);
+
         monthYearText.setText(monthYearFromDate(selectedDate));
         setChart();
         bottom_menu = findViewById(R.id.bottom_menu);
@@ -106,16 +115,18 @@ public class GraphActivity extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setChart() {
+        sortName.setText("전체");
         monthYearText.setText(monthYearFromDate(selectedDate));
-        List<PieEntry> pieEntries = new ArrayList<>();
-        List<graphDate> arrayList = db.dao().getGraphDate(monthYearFromDate(selectedDate)); //해당월 데이터 가져옴
-        arrayList.forEach(i->{
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate)));
+        pieEntries = new ArrayList<>();
+        graphDateList = db.dao().getGraphDate(monthYearFromDate(selectedDate)); //해당월 데이터 가져옴
+        graphDateList.forEach(i->{
             pieEntries.add(new PieEntry(i.getAmount(),i.getSortName()));
         });
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setSliceSpace(3f);      //그래프 사이 빈공간
-        dataSet.setSelectionShift(5);  //그래프 클릭시 해당 파이 커지는 크기 설정
+        dataSet.setSliceSpace(5f);      //그래프 사이 빈공간
+        dataSet.setSelectionShift(8);  //그래프 클릭시 해당 파이 커지는 크기 설정
 
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);   //색 조합
         PieData data = new PieData((dataSet));
@@ -133,5 +144,31 @@ public class GraphActivity extends AppCompatActivity {
     private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onValueSelected(Entry e, Highlight h) { // 그래프 클릭
+        sortName.setText(graphDateList.get((int)h.getX()).getSortName());
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),graphDateList.get((int)h.getX()).getSortName()));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onNothingSelected() {   //클릭해서 아무것도 선택 안되어 있는 상태
+        sortName.setText("전체");
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate)));
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void setList(ArrayList<Cost> arrayList){
+        ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
+        for (Cost cost : arrayList) {
+            if(!dateArray.contains(cost.getUseDate().substring(0, 14))) {
+                dateArray.add(cost.getUseDate().substring(0, 14));
+            }
+        }
+        rv.setAdapter(new adapter2(context,arrayList,dateArray));
+        rv.setLayoutManager(new LinearLayoutManager(this));
     }
 }
