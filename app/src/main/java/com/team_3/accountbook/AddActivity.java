@@ -316,87 +316,112 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
             case R.id.tv_save:
                 String amount = mSum.getText().toString();
-                try {                                             // null 값을 받으면 에러가 나서 예외처리 사용.
-                    amount = amount.replaceAll(",", "");          // 금액의 쉼표(,) 제거
-                } catch (Exception e) {
-                }
-
-                // 저장버튼 클릭 순간의 데이터들 ↓
+                try { amount = amount.replaceAll(",", ""); }          // 금액의 쉼표(,) 제거 <- null 값을 받으면 에러가 나서 예외처리 사용.
+                catch (Exception e) { }
                 int int_amount = Integer.parseInt(amount);
-                String changeDate = mDate.getText().toString(), wayName = mWay.getText().toString();
 
                 if (mDate.length() > 0 && mWay.length() > 0 && mSort.length() > 0 && mSum.length() > 0) {
                     if (callValue == 1) {         // 기존 데이터 수정 - ListInAssetActivity 에서 왔을 때
-                        String iniDate = costAll.getUseDate();
-                        int margin = 0;
-                        if(action.equals("income")){ margin = int_amount - costAll.getAmount(); }
-                        else if(action.equals("expense")){ margin = costAll.getAmount() - int_amount; }
+                        // 변경 후&변경 전 데이터들 ↓
+                        String initDivision = costAll.getDivision();
+                        String changeDate = mDate.getText().toString(), initDate = costAll.getUseDate();
+                        String changeWay = mWay.getText().toString(), initWay = costAll.getFK_wayName();
+                        int changeAmount = Integer.parseInt(amount), initAmount = costAll.getAmount();
+                        String changeContent = mBody.getText().toString(), initContent = costAll.getContent();
 
-                        if (iniDate.equals(changeDate) && costAll.getAmount() != int_amount) {    // 값만 변경(기존날짜 == 변경날짜 && 기존금액 != 변경금액)
-                            List<Cost> afterData_detail = db.dao().getNowAfter_hard(iniDate, mBody.getText().toString(), myCostId, wayName);
-                            List<Cost> afterData_today = db.dao().getNowAfter2(iniDate, mBody.getText().toString(), wayName);
-                            List<Cost> afterData = db.dao().getCostDataAfter(iniDate, wayName);
-                            afterData_detail.addAll(afterData_today);
-                            afterData_detail.addAll(afterData);
+                        if(!action.equals(initDivision) || !changeDate.equals(initDate) || !changeWay.equals(initWay) ||
+                                changeAmount != initAmount || !changeContent.equals(initContent)){        // 날짜/자산/금액/내용 중 하나라도 바뀌면 실행
+                            if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) &&
+                                    changeAmount != initAmount && changeContent.equals(initContent)){     // 값만 변경시~
+                                int margin = 0;
+                                if(action.equals("income")){ margin = int_amount - costAll.getAmount(); }
+                                else if(action.equals("expense")){ margin = costAll.getAmount() - int_amount; }
 
-                            db.dao().update_CostData(iniDate, wayName, mSort.getText().toString(),
-                                    int_amount, costAll.getBalance()+margin, mBody.getText().toString(), myCostId);
-                            for (int i = 0; i < afterData_detail.size(); i++) {
-                                if (i < afterData_detail.size() - 1) {
-                                    db.dao().update_NextCostBal_plus(margin, afterData_detail.get(i).getCostId());
+                                List<Cost> afterData_detail = db.dao().getNowAfter_hard(initDate, mBody.getText().toString(), myCostId, changeWay);
+                                List<Cost> afterData_today = db.dao().getNowAfter2_forChange(initDate, mBody.getText().toString(), changeWay, myCostId);
+                                List<Cost> afterData = db.dao().getCostDataAfter_forChange(initDate, changeWay, myCostId);
+                                afterData_detail.addAll(afterData_today);
+                                afterData_detail.addAll(afterData);
+
+                                updateCostData(int_amount, costAll.getBalance()+margin);
+
+                                if(afterData_detail.size() > 0){
+                                    for (int i = 0; i < afterData_detail.size(); i++) {
+                                        if (i < afterData_detail.size() - 1) {
+                                            db.dao().update_NextCostBal_plus(margin, afterData_detail.get(i).getCostId());
+                                        }
+                                        else if (i == afterData_detail.size() - 1) {
+                                            db.dao().update_NextCostBal_plus(margin, afterData_detail.get(i).getCostId());
+                                            int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
+                                            db.dao().updateWayBal(n, changeWay);
+                                        }
+                                    }
                                 }
-                                else if (i == afterData_detail.size() - 1) {
-                                    db.dao().update_NextCostBal_plus(margin, afterData_detail.get(i).getCostId());
-                                    int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
-                                    db.dao().updateWayBal(n, wayName);
+                                else{
+                                    db.dao().updateWayBal2(margin, initWay);
                                 }
+
+                            }
+
+                            else{           // 값만 변경을 제외한 모든 경우
+                                // "변경 전" 날짜 "이후"의 데이터 배열
+                                List<Cost> afterData_detail = db.dao().getNowAfter_hard(initDate, mBody.getText().toString(), myCostId, initWay);
+                                List<Cost> afterData_today = db.dao().getNowAfter2_forChange(initDate, mBody.getText().toString(), initWay, myCostId);
+                                List<Cost> afterData = db.dao().getCostDataAfter_forChange(initDate, initWay, myCostId);
+                                afterData_detail.addAll(afterData_today);
+                                afterData_detail.addAll(afterData);
+
+                                // 변경 전 날짜 이후의 데이터들 잔액 정리
+                                if(afterData_detail.size() > 0){
+                                    if(costAll.getDivision().equals("income")){ initAmount = -initAmount; }
+
+                                    for (int i = 0; i < afterData_detail.size(); i++) {
+                                        if (i < afterData_detail.size() - 1) {
+                                            db.dao().update_NextCostBal_plus(initAmount, afterData_detail.get(i).getCostId());
+                                        }
+                                        else if (i == afterData_detail.size() - 1) {
+                                            db.dao().update_NextCostBal_plus(initAmount, afterData_detail.get(i).getCostId());
+                                            int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
+                                            db.dao().updateWayBal(n, initWay);
+                                        }
+                                    }
+                                }
+                                else {
+                                    if(costAll.getDivision().equals("income")){ initAmount = -initAmount; }
+                                    db.dao().updateWayBal2(initAmount, initWay);
+                                }
+
+                                // "변경 후" 날짜 "이전"의 데이터 배열
+                                List<Cost> preData_detail = db.dao().getNowPre_hard(changeDate, mBody.getText().toString(), myCostId, changeWay);
+                                List<Cost> preData_today = db.dao().getNowPre_forChange(changeDate, mBody.getText().toString(), changeWay, myCostId);
+                                List<Cost> preData = db.dao().getCostDataPre_forChange(changeDate, changeWay, myCostId);
+                                preData_detail.addAll(preData_today);
+                                preData_detail.addAll(preData);
+
+                                afterData_detail.clear();
+                                afterData_today.clear();
+                                afterData.clear();
+                                // "변경 후" 날짜 "이후"의 데이터 배열
+                                afterData_detail = db.dao().getNowAfter_hard(changeDate, mBody.getText().toString(), myCostId, changeWay);
+                                afterData_today = db.dao().getNowAfter2_forChange(changeDate, mBody.getText().toString(), changeWay, myCostId);
+                                afterData = db.dao().getCostDataAfter_forChange(changeDate, changeWay, myCostId);
+                                afterData_detail.addAll(afterData_today);
+                                afterData_detail.addAll(afterData);
+
+                                int preCostId = -100, afterCostId = -100;
+                                try { preCostId = preData_detail.get(0).getCostId(); }
+                                catch (Exception ignored) { }
+                                try { afterCostId = afterData_detail.get(0).getCostId(); }
+                                catch (Exception ignored) { }
+
+                                updateBalanceOnByNewData(afterData_detail, preCostId, afterCostId, changeAmount, changeWay, "change");
                             }
                         }
-                        else if (!iniDate.equals(changeDate)) {    // 날짜 변경(기존날짜 != 변경날짜)
-                            // 최신 데이터(이전 데이터 o, 다음 데이터 x)
-                            // 기존 데이터 사이(이전 데이터 o, 다음 데이터 o)
-                            // 첫 데이터(이전 데이터 x, 다음 데이터 o)
-                        }
-                        else if (!costAll.getFK_wayName().equals(mWay.getText().toString())) {    // 수단 변경(기존수단 != 변경수단)
 
-                        }
-                        else if(!costAll.getDivision().equals(action)){         // 구분(수입/지출) 변경
-
-                        }
-
-
-
-//                        db.dao().updateCostInfo(myCostId, action, mDate.getText().toString(), mWay.getText().toString(),
-//                                mSort.getText().toString(), Integer.parseInt(amount), mBody.getText().toString());
-//                        if(action.equals("expense")){
-//                            if(costAll.getAmount() > Integer.parseInt(amount)){         // 더 작은 값으로 수정시
-//                                int margin = costAll.getAmount() - Integer.parseInt(amount);
-//                                db.dao().updateCostUnderBalanceOfEx(mDate.getText().toString(), mWay.getText().toString(), margin);
-//                                db.dao().updateWayBalanceOfIn(mWay.getText().toString(), margin);
-//                            }
-//                            else if(costAll.getAmount() < Integer.parseInt(amount)){    // 더 큰 값으로 수정시
-//                                int margin = Integer.parseInt(amount) - costAll.getAmount();
-//                                db.dao().updateCostOverBalanceOfEx(mDate.getText().toString(), mWay.getText().toString(), margin);
-//                                db.dao().updateWayBalanceOfEx(mWay.getText().toString(), margin);
-//                            }
-//                        }
-//                        else if(action.equals("income")){
-//                            if(costAll.getAmount() > Integer.parseInt(amount)){         // 더 작은 값으로 수정시
-//                                int margin = costAll.getAmount() - Integer.parseInt(amount);
-//                                db.dao().updateCostUnderBalanceOfIn(mDate.getText().toString(), mWay.getText().toString(), margin);
-//                                db.dao().updateWayBalanceOfEx(mWay.getText().toString(), margin);
-//                            }
-//                            else if(costAll.getAmount() < Integer.parseInt(amount)){    // 더 큰 값으로 수정시
-//                                int margin = Integer.parseInt(amount) - costAll.getAmount();
-//                                db.dao().updateCostOverBalanceOfIn(mDate.getText().toString(), mWay.getText().toString(), margin);
-//                                db.dao().updateWayBalanceOfIn(mWay.getText().toString(), margin);
-//                            }
-//                        }
                         Intent resultIntent = new Intent();
                         setResult(RESULT_OK, resultIntent);
                         finish();
                     }
-
 
                     /*  ※첫 List<Cost> 4줄 설명※
                     현재 날짜의 이후 데이터들을 가져옴 A(afterData_today)
@@ -418,6 +443,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         preData_today.addAll(preData);
                         afterData_today.addAll(afterData);
 
+                        String wayName = mWay.getText().toString();
                         int preCostId = -100, afterCostId = -100;
 
                         try { preCostId = preData_today.get(0).getCostId(); }
@@ -425,7 +451,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         try { afterCostId = afterData_today.get(0).getCostId(); }
                         catch (Exception ignored) { }
 
-                        updateBalanceOnByNewData(afterData_today, preCostId, afterCostId, int_amount, wayName);
+                        updateBalanceOnByNewData(afterData_today, preCostId, afterCostId, int_amount, wayName, "new");
 
                         Intent intent = new Intent(this, ListActivity.class);
                         startActivity(intent);
@@ -443,23 +469,26 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     
 
-    private void updateBalanceOnByNewData(List<Cost> afterData, int preCostId, int afterCostId, int int_amount, String wayName) {
-        int A = -1;
+    private void updateBalanceOnByNewData(List<Cost> afterData, int preCostId, int afterCostId, int int_amount, String wayName, String flag) {
+        int myBalance = -1;
 
         if (preCostId != -100 && afterCostId == -100) {   // 최신 데이터(이전 데이터 o, 다음 데이터 x)
             Log.d("LEEhj_add", "here1_최신 데이터(이전 데이터 o, 다음 데이터 x)");
-            if (action.equals("income")) { A = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
-            else if (action.equals("expense")) { A = db.dao().getCostBalance(preCostId) - int_amount; }
+            if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
+            else if (action.equals("expense")) { myBalance = db.dao().getCostBalance(preCostId) - int_amount; }
 
-            insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, A);
-            db.dao().updateWayBal(A, wayName);
+            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
+
+            db.dao().updateWayBal(myBalance, wayName);
         }
         else if (preCostId != -100) {       // 기존 데이터 사이(이전 데이터 o, 다음 데이터 o)
             Log.d("LEEhj_add", "here2_기존 데이터 사이(이전 데이터 o, 다음 데이터 o)");
-            if (action.equals("income")) { A = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
-            else if (action.equals("expense")) { A = db.dao().getCostBalance(preCostId) - int_amount; }
+            if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
+            else if (action.equals("expense")) { myBalance = db.dao().getCostBalance(preCostId) - int_amount; }
 
-            insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, A);
+            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             for (int i = 0; i < afterData.size(); i++) {
                 if (action.equals("income")) {
@@ -487,18 +516,20 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         else if (afterCostId != -100) {       // 첫 데이터(이전 데이터 x, 다음 데이터 o)
             Log.d("LEEhj_add", "here3_첫 데이터(이전 데이터 x, 다음 데이터 o)");
             if (action.equals("income")) {
-                if (mWay.getText().toString().equals("지갑")) { A = begin1 + int_amount; }
-                else if (mWay.getText().toString().equals("나라사랑")) { A = begin2 + int_amount; }
-                else if (mWay.getText().toString().equals("경기지역화폐")) { A = begin3 + int_amount; }
-                else if (mWay.getText().toString().equals("노리(nori)")) { A = begin4 + int_amount; }
+                if (mWay.getText().toString().equals("지갑")) { myBalance = begin1 + int_amount; }
+                else if (mWay.getText().toString().equals("나라사랑")) { myBalance = begin2 + int_amount; }
+                else if (mWay.getText().toString().equals("경기지역화폐")) { myBalance = begin3 + int_amount; }
+                else if (mWay.getText().toString().equals("노리(nori)")) { myBalance = begin4 + int_amount; }
             }
             else if (action.equals("expense")) {
-                if (mWay.getText().toString().equals("지갑")) { A = begin1 - int_amount; }
-                else if (mWay.getText().toString().equals("나라사랑")) { A = begin2 - int_amount; }
-                else if (mWay.getText().toString().equals("경기지역화폐")) { A = begin3 - int_amount; }
-                else if (mWay.getText().toString().equals("노리(nori)")) { A = begin4 - int_amount; }
+                if (mWay.getText().toString().equals("지갑")) { myBalance = begin1 - int_amount; }
+                else if (mWay.getText().toString().equals("나라사랑")) { myBalance = begin2 - int_amount; }
+                else if (mWay.getText().toString().equals("경기지역화폐")) { myBalance = begin3 - int_amount; }
+                else if (mWay.getText().toString().equals("노리(nori)")) { myBalance = begin4 - int_amount; }
             }
-            insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, A);
+
+            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             for (int i = 0; i < afterData.size(); i++) {
                 if (action.equals("income")) {
@@ -525,25 +556,42 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         }
         else {      // 초기 데이터(이전 데이터 x, 다음 데이터 x)
             Log.d("LEEhj_add", "here4_초기 데이터(이전 데이터 x, 다음 데이터 x)");
-            if (action.equals("income")) { A = db.dao().getWayBalance(wayName) + int_amount; }
-            else if (action.equals("expense")) { A = db.dao().getWayBalance(wayName) - int_amount; }
+            if (action.equals("income")) { myBalance = db.dao().getWayBalance(wayName) + int_amount; }
+            else if (action.equals("expense")) { myBalance = db.dao().getWayBalance(wayName) - int_amount; }
 
-            insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, A);
-            db.dao().updateWayBal(A, wayName);
+            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
+
+            db.dao().updateWayBal(myBalance, wayName);
         }
     }
 
 
     private void insertDataToCostTable(String date, String wayName, int amount, int balance) {
         db.dao().insertCost(
-                date,                     // 날짜
-                wayName,                                        // 수단
-                mSort.getText().toString(),                     // 분류
-                amount,                                     // 금액
-                mBody.getText().toString(),                     // 내용
-                balance,                                        // 잔액
-                action,                                         // 구분
-                ms                                              // 수신시간(마이크로초)
+                date,                                   // 날짜
+                wayName,                                // 수단
+                mSort.getText().toString(),             // 분류
+                amount,                                 // 금액
+                mBody.getText().toString(),             // 내용
+                balance,                                // 잔액
+                action,                                 // 구분
+                ms                                      // 수신시간(마이크로초)
+        );
+    }
+
+
+    private void updateCostData(int amount, int balance){
+        db.dao().update_CostData(
+                mDate.getText().toString(),         // 날짜
+                mWay.getText().toString(),          // 수단명
+                mSort.getText().toString(),         // 분류명
+                amount,                             // 금액
+                balance,                            // 잔액
+                mBody.getText().toString(),         // 내용
+                action,                             // 구분(수입/지출)
+                costAll.getMs(),                    // ms
+                myCostId                            // 업데이트 행의 costId
         );
     }
 

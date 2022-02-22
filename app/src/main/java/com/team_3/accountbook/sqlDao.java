@@ -42,6 +42,9 @@ public interface sqlDao {
     @Query("UPDATE Way SET wayBalance = :bal  WHERE wayName = :wayName")
     void updateWayBal(int bal, String wayName);
 
+    @Query("UPDATE Way SET wayBalance = wayBalance + :amount  WHERE wayName = :wayName")
+    void updateWayBal2(int amount, String wayName);
+
     @Query("UPDATE Cost SET balance = balance - :amount  WHERE costId = :costId")
     void update_NextCostBal_minus(int amount, int costId);
 
@@ -49,8 +52,8 @@ public interface sqlDao {
     void update_NextCostBal_plus(int amount, int costId);
 
     @Query("UPDATE Cost SET useDate = :useDate, FK_wayName = :wayName, sortName = :sortName, " +
-                            "amount = :amount, balance = :balance, content = :content WHERE costId = :costId")
-    void update_CostData(String useDate, String wayName, String sortName, int amount, int balance, String content, int costId);
+                            "amount = :amount, balance = :balance, content = :content, division = :division, ms = :ms WHERE costId = :costId")
+    void update_CostData(String useDate, String wayName, String sortName, int amount, int balance, String content, String division, long ms, int costId);
 
 
 
@@ -115,28 +118,71 @@ public interface sqlDao {
 
 
 
+    // 내 이후 날짜(내 날짜 제외)의 데이터들 가져오기
     @Query("SELECT * FROM Cost c " +
             "WHERE :date < c.useDate AND c.FK_wayName = :wayName " +
             "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
     List<Cost> getCostDataAfter(String date, String wayName);
 
+    // 같은 날짜의 내 이후(내 내용 포함) 데이터들 가져오기
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content >= c.content AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter(String date, String content, String wayName);
+
+    // 같은 날짜의 내 이후(내 내용 제외) 데이터들 가져오기
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content > c.content AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter2(String date, String content, String wayName);
+
+    // 같은 날짜, 같은 내용의 내 이후 데이터들 가져오기
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content = c.content AND :costId > c.costId AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter_hard(String date, String content, int costId, String wayName);
+
+
+    // 내 이전 날짜(내 날짜 제외)의 데이터들 가져오기
     @Query("SELECT * FROM Cost c " +
             "WHERE :date > c.useDate AND c.FK_wayName = :wayName " +
             "ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getCostDataPre(String date, String wayName);
 
-    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content >= c.content AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
-    List<Cost> getNowAfter(String date, String content, String wayName);
-
-    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content < c.content AND c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
+    // 같은 날짜의 내 이전(내 내용 제외) 데이터들 가져오기
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content < c.content AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getNowPre(String date, String content, String wayName);
 
+    // 같은 날짜, 같은 내용의 내 이전(내 내용 포함) 데이터들 가져오기
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content = c.content AND :costId < c.costId AND c.FK_wayName = :wayName " +
+            "ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getNowPre_hard(String date, String content, int costId, String wayName);
 
-    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content > c.content AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
-    List<Cost> getNowAfter2(String date, String content, String wayName);
 
-    @Query("SELECT * FROM Cost c WHERE :date = c.useDate AND :content = c.content AND :costId > c.costId AND c.FK_wayName = :wayName ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
-    List<Cost> getNowAfter_hard(String date, String content, int costId, String wayName);
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date < c.useDate AND c.FK_wayName = :wayName AND c.costId <> :costId " +
+            "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getCostDataAfter_forChange(String date, String wayName, int costId);
+
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content > c.content AND c.FK_wayName = :wayName AND c.costId <> :costId " +
+            "ORDER BY c.useDate ASC, c.content DESC, c.costId DESC")
+    List<Cost> getNowAfter2_forChange(String date, String content, String wayName, int costId);
+
+
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date > c.useDate AND c.FK_wayName = :wayName AND c.costId <> :costId " +
+            "ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getCostDataPre_forChange(String date, String wayName, int costId);
+
+    @Query("SELECT * FROM Cost c " +
+            "WHERE :date = c.useDate AND :content < c.content AND c.FK_wayName = :wayName AND c.costId <> :costId " +
+            "ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getNowPre_forChange(String date, String content, String wayName, int costId);
+
 
 
 
