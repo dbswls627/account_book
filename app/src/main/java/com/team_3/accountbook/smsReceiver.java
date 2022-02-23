@@ -2,20 +2,22 @@ package com.team_3.accountbook;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +26,7 @@ public class smsReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "1";           // Channel 에 대한 id 생성: Channel 을 구부하기 위한 ID.
     private NotificationManager mNotificationManager;       // Channel 을 생성 및 전달해 줄 수 있는 Manager
     private static final int NOTIFICATION_ID = 0;           // Notification 에 대한 ID
-    NotificationCompat.Builder notifyBuilder;               // Notification Builder: Notification 을 생성
+    private NotificationCompat.Builder notifyBuilder;               // Notification Builder: Notification 을 생성
 
     private String useDate, useHour, useAmount;
     private Pattern p;
@@ -97,7 +99,7 @@ public class smsReceiver extends BroadcastReceiver {
 
         if (useDate != null && useHour != null && useAmount != null) {      // 결제문자의 형식이 갖춰졌을 때~
             mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 //Channel 정의 생성자( construct 이용 )
                 NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Test Notification", mNotificationManager.IMPORTANCE_HIGH);
                 //Channel 에 대한 기본 설정
@@ -113,9 +115,20 @@ public class smsReceiver extends BroadcastReceiver {
                 notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setContentTitle("새로운 결제 알림")                   // 알림 제목
                         .setContentText("결제 정보를 등록하세요.")              // 알림 내용
+                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                         .setSmallIcon(R.drawable.ic_launcher_foreground)    // 알림 아이콘
                         .setContentIntent(notiPendingIntent)                // 알림 클릭시 실행할 액티비티 인텐트
                         .setAutoCancel(true);                               // notification 을 탭 했을경우 notification 을 없앤다.
+//                RemoteViews notificationLayout = new RemoteViews("com.team_3.accountbook", R.layout.notification_small);
+//                @SuppressLint("RemoteViewLayout") RemoteViews notificationLayoutExpanded = new RemoteViews("com.team_3.accountbook", R.layout.notification_large);
+//                Notification notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.ic_launcher_foreground)    // 알림 아이콘
+//                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+//                        .setCustomContentView(notificationLayout)
+//                        .setCustomBigContentView(notificationLayoutExpanded)
+//                        .setContentIntent(notiPendingIntent)                // 알림 클릭시 실행할 액티비티 인텐트
+//                        .setAutoCancel(true)                                // notification 을 탭 했을경우 notification 을 없앤다.
+//                        .build();
 
                 mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());        // 최종적으로 알림 띄우기
             }
