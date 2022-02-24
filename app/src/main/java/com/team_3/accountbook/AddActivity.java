@@ -266,9 +266,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mIncome.setSelected(true);
             mExpense.setSelected(false);
             mSave.setSelected(false);
-            mIncome.setTextColor(R.color.green);      // 초록색
-            mExpense.setTextColor(R.color.grayForText);     // 진회색
-            mSave.setTextColor(R.color.green);        // 초록색
+            mIncome.setTextColor(getResources().getColor(R.color.green));           // 초록색
+            mExpense.setTextColor(getResources().getColor(R.color.grayForText));    // 진회색
+            mSave.setTextColor(getResources().getColor(R.color.green));             // 초록색
             mSort.setText("");
         }
         else if (division.equals("expense")) {
@@ -281,9 +281,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mIncome.setSelected(false);
             mExpense.setSelected(true);
             mSave.setSelected(true);
-            mIncome.setTextColor(R.color.grayForText);      // 진회색
-            mExpense.setTextColor(R.color.red);     // 빨간색
-            mSave.setTextColor(R.color.red);        // 빨간색
+            mIncome.setTextColor(getResources().getColor(R.color.grayForText));     // 진회색
+            mExpense.setTextColor(getResources().getColor(R.color.red));            // 빨간색
+            mSave.setTextColor(getResources().getColor(R.color.red));               // 빨간색
             mSort.setText("");
         }
         setWayAndSortRV(focus);
