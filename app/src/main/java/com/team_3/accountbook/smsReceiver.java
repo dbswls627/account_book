@@ -16,6 +16,7 @@ import android.telephony.SmsMessage;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+
 import androidx.core.app.NotificationCompat;
 
 import java.util.Date;
@@ -110,7 +111,7 @@ public class smsReceiver extends BroadcastReceiver {
                 mNotificationManager.createNotificationChannel(notificationChannel);
 
                 Intent notiIntent = new Intent(context, MainActivity.class);    // 알림 클릭시 MainActivity 로 이동하게 설정
-                PendingIntent notiPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, notiIntent, 0);   // Notification 에선 PendingIntent 라는걸 써야한다고 함
+                PendingIntent notiPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, notiIntent, PendingIntent.FLAG_IMMUTABLE);   // Notification 에선 PendingIntent 라는걸 써야한다고 함
 
                 notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setContentTitle("새로운 결제 알림")                   // 알림 제목
