@@ -45,11 +45,8 @@ public interface sqlDao {
     @Query("UPDATE Way SET wayBalance = wayBalance + :amount  WHERE wayName = :wayName")
     void updateWayBal2(int amount, String wayName);
 
-    @Query("UPDATE Cost SET balance = balance - :amount  WHERE costId = :costId")
-    void update_NextCostBal_minus(int amount, int costId);
-
     @Query("UPDATE Cost SET balance = balance + :amount  WHERE costId = :costId")
-    void update_NextCostBal_plus(int amount, int costId);
+    void update_NextCostBal(int amount, int costId);
 
     @Query("UPDATE Cost SET useDate = :useDate, FK_wayName = :wayName, sortName = :sortName, " +
                             "amount = :amount, balance = :balance, content = :content, division = :division, ms = :ms WHERE costId = :costId")
@@ -109,6 +106,12 @@ public interface sqlDao {
 
     @Query("SELECT c.balance FROM Cost c WHERE c.costId = :costId")
     Integer getCostBalance(int costId);
+
+    @Query("SELECT c.amount FROM Cost c WHERE c.costId = :costId")
+    Integer getCostAmount(int costId);
+
+    @Query("SELECT c.division FROM Cost c WHERE c.costId = :costId")
+    String getCostDivision(int costId);
 
     @Query("SELECT w.wayBalance FROM Way w WHERE w.wayName = :wayName")
     Integer getWayBalance(String wayName);

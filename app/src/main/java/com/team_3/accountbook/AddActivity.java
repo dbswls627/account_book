@@ -44,8 +44,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     private int callValue = -1, myCostId = -1;
     Cost costAll;
 
-    int begin1, begin2, begin3, begin4;
-
     InputMethodManager imm;
     Calendar c;
     int year, month, day, hour, minute;
@@ -130,12 +128,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSum.setText(costAll.getAmount() + "");
             mBody.setText(costAll.getContent());
         }
-
-        begin1 = HomeActivity.wayBalance[0];
-        begin2 = HomeActivity.wayBalance[1];
-        begin3 = HomeActivity.wayBalance[2];
-        begin4 = HomeActivity.wayBalance[3];
-
 
         if(callValue != 1){
             mExpense.setSelected(true);
@@ -317,7 +309,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             case R.id.tv_save:
                 String amount = mSum.getText().toString();
                 try { amount = amount.replaceAll(",", ""); }          // 금액의 쉼표(,) 제거 <- null 값을 받으면 에러가 나서 예외처리 사용.
-                catch (Exception e) { }
+                catch (Exception ignored) { }
                 int int_amount = Integer.parseInt(amount);
 
                 if (mDate.length() > 0 && mWay.length() > 0 && mSort.length() > 0 && mSum.length() > 0) {
@@ -348,10 +340,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                                 if(afterData_detail.size() > 0){
                                     for (int i = 0; i < afterData_detail.size(); i++) {
                                         if (i < afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal_plus(margin, afterData_detail.get(i).getCostId());
+                                            db.dao().update_NextCostBal(margin, afterData_detail.get(i).getCostId());
                                         }
                                         else if (i == afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal_plus(margin, afterData_detail.get(i).getCostId());
+                                            db.dao().update_NextCostBal(margin, afterData_detail.get(i).getCostId());
                                             int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
                                             db.dao().updateWayBal(n, changeWay);
                                         }
@@ -377,10 +369,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                                     for (int i = 0; i < afterData_detail.size(); i++) {
                                         if (i < afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal_plus(initAmount, afterData_detail.get(i).getCostId());
+                                            db.dao().update_NextCostBal(initAmount, afterData_detail.get(i).getCostId());
                                         }
                                         else if (i == afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal_plus(initAmount, afterData_detail.get(i).getCostId());
+                                            db.dao().update_NextCostBal(initAmount, afterData_detail.get(i).getCostId());
                                             int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
                                             db.dao().updateWayBal(n, initWay);
                                         }
@@ -482,6 +474,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
             db.dao().updateWayBal(myBalance, wayName);
         }
+
         else if (preCostId != -100) {       // 기존 데이터 사이(이전 데이터 o, 다음 데이터 o)
             Log.d("LEEhj_add", "here2_기존 데이터 사이(이전 데이터 o, 다음 데이터 o)");
             if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
@@ -490,70 +483,47 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
+            if(action.equals("expense")) { int_amount = -int_amount; }      // 지출이면 이후 잔액들에 금액만큼 (-)를 해야함.
             for (int i = 0; i < afterData.size(); i++) {
-                if (action.equals("income")) {
-                    if (i < afterData.size() - 1) {
-                        db.dao().update_NextCostBal_plus(int_amount, afterData.get(i).getCostId());
-                    }
-                    else if (i == afterData.size() - 1) {
-                        db.dao().update_NextCostBal_plus(int_amount, afterData.get(i).getCostId());
-                        int n = db.dao().getCostBalance(afterData.get(i).getCostId());
-                        db.dao().updateWayBal(n, wayName);
-                    }
+                if (i < afterData.size() - 1) {
+                    db.dao().update_NextCostBal(int_amount, afterData.get(i).getCostId());
                 }
-                else if (action.equals("expense")) {
-                    if (i < afterData.size() - 1) {
-                        db.dao().update_NextCostBal_minus(int_amount, afterData.get(i).getCostId());
-                    }
-                    else if (i == afterData.size() - 1) {
-                        db.dao().update_NextCostBal_minus(int_amount, afterData.get(i).getCostId());
-                        int n = db.dao().getCostBalance(afterData.get(i).getCostId());
-                        db.dao().updateWayBal(n, wayName);
-                    }
+                else if (i == afterData.size() - 1) {
+                    db.dao().update_NextCostBal(int_amount, afterData.get(i).getCostId());
+                    int n = db.dao().getCostBalance(afterData.get(i).getCostId());
+                    db.dao().updateWayBal(n, wayName);
                 }
             }
         }
+
         else if (afterCostId != -100) {       // 첫 데이터(이전 데이터 x, 다음 데이터 o)
             Log.d("LEEhj_add", "here3_첫 데이터(이전 데이터 x, 다음 데이터 o)");
-            if (action.equals("income")) {
-                if (mWay.getText().toString().equals("지갑")) { myBalance = begin1 + int_amount; }
-                else if (mWay.getText().toString().equals("나라사랑")) { myBalance = begin2 + int_amount; }
-                else if (mWay.getText().toString().equals("경기지역화폐")) { myBalance = begin3 + int_amount; }
-                else if (mWay.getText().toString().equals("노리(nori)")) { myBalance = begin4 + int_amount; }
-            }
-            else if (action.equals("expense")) {
-                if (mWay.getText().toString().equals("지갑")) { myBalance = begin1 - int_amount; }
-                else if (mWay.getText().toString().equals("나라사랑")) { myBalance = begin2 - int_amount; }
-                else if (mWay.getText().toString().equals("경기지역화폐")) { myBalance = begin3 - int_amount; }
-                else if (mWay.getText().toString().equals("노리(nori)")) { myBalance = begin4 - int_amount; }
-            }
+            myBalance = db.dao().getCostBalance(afterCostId);       // 바로 앞 데이터의 잔액
+            int amt = db.dao().getCostAmount(afterCostId);          // 바로 앞 데이터의 금액
+            String dvs = db.dao().getCostDivision(afterCostId);     // 바로 앞 데이터의 구분
+
+            if(dvs.equals("income")) { amt = -amt; }
+            myBalance += amt;
+
+            if (action.equals("income")) { myBalance += int_amount; }       // 현재 나의 잔액 구하는 부분
+            else if (action.equals("expense")) { myBalance -= int_amount; }
 
             if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
+            if(action.equals("expense")) { int_amount = -int_amount; }      // 지출이면 이후 잔액들에 금액만큼 (-)를 해야함.
             for (int i = 0; i < afterData.size(); i++) {
-                if (action.equals("income")) {
-                    if (i < afterData.size() - 1) {
-                        db.dao().update_NextCostBal_plus(int_amount, afterData.get(i).getCostId());
-                    }
-                    else if (i == afterData.size() - 1) {
-                        db.dao().update_NextCostBal_plus(int_amount, afterData.get(i).getCostId());
-                        int n = db.dao().getCostBalance(afterData.get(i).getCostId());
-                        db.dao().updateWayBal(n, wayName);
-                    }
+                if (i < afterData.size() - 1) {
+                    db.dao().update_NextCostBal(int_amount, afterData.get(i).getCostId());
                 }
-                else if (action.equals("expense")) {
-                    if (i < afterData.size() - 1) {
-                        db.dao().update_NextCostBal_minus(int_amount, afterData.get(i).getCostId());
-                    }
-                    else if (i == afterData.size() - 1) {
-                        db.dao().update_NextCostBal_minus(int_amount, afterData.get(i).getCostId());
-                        int n = db.dao().getCostBalance(afterData.get(i).getCostId());
-                        db.dao().updateWayBal(n, wayName);
-                    }
+                else if (i == afterData.size() - 1) {
+                    db.dao().update_NextCostBal(int_amount, afterData.get(i).getCostId());
+                    int n = db.dao().getCostBalance(afterData.get(i).getCostId());
+                    db.dao().updateWayBal(n, wayName);
                 }
             }
         }
+
         else {      // 초기 데이터(이전 데이터 x, 다음 데이터 x)
             Log.d("LEEhj_add", "here4_초기 데이터(이전 데이터 x, 다음 데이터 x)");
             if (action.equals("income")) { myBalance = db.dao().getWayBalance(wayName) + int_amount; }

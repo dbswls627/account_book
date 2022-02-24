@@ -28,7 +28,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private TextView monthYearText, date;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout;
-    static int[] wayBalance = {43000, 99600, 3100, 1997500};
     AppDatabase db;
 
     BottomNavigationView bottom_menu;
@@ -178,6 +177,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         String[] assetName = {"현금", "은행", "선불식카드"};
 
         String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)"};
+        int[] wayBalance = {43000, 99600, 3100, 1997500};
         int[] FK_assetId = {1 ,2 ,3, 2};
 
         String[] sortName = {"식비", "교통/차량", "문화생활", "패션/미용", "생활용품", "경조사/회비", "건강", "교육", "월급", "용돈", "부수입", "금융소득", "기타"};
