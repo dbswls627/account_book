@@ -79,6 +79,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mTime_dh.setText(arrayList.get(position).getUseDate().substring(14, 19));
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.mAmount_dh.setText(formatAmount + "원");
+            holder.mWayName_dh.setText(arrayList.get(position).getFK_wayName());
 
             if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.green)); }
             else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.red)); }
@@ -130,7 +131,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         TextView bd;        // 내용
         TextView amt;       // 금액
 
-        TextView mSortName_dh, mBody_dh, mTime_dh, mAmount_dh;
+        TextView mSortName_dh, mBody_dh, mTime_dh, mAmount_dh, mWayName_dh;
         TextView mSortName_da, mBody_da, mTime_da, mAmount_da, mBalance_da;
 
         public CumstomViewHolder(@NonNull View itemView) {
@@ -143,6 +144,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             mBody_dh = itemView.findViewById(R.id.detailHome_body);
             mTime_dh = itemView.findViewById(R.id.detailHome_time);
             mAmount_dh = itemView.findViewById(R.id.detailHome_amount);
+            mWayName_dh = itemView.findViewById(R.id.detailHome_wayName);
 
             mSortName_da = itemView.findViewById(R.id.detailAsset_sortName);
             mBody_da = itemView.findViewById(R.id.detailAsset_body);

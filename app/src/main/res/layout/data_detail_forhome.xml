@@ -57,18 +57,19 @@
                 android:id="@+id/detailHome_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
                 android:gravity="right"
                 android:text="금액"
                 android:textSize="16sp" />
             <TextView
-                android:id="@+id/detailHome_amount2"
+                android:id="@+id/detailHome_wayName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="40dp"
                 android:gravity="right"
-                android:text="금액"
-                android:textSize="16sp" />
+                android:text="수단명"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
