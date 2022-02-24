@@ -69,7 +69,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
         if (context instanceof HomeActivity){       // HomeActivity 에서의 세팅
@@ -79,8 +79,8 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.mAmount_dh.setText(formatAmount + "원");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(Color.parseColor("#1D9111")); }
-            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(Color.parseColor("#FF5252")); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(R.color.green); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(R.color.red); }
         }
         else if (context instanceof ListInAssetActivity){   // ListInAssetActivity 에서의 세팅
             holder.mSortName_da.setText(arrayList.get(position).getSortName());
@@ -91,8 +91,8 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getBalance());
             holder.mBalance_da.setText("("+formatAmount+")");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(Color.parseColor("#1D9111")); }
-            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(Color.parseColor("#FF5252")); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(R.color.green); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(R.color.red); }
 
             holder.itemView.setOnClickListener((View -> {
                 Cost cost = arrayList.get(position);
@@ -105,8 +105,8 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.amt.setText(formatAmount + "원");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(Color.parseColor("#1D9111")); }
-            else if(arrayList.get(position).getDivision().equals("expense")){ holder.amt.setTextColor(Color.parseColor("#FF5252")); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(R.color.green); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.amt.setTextColor(R.color.red); }
         }
 
         // 리스트 항목 클릭시~
