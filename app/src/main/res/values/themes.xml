@@ -19,7 +19,7 @@
         <item name="colorControlNormal">@color/gray</item>
     </style>
     <style name="editText_income" parent="@style/Theme.Accountbook">
-        <item name="colorControlActivated">#5DDE62</item>
+        <item name="colorControlActivated">#1D9111</item>
         <item name="colorControlNormal">@color/gray</item>
     </style>
 </resources>
