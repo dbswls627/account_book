@@ -265,9 +265,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mIncome.setSelected(true);
             mExpense.setSelected(false);
             mSave.setSelected(false);
-            mIncome.setTextColor(Color.parseColor("#5DDE62"));      // 초록색
+            mIncome.setTextColor(Color.parseColor("#1D9111"));      // 초록색
             mExpense.setTextColor(Color.parseColor("#757575"));     // 진회색
-            mSave.setTextColor(Color.parseColor("#5DDE62"));        // 초록색
+            mSave.setTextColor(Color.parseColor("#1D9111"));        // 초록색
             mSort.setText("");
         }
         else if (division.equals("expense")) {

@@ -17,7 +17,7 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:id="@+id/expense"
-        android:textColor="#FF0000"
+        android:textColor="#FF5252"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -25,7 +25,7 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:id="@+id/income"
-        android:textColor="#0000FF"
+        android:textColor="#1D9111"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

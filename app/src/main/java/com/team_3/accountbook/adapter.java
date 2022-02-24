@@ -4,6 +4,7 @@ package com.team_3.accountbook;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,9 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mTime_dh.setText(arrayList.get(position).getUseDate().substring(14, 19));
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.mAmount_dh.setText(formatAmount + "원");
+
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(Color.parseColor("#1D9111")); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(Color.parseColor("#FF5252")); }
         }
         else if (context instanceof ListInAssetActivity){   // ListInAssetActivity 에서의 세팅
             holder.mSortName_da.setText(arrayList.get(position).getSortName());
@@ -87,12 +91,12 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getBalance());
             holder.mBalance_da.setText("("+formatAmount+")");
 
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(Color.parseColor("#1D9111")); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(Color.parseColor("#FF5252")); }
+
             holder.itemView.setOnClickListener((View -> {
                 Cost cost = arrayList.get(position);
                 mOnItemClick.onClick(cost);
-//                Intent intent = new Intent(context, AddActivity.class);
-//                intent.putExtra("costId", arrayList.get(position).getCostId());
-//                context.startActivity(intent);
             }));
         }
         else{       // 그 외 세팅
@@ -100,6 +104,9 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.bd.setText(arrayList.get(position).getContent());
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.amt.setText(formatAmount + "원");
+
+            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(Color.parseColor("#1D9111")); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.amt.setTextColor(Color.parseColor("#FF5252")); }
         }
 
         // 리스트 항목 클릭시~
