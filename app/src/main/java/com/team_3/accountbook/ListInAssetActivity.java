@@ -39,6 +39,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
     private void setList(){
         costList = db.dao().getCostInWayName(wayName);
+        dateList.clear();
         for (int i = 0; i < costList.size(); i++) {
             if(!dateList.contains(costList.get(i).getUseDate().substring(0, 14))){
                 dateList.add(costList.get(i).getUseDate().substring(0, 14));
@@ -52,7 +53,6 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
 
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -73,4 +73,14 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         intent.putExtra("flag", 1);
         startActivityForResult(intent, 0);
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
+    }
 }
+
+

@@ -1,15 +1,18 @@
 package com.team_3.accountbook;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,7 +20,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssetsActivity extends AppCompatActivity {
+@SuppressWarnings("deprecation")
+public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.OnItemClickInAssetAc{
     private List<AssetNameWayNameAndBalance> ANWNList;
     private ArrayList<String> assetNameList = new ArrayList<>();
     private DecimalFormat myFormatter = new DecimalFormat("###,###");
@@ -33,6 +37,7 @@ public class AssetsActivity extends AppCompatActivity {
         bottom_menu.setSelectedItemId(R.id.assets);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +71,12 @@ public class AssetsActivity extends AppCompatActivity {
         mAssetAndWay = findViewById(R.id.rv_AssetAndWay);
         db = AppDatabase.getInstance(this);
 
+        buildActivityScreen();
+    }
+
+
+
+    private void buildActivityScreen(){
         String formatPrice = myFormatter.format(db.dao().getTotalBalance());
         mTotalMoney.setText(formatPrice + "원");
 
@@ -82,4 +93,27 @@ public class AssetsActivity extends AppCompatActivity {
 
 
 
+    @Override
+    public void listItemClick(String wayName) {
+        Intent intent = new Intent(this, ListInAssetActivity.class);
+        intent.putExtra("wayName", wayName);
+        Toast.makeText(this, wayName+"(으)로 이동", Toast.LENGTH_SHORT).show();   // 테스트용
+
+        startActivityForResult(intent, 10);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 10){
+            if(resultCode == RESULT_OK){
+                ANWNList.clear();
+                assetNameList.clear();
+
+                buildActivityScreen();
+            }
+        }
+    }
 }

@@ -411,8 +411,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                             }
                         }
 
-                        Intent resultIntent = new Intent();
-                        setResult(RESULT_OK, resultIntent);
+                        setResult(RESULT_OK);
                         finish();
                     }
 
@@ -446,8 +445,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                         updateBalanceOnByNewData(afterData_today, preCostId, afterCostId, int_amount, wayName, "new");
 
-                        Intent intent = new Intent(this, ListActivity.class);
-                        startActivity(intent);
+                        finish();
                     }
                 }
                 else {

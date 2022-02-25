@@ -2,6 +2,7 @@ package com.team_3.accountbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,18 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
     private DecimalFormat myFormatter = new DecimalFormat("###,###");
     private ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances;
     private Context context;
-
-
-    public AssetInAdapter(ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances) {
-        this.wayNameAndBalances = wayNameAndBalances;
+    private OnItemClickInAssetAc mClickInAssetAc;
+    public interface OnItemClickInAssetAc{
+        void listItemClick(String wayName);
     }
+
+
+
+    public AssetInAdapter(ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances, OnItemClickInAssetAc mClickInAssetAc) {
+        this.wayNameAndBalances = wayNameAndBalances;
+        this.mClickInAssetAc = mClickInAssetAc;
+    }
+
 
 
     @NonNull
@@ -43,11 +51,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
         holder.mWayBalance.setText(formatBalance + "원");
 
         holder.itemView.setOnClickListener(View -> {
-            Intent intent = new Intent(context, ListInAssetActivity.class);
-            intent.putExtra("wayName", holder.mWayName.getText());
-            Toast.makeText(context, holder.mWayName.getText()+"(으)로 이동", Toast.LENGTH_SHORT).show();   // 테스트용
-
-            context.startActivity(intent);
+            mClickInAssetAc.listItemClick(holder.mWayName.getText().toString());
         });
     }
 
