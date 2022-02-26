@@ -30,7 +30,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/select_state_income"
                     android:text="수입"
-                    android:textColor="#757575"
+                    android:textColor="@color/grayForText"
                     android:textSize="14dp"
                     android:gravity="center"
                     android:onClick="mOnClick"
@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/select_state_expense"
                     android:text="지출"
-                    android:textColor="#FF4040"
+                    android:textColor="@color/red"
                     android:textSize="14dp"
                     android:gravity="center"
                     android:onClick="mOnClick"
@@ -124,21 +124,43 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_save"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:onClick="mOnClick"
-                android:background="@drawable/save_state"
-                app:backgroundTint="@null"
-                android:text="저장"
-                android:textSize="14dp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textColor="#FF5252"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:onClick="mOnClick"
+                    android:background="@drawable/save_state"
+                    app:backgroundTint="@null"
+                    android:text="저장"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@color/red"/>
+                <TextView
+                    android:id="@+id/tv_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:onClick="mOnClick"
+                    android:background="@drawable/button_delete"
+                    app:backgroundTint="@null"
+                    android:text="삭제"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@color/darkGray"/>
+            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>

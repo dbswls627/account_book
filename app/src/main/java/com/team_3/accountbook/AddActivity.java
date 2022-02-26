@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -34,7 +33,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     LinearLayout mLayout;
     EditText mDate, mWay, mSort, mSum, mBody;
-    TextView mIncome, mExpense, mSave, mFlag;
+    TextView mIncome, mExpense, mSave, mFlag, mDelete;
     AppDatabase db;
     long ms;
     boolean checkIncome = false, checkExpense = true;
@@ -127,11 +126,22 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSort.setText(costAll.getSortName());
             mSum.setText(costAll.getAmount() + "");
             mBody.setText(costAll.getContent());
+
+            mSave.setVisibility(View.GONE);
+            mDelete.setVisibility(View.VISIBLE);
         }
 
         if(callValue != 1){
             mExpense.setSelected(true);
             mSave.setSelected(true);
+        }
+    }
+
+
+    private void saveOrDeleteSetting(){
+        if(callValue == 1 && mSave.getVisibility() == View.GONE){
+            mSave.setVisibility(View.VISIBLE);
+            mDelete.setVisibility(View.GONE);
         }
     }
 
@@ -148,6 +158,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mSum = findViewById(R.id.edit_sum);         // 금액
         mBody = findViewById(R.id.body);            // 내용
         mSave = findViewById(R.id.tv_save);         // 저장버튼
+        mDelete = findViewById(R.id.tv_delete);    // 삭제버튼
         mRV_WayAndSort = findViewById(R.id.rv_WayAndSort);
 
         db = AppDatabase.getInstance(this);
@@ -173,9 +184,12 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mLayout.setVisibility(View.GONE);
         }
 
-
         mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
         mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
+
+        mSave.setVisibility(View.VISIBLE);
+        mDelete.setVisibility(View.GONE);
+
 
         mDate.setOnTouchListener((view, motionEvent) -> {       // 터치즉시 이벤트 발생(mOnClick 시 2번 터치)
             focus = "";
@@ -183,6 +197,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기 (다른 edittext 누른후 누른면 키보드가 뜸)
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
             datePickerDialog.show();        // 데이트피커 띠우기
+            saveOrDeleteSetting();
             return false;
         });
         mWay.setOnTouchListener((view, motionEvent) -> {
@@ -191,6 +206,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
             mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
             setWayAndSortRV(focus);
+            saveOrDeleteSetting();
             return false;
         });
         mSort.setOnTouchListener((view, motionEvent) -> {
@@ -199,6 +215,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
             mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
             setWayAndSortRV(focus);
+            saveOrDeleteSetting();
             return false;
         });
         mSum.setOnTouchListener((view, motionEvent) -> {
@@ -206,6 +223,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             cursorPosition = 3;
             mLayout.setVisibility(View.GONE);
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
+            saveOrDeleteSetting();
             return false;
         });
         mBody.setOnTouchListener((view, motionEvent) -> {
@@ -213,6 +231,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             cursorPosition = 4;
             mLayout.setVisibility(View.GONE);
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
+            saveOrDeleteSetting();
             return false;
         });
     }
@@ -451,6 +470,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 else {
                     Toast.makeText(this, "모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
+
+                break;
+
+            case R.id.tv_delete:
 
                 break;
 
