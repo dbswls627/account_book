@@ -152,10 +152,20 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/listRecyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:layout_marginBottom="70dp"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_menu" />
+
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -171,14 +181,6 @@
         app:fabSize="normal"
         app:tint="@null"
         app:srcCompat="@drawable/ic_baseline_add_24" />
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_menu" />
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

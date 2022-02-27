@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -39,7 +40,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     String action = "expense";
     String focus = "";
     int cursorPosition = -1;
-    private int callValue = -1, myCostId = -1;
+    private String callValue = "nothing";
+    private int myCostId = -1;
     Cost costAll;
 
     InputMethodManager imm;
@@ -60,14 +62,12 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
         reRun(preDate, preWay, preSum, preBody);
 
-        // MainActivity 에서 리스트 클릭시 실행되는 부분
-        String date = getIntent().getStringExtra("date");
-        String body = getIntent().getStringExtra("body");
-        int amount = getIntent().getIntExtra("amount", 0);
-        ms = getIntent().getLongExtra("ms", 0);
-        mDate.setText(date);
-        mBody.setText(body);
-        mSum.setText(String.valueOf(amount));
+
+
+        long now = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 hh:mm");
+        String processedNow = sdf.format(now);
+        mDate.setText(processedNow);
 
         c = Calendar.getInstance();        // date 가 비어 있을 경우 datePicker 가 현재 날짜를 가져오기 하기 위함
         year = c.get(Calendar.YEAR);
@@ -111,9 +111,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             timePickerDialog.show();             // 타임피커 띠우기
         }, year, month, day);                    // datePicker 초기 값  현재 년 월 일 or edittext 값 받아와서
 
-        // ListInAssetActivity 에서 리스트 클릭시 실행되는 부분
-        callValue = getIntent().getIntExtra("flag", -1);
-        if (callValue == 1) {
+        callValue = getIntent().getStringExtra("flag");
+        if (callValue.equals("ListInAsset_modify")) {
+            // ListInAssetActivity 에서 리스트 클릭시 실행되는 부분
             myCostId = getIntent().getIntExtra("costId", -1);
             costAll = db.dao().getCostAllOfCostId(myCostId);
 
@@ -129,16 +129,34 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSave.setVisibility(View.GONE);
             mDelete.setVisibility(View.VISIBLE);
         }
-
-        if(callValue != 1){
+        else if(callValue.equals("ListInAsset_add")){
+            // ListInAssetActivity 에서 추가버튼 클릭시 실행되는 부분
+            String myWayName = getIntent().getStringExtra("wayName");
+            mWay.setText(myWayName);
+            setColorOfDivision(action);
+        }
+        else if(callValue.equals("Main")){
+            // MainActivity 에서 리스트 클릭시 실행되는 부분
+            String date = getIntent().getStringExtra("date");
+            String body = getIntent().getStringExtra("body");
+            int amount = getIntent().getIntExtra("amount", 0);
+            ms = getIntent().getLongExtra("ms", 0);
+            mDate.setText(date);
+            mBody.setText(body);
+            mSum.setText(String.valueOf(amount));
+            setColorOfDivision(action);
+        }
+        else if(callValue.equals("nothing")){
+            // HomeActivity 에서 추가버튼 클릭시 실행되는 부분
             mExpense.setSelected(true);
             mSave.setSelected(true);
         }
+
     }
 
 
     private void saveOrDeleteSetting(){
-        if(callValue == 1 && mSave.getVisibility() == View.GONE){
+        if(callValue.equals("ListInAsset_modify") && mSave.getVisibility() == View.GONE){
             mSave.setVisibility(View.VISIBLE);
             mDelete.setVisibility(View.GONE);
         }
@@ -332,7 +350,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 int int_amount = Integer.parseInt(amount);
 
                 if (mDate.length() > 0 && mWay.length() > 0 && mSort.length() > 0 && mSum.length() > 0) {
-                    if (callValue == 1) {         // 기존 데이터 수정 - ListInAssetActivity 에서 왔을 때
+                    if (callValue.equals("ListInAsset_modify")) {         // 기존 데이터 수정 - ListInAssetActivity 에서 왔을 때
                         // 변경 후&변경 전 데이터들 ↓
                         String initDivision = costAll.getDivision();
                         String changeDate = mDate.getText().toString(), initDate = costAll.getUseDate();
@@ -444,7 +462,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     이전 날짜의 데이터들을 가져옴 Y(preData)
                     X = X + Y
                     */
-                    else if (callValue == -1) {       // 새로운 데이터 입력
+                    else if (callValue.equals("nothing") || callValue.equals("ListInAsset_add")) {       // 새로운 데이터 입력
                         List<Cost> preData_today = db.dao().getNowPre(mDate.getText().toString(), mBody.getText().toString(), mWay.getText().toString());
                         List<Cost> afterData_today = db.dao().getNowAfter(mDate.getText().toString(), mBody.getText().toString(), mWay.getText().toString());
                         List<Cost> preData = db.dao().getCostDataPre(mDate.getText().toString(), mWay.getText().toString());
@@ -463,6 +481,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                         updateBalanceOnByNewData(afterData_today, preCostId, afterCostId, int_amount, wayName, "new");
 
+                        if(callValue.equals("ListInAsset_add")){ setResult(RESULT_OK); }
                         finish();
                     }
                 }

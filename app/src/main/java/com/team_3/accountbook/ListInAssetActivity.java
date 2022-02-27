@@ -71,7 +71,9 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         switch (v.getId()){
             case R.id.fab_add2:
                 Intent intent = new Intent(this, AddActivity.class);
-                startActivity(intent);
+                intent.putExtra("wayName", wayName);
+                intent.putExtra("flag", "ListInAsset_add");
+                startActivityForResult(intent, 0);
 
                 break;
         }
@@ -83,7 +85,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     public void onClick(Cost cost) {
         Intent intent = new Intent(this, AddActivity.class);
         intent.putExtra("costId", cost.getCostId());
-        intent.putExtra("flag", 1);
+        intent.putExtra("flag", "ListInAsset_modify");
         startActivityForResult(intent, 0);
     }
 

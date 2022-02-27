@@ -175,6 +175,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         switch (v.getId()){
             case R.id.fab_add:
                 Intent intent = new Intent(this, AddActivity.class);
+                intent.putExtra("flag", "nothing");
                 startActivity(intent);
 
                 break;
