@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -285,9 +284,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mIncome.setSelected(true);
             mExpense.setSelected(false);
             mSave.setSelected(false);
-            mIncome.setTextColor(getResources().getColor(R.color.green));           // 초록색
+            mIncome.setTextColor(getResources().getColor(R.color.hardGreen));           // 초록색
             mExpense.setTextColor(getResources().getColor(R.color.grayForText));    // 진회색
-            mSave.setTextColor(getResources().getColor(R.color.green));             // 초록색
+            mSave.setTextColor(getResources().getColor(R.color.hardGreen));             // 초록색
             mSort.setText("");
         }
         else if (division.equals("expense")) {

@@ -31,11 +31,6 @@ public class SettingActivity extends AppCompatActivity {
         sms=findViewById(R.id.sms);
         list=findViewById(R.id.list);
         sqlTest=findViewById(R.id.sqlTest);
-
-        add.setOnClickListener((view)->{
-            intent = new Intent(this, AddActivity.class);
-            startActivity(intent);
-        });
         
         sms.setOnClickListener((view)->{
             intent = new Intent(this, MainActivity.class);

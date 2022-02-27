@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,18 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
             if(resultCode == RESULT_OK){
                 setList();      // adapter2.NotifyDataSetChanged();를 해도 새로고침이 안되어있어 그냥 다시 연결해버림.
             }
+        }
+    }
+
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.fab_add2:
+                Intent intent = new Intent(this, AddActivity.class);
+                startActivity(intent);
+
+                break;
         }
     }
 

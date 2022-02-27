@@ -171,6 +171,18 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
 
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.fab_add:
+                Intent intent = new Intent(this, AddActivity.class);
+                startActivity(intent);
+
+                break;
+        }
+    }
+
+
+
     private void buildTableData(){
         Asset asset = new Asset();
 

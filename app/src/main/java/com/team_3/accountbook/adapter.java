@@ -4,12 +4,10 @@ package com.team_3.accountbook;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -81,7 +79,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mAmount_dh.setText(formatAmount + "원");
             holder.mWayName_dh.setText(arrayList.get(position).getFK_wayName());
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.green)); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
             else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.red)); }
         }
         else if (context instanceof ListInAssetActivity){   // ListInAssetActivity 에서의 세팅
@@ -93,7 +91,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getBalance());
             holder.mBalance_da.setText("("+formatAmount+")");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.green)); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
             else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.red)); }
             holder.itemView.setOnClickListener((View -> {
                 Cost cost = arrayList.get(position);
@@ -106,7 +104,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.amt.setText(formatAmount + "원");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(ContextCompat.getColor(context, R.color.green)); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
             else if(arrayList.get(position).getDivision().equals("expense")){ holder.amt.setTextColor(ContextCompat.getColor(context, R.color.red)); }
         }
 

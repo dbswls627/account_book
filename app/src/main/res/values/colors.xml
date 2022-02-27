@@ -12,6 +12,7 @@
     <color name="lightGray">#E7E7E7</color>
     <color name="grayForText">#757575</color>
     <color name="hardLightGray">#F6F6F6</color>
-    <color name="green">#1D9111</color>
+    <color name="green">#2DB532</color>
+    <color name="hardGreen">#1D9111</color>
     <color name="red">#FF5252</color>
 </resources>
