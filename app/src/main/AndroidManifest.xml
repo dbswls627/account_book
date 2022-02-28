@@ -17,8 +17,12 @@
             android:name=".ListInAssetActivity"
             android:exported="false" />
         <activity
+            android:name=".WearActivity"
+            android:exported="true" />
+        <activity
             android:name=".ListActivity"
             android:exported="true" />
+
         <activity
             android:name=".SqlTestActivity"
             android:exported="true" />
@@ -51,7 +55,20 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
+        <service
+            android:name=".ListenerService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <!--action android:name="com.google.android.gms.wearable.DATA_CHANGED" /-->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/message_path" />
+            </intent-filter>
+        </service>
         <receiver
             android:name=".smsReceiver"
             android:enabled="true"

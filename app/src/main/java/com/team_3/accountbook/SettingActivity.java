@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SettingActivity extends AppCompatActivity {
-    TextView add,sms,list,sqlTest;
+    TextView add,sms,list,sqlTest,wear;
     Intent intent;
     BottomNavigationView bottom_menu;
     @Override
@@ -26,11 +26,11 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
-        add=findViewById(R.id.add);
-        sms=findViewById(R.id.sms);
-        list=findViewById(R.id.list);
-        sqlTest=findViewById(R.id.sqlTest);
+        wear = findViewById(R.id.wear);
+        add = findViewById(R.id.add);
+        sms = findViewById(R.id.sms);
+        list = findViewById(R.id.list);
+        sqlTest = findViewById(R.id.sqlTest);
         
         sms.setOnClickListener((view)->{
             intent = new Intent(this, MainActivity.class);
@@ -44,6 +44,10 @@ public class SettingActivity extends AppCompatActivity {
 
         sqlTest.setOnClickListener((view)->{
             intent = new Intent(this, SqlTestActivity.class);
+            startActivity(intent);
+        });
+        wear.setOnClickListener((view)->{
+            intent = new Intent(this, WearActivity.class);
             startActivity(intent);
         });
         bottom_menu = findViewById(R.id.bottom_menu);
