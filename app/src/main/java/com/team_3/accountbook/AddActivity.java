@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +18,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -52,6 +56,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     String hh, mm, dd;
 
     String preDate = "", preWay = "", preSum = "", preBody = "";
+
+    Dialog dialog;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
@@ -175,7 +181,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mSum = findViewById(R.id.edit_sum);         // 금액
         mBody = findViewById(R.id.body);            // 내용
         mSave = findViewById(R.id.tv_save);         // 저장버튼
-        mDelete = findViewById(R.id.tv_delete);    // 삭제버튼
+        mDelete = findViewById(R.id.tv_delete);     // 삭제버튼
         mRV_WayAndSort = findViewById(R.id.rv_WayAndSort);
 
         db = AppDatabase.getInstance(this);
@@ -362,63 +368,13 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                                 changeAmount != initAmount || !changeContent.equals(initContent)){        // 날짜/자산/금액/내용 중 하나라도 바뀌면 실행
                             if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) &&
                                     changeAmount != initAmount && changeContent.equals(initContent)){     // 값만 변경시~
-                                int margin = 0;
-                                if(action.equals("income")){ margin = int_amount - costAll.getAmount(); }
-                                else if(action.equals("expense")){ margin = costAll.getAmount() - int_amount; }
 
-                                List<Cost> afterData_detail = db.dao().getNowAfter_hard(initDate, mBody.getText().toString(), myCostId, changeWay);
-                                List<Cost> afterData_today = db.dao().getNowAfter2_forChange(initDate, mBody.getText().toString(), changeWay, myCostId);
-                                List<Cost> afterData = db.dao().getCostDataAfter_forChange(initDate, changeWay, myCostId);
-                                afterData_detail.addAll(afterData_today);
-                                afterData_detail.addAll(afterData);
-
-                                updateCostData(int_amount, costAll.getBalance()+margin);
-
-                                if(afterData_detail.size() > 0){
-                                    for (int i = 0; i < afterData_detail.size(); i++) {
-                                        if (i < afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal(margin, afterData_detail.get(i).getCostId());
-                                        }
-                                        else if (i == afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal(margin, afterData_detail.get(i).getCostId());
-                                            int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
-                                            db.dao().updateWayBal(n, changeWay);
-                                        }
-                                    }
-                                }
-                                else{
-                                    db.dao().updateWayBal2(margin, initWay);
-                                }
+                                updateBalanceOnByDelete(initDate, changeWay, changeAmount, "onlyMoney");
 
                             }
 
                             else{           // 값만 변경을 제외한 모든 경우
-                                // "변경 전" 날짜 "이후"의 데이터 배열
-                                List<Cost> afterData_detail = db.dao().getNowAfter_hard(initDate, mBody.getText().toString(), myCostId, initWay);
-                                List<Cost> afterData_today = db.dao().getNowAfter2_forChange(initDate, mBody.getText().toString(), initWay, myCostId);
-                                List<Cost> afterData = db.dao().getCostDataAfter_forChange(initDate, initWay, myCostId);
-                                afterData_detail.addAll(afterData_today);
-                                afterData_detail.addAll(afterData);
-
-                                // 변경 전 날짜 이후의 데이터들 잔액 정리
-                                if(afterData_detail.size() > 0){
-                                    if(costAll.getDivision().equals("income")){ initAmount = -initAmount; }
-
-                                    for (int i = 0; i < afterData_detail.size(); i++) {
-                                        if (i < afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal(initAmount, afterData_detail.get(i).getCostId());
-                                        }
-                                        else if (i == afterData_detail.size() - 1) {
-                                            db.dao().update_NextCostBal(initAmount, afterData_detail.get(i).getCostId());
-                                            int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
-                                            db.dao().updateWayBal(n, initWay);
-                                        }
-                                    }
-                                }
-                                else {
-                                    if(costAll.getDivision().equals("income")){ initAmount = -initAmount; }
-                                    db.dao().updateWayBal2(initAmount, initWay);
-                                }
+                                updateBalanceOnByDelete(initDate, initWay, initAmount, "anything");
 
                                 // "변경 후" 날짜 "이전"의 데이터 배열
                                 List<Cost> preData_detail = db.dao().getNowPre_hard(changeDate, mBody.getText().toString(), myCostId, changeWay);
@@ -427,13 +383,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                                 preData_detail.addAll(preData_today);
                                 preData_detail.addAll(preData);
 
-                                afterData_detail.clear();
-                                afterData_today.clear();
-                                afterData.clear();
                                 // "변경 후" 날짜 "이후"의 데이터 배열
-                                afterData_detail = db.dao().getNowAfter_hard(changeDate, mBody.getText().toString(), myCostId, changeWay);
-                                afterData_today = db.dao().getNowAfter2_forChange(changeDate, mBody.getText().toString(), changeWay, myCostId);
-                                afterData = db.dao().getCostDataAfter_forChange(changeDate, changeWay, myCostId);
+                                List<Cost> afterData_detail = db.dao().getNowAfter_hard(changeDate, mBody.getText().toString(), myCostId, changeWay);
+                                List<Cost> afterData_today = db.dao().getNowAfter2_forChange(changeDate, mBody.getText().toString(), changeWay, myCostId);
+                                List<Cost> afterData = db.dao().getCostDataAfter_forChange(changeDate, changeWay, myCostId);
                                 afterData_detail.addAll(afterData_today);
                                 afterData_detail.addAll(afterData);
 
@@ -492,11 +445,57 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 break;
 
             case R.id.tv_delete:
+                dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog);
+
+                showDialog();
 
                 break;
 
 
         }
+    }
+
+
+
+    private void updateBalanceOnByDelete(String date, String wayName, int amount, String flag){
+        int money = 0;
+
+        if(flag.equals("onlyMoney")){
+            if(action.equals("income")){ money = amount - costAll.getAmount(); }
+            else if(action.equals("expense")){ money = costAll.getAmount() - amount; }
+            updateCostData(amount, costAll.getBalance()+money);
+        }
+        else if(flag.equals("anything") || flag.equals("delete")){
+            if(costAll.getDivision().equals("income")){ money = -amount; }
+            else if(costAll.getDivision().equals("expense")){ money = amount; }
+
+            if(flag.equals("delete")){ db.dao().deleteCostData(myCostId); }
+        }
+
+        List<Cost> afterData_detail = db.dao().getNowAfter_hard(date, mBody.getText().toString(), myCostId, wayName);
+        List<Cost> afterData_today = db.dao().getNowAfter2_forChange(date, mBody.getText().toString(), wayName, myCostId);
+        List<Cost> afterData = db.dao().getCostDataAfter_forChange(date, wayName, myCostId);
+        afterData_detail.addAll(afterData_today);
+        afterData_detail.addAll(afterData);
+
+        if(afterData_detail.size() > 0){
+            for (int i = 0; i < afterData_detail.size(); i++) {
+                if (i < afterData_detail.size() - 1) {
+                    db.dao().update_NextCostBal(money, afterData_detail.get(i).getCostId());
+                }
+                else if (i == afterData_detail.size() - 1) {
+                    db.dao().update_NextCostBal(money, afterData_detail.get(i).getCostId());
+                    int n = db.dao().getCostBalance(afterData_detail.get(i).getCostId());
+                    db.dao().updateWayBal(n, wayName);
+                }
+            }
+        }
+        else{
+            db.dao().updateWayBal2(money, wayName);
+        }
+
     }
 
     
@@ -603,6 +602,31 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 costAll.getMs(),                    // ms
                 myCostId                            // 업데이트 행의 costId
         );
+    }
+
+
+
+    private void showDialog(){
+        dialog.show();
+
+        TextView mCancel, mAccept;
+        mCancel = dialog.findViewById(R.id.tv_cancel);
+        mAccept = dialog.findViewById(R.id.tv_accept);
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                updateBalanceOnByDelete(costAll.getUseDate(), costAll.getFK_wayName(), costAll.getAmount(), "delete");
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
     }
 
 
