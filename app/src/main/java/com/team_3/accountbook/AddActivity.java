@@ -424,7 +424,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     이전 날짜의 데이터들을 가져옴 Y(preData)
                     X = X + Y
                     */
-                    else if (callValue.equals("nothing") || callValue.equals("ListInAsset_add")) {       // 새로운 데이터 입력
+                    else if (callValue.equals("nothing") || callValue.equals("ListInAsset_add") || callValue.equals("Main")) {       // 새로운 데이터 입력
                         List<Cost> preData_today = db.dao().getNowPre(mDate.getText().toString(), mBody.getText().toString(), mWay.getText().toString());
                         List<Cost> afterData_today = db.dao().getNowAfter(mDate.getText().toString(), mBody.getText().toString(), mWay.getText().toString());
                         List<Cost> preData = db.dao().getCostDataPre(mDate.getText().toString(), mWay.getText().toString());
