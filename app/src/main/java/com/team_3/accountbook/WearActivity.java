@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,9 +23,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class WearActivity extends AppCompatActivity implements
-        View.OnClickListener {
-
+public class WearActivity extends AppCompatActivity{
     String datapath = "/message_path";
     Button mybutton;
     TextView logger;
@@ -42,7 +39,6 @@ public class WearActivity extends AppCompatActivity implements
         //get the widgets
         mybutton = findViewById(R.id.sendbtn);
         text = findViewById(R.id.text);
-        mybutton.setOnClickListener(this);
         logger = findViewById(R.id.logger);
 
         //message handler for the send thread.
@@ -56,11 +52,15 @@ public class WearActivity extends AppCompatActivity implements
         });
 
         // Register the local broadcast receiver
+        //백그라운드랑 연결 하는듯 ??
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         MessageReceiver messageReceiver = new MessageReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
-
+        mybutton.setOnClickListener((view -> {
+            String message = text.getText().toString();
+            new SendThread(datapath, message).start();
+        }));
     }
 
     /*
@@ -73,6 +73,7 @@ public class WearActivity extends AppCompatActivity implements
     }
 
     //setup a broadcast receiver to receive the messages from the wear device via the listenerService.
+    //워치에서 메세지 받았을 때 화면 바꿔주는
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -85,15 +86,8 @@ public class WearActivity extends AppCompatActivity implements
     }
 
     //button listener
-    @Override
-    public void onClick(View v) {
-       /* String message = "Hello wearable " + num;
-        //Requires a new thread to avoid blocking the UI
-        new SendThread(datapath, message).start();
-        num++;*/
-        String message = text.getText().toString();
-        new SendThread(datapath, message).start();
-    }
+
+
 
     //method to create up a bundle to send to a handler via the thread below.
     public void sendmessage(String logthis) {
@@ -108,7 +102,7 @@ public class WearActivity extends AppCompatActivity implements
     }
 
     //This actually sends the message to the wearable device.
-    class SendThread extends Thread {
+     class SendThread extends Thread {
         String path;
         String message;
 
