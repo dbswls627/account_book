@@ -7,8 +7,6 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -246,6 +244,8 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and sortName = :sortName ORDER BY useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getMDate(String date,String sortName);
 
+    @Query("SELECT sum(amount) FROM Cost c WHERE substr(c.useDate,0,10) = :date")
+    String getAmount(String date);
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")

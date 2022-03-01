@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -49,23 +48,26 @@ public class MainActivity extends WearableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = AppDatabase.getInstance(this);
-        mTextView =  findViewById(R.id.text);
         //send a message from the wear.  This one will not have response.
+        mTextView =  findViewById(R.id.text);
         myButton =  findViewById(R.id.wrbutton);
-        myButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Requires a new thread to avoid blocking the UI
-                new SendThread(datapath, mTextView.getText().toString()).start();
-            }
-        });
+        if (db.dao().get("test")!=null) {
+            mTextView.setText(db.dao().get("test"));
+        }
+        else {
+            mTextView.setText("0원");
+        }
         // Register the local broadcast receiver to receive messages from the listener.
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         MessageReceiver messageReceiver = new MessageReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
-        mTextView.setText(db.dao().get("test"));
+
         // Enables Always-on
         setAmbientEnabled();
+        myButton.setOnClickListener((view -> {
+            //Requires a new thread to avoid blocking the UI
+            new SendThread(datapath, mTextView.getText().toString()).start();
+        }));
     }
 
     public class MessageReceiver extends BroadcastReceiver {
@@ -75,9 +77,7 @@ public class MainActivity extends WearableActivity {
             Log.v(TAG, "Main activity received message: " + message);
             // Display message in UI
             mTextView.setText(message);
-            //here, send a message back.
-            //Requires a new thread to avoid blocking the UI
-            /*new SendThread(datapath, message).start();*/
+
         }
     }
 
@@ -97,7 +97,7 @@ public class MainActivity extends WearableActivity {
         public void run() {
             //first get all the nodes, ie connected wearable devices.
             Task<List<Node>> nodeListTask =
-                Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
+                    Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
             try {
                 // Block on a task and get the result synchronously (because this is on a background
                 // thread).
@@ -106,7 +106,7 @@ public class MainActivity extends WearableActivity {
                 //Now send the message to each device.
                 for (Node node : nodes) {
                     Task<Integer> sendMessageTask =
-                        Wearable.getMessageClient(MainActivity.this).sendMessage(node.getId(), path, message.getBytes());
+                            Wearable.getMessageClient(MainActivity.this).sendMessage(node.getId(), path, message.getBytes());
 
                     try {
                         // Block on a task and get the result synchronously (because this is on a background

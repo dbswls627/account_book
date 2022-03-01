@@ -1,16 +1,9 @@
 package com.team_3.accountbook;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,16 +18,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.Wearable;
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.touchItem {
     List<String> WayAndSortList;
     RecyclerView mRV_WayAndSort;
-
+    LocalDate selectedDate = LocalDate.now();
     LinearLayout mLayout;
     EditText mDate, mWay, mSort, mSum, mBody;
     TextView mIncome, mExpense, mSave, mFlag, mDelete;
@@ -332,8 +339,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void mOnClick(View v) {
         switch (v.getId()) {
             case R.id.tv_income:
@@ -442,6 +447,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     Toast.makeText(this, "모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
 
+                bluetooth();
                 break;
 
             case R.id.tv_delete:
@@ -621,8 +627,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 dialog.dismiss();
                 updateBalanceOnByDelete(costAll.getUseDate(), costAll.getFK_wayName(), costAll.getAmount(), "delete");
+                bluetooth();
                 setResult(RESULT_OK);
                 finish();
             }
@@ -689,6 +697,70 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
     }
+    class SendThread extends Thread {
+        String path;
+        String message;
 
+        //constructor
+        SendThread(String p, String msg) {
+            path = p;
+            message = msg;
+        }
+
+        //sends the message via the thread.  this will send to all wearables connected, but
+        //since there is (should only?) be one, no problem.
+        public void run() {
+
+            //first get all the nodes, ie connected wearable devices.
+            Task<List<Node>> nodeListTask =
+                    Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
+            try {
+                // Block on a task and get the result synchronously (because this is on a background
+                // thread).
+                List<Node> nodes = Tasks.await(nodeListTask);
+
+                //Now send the message to each device.
+                for (Node node : nodes) {
+                    Task<Integer> sendMessageTask =
+                            Wearable.getMessageClient(AddActivity.this).sendMessage(node.getId(), path, message.getBytes());
+
+                    try {
+                        // Block on a task and get the result synchronously (because this is on a background
+                        // thread).
+                        Integer result = Tasks.await(sendMessageTask);
+
+
+
+                    } catch (ExecutionException exception) {
+
+
+                    } catch (InterruptedException exception) {
+
+                    }
+
+                }
+
+            } catch (ExecutionException exception) {
+
+
+
+            } catch (InterruptedException exception) {
+
+            }
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        return date.format(formatter);
+    }
+    void bluetooth(){
+        if (db.dao().getAmount(monthYearFromDate(selectedDate))!=null){
+            new SendThread("/message_path", db.dao().getAmount(monthYearFromDate(selectedDate))+"원").start();
+        }
+        else{
+            new SendThread("/message_path", "0원").start();
+        }
+    }
 
 }
