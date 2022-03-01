@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey;
 public class Data {
     @PrimaryKey
     @NonNull
-    private String name;
-    private String amount;     // 자산명
+    private String name;        // (??)
+    private String amount;      // 달 총 사용금액
 
     public Data(@NonNull String name, String amount) {
         this.name = name;

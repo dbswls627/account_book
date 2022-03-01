@@ -63,6 +63,8 @@ public class WearActivity extends AppCompatActivity{
         }));
     }
 
+
+
     /*
      * simple method to add the log TextView.
      */
@@ -71,6 +73,8 @@ public class WearActivity extends AppCompatActivity{
             logger.append("\n" + newinfo);
         }
     }
+
+
 
     //setup a broadcast receiver to receive the messages from the wear device via the listenerService.
     //워치에서 메세지 받았을 때 화면 바꿔주는
@@ -85,8 +89,6 @@ public class WearActivity extends AppCompatActivity{
         }
     }
 
-    //button listener
-
 
 
     //method to create up a bundle to send to a handler via the thread below.
@@ -100,6 +102,8 @@ public class WearActivity extends AppCompatActivity{
         handler.sendMessage(msg);
 
     }
+
+
 
     //This actually sends the message to the wearable device.
      class SendThread extends Thread {
@@ -156,4 +160,6 @@ public class WearActivity extends AppCompatActivity{
 
         }
     }
+
+
 }

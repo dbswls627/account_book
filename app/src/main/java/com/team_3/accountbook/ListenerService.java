@@ -23,8 +23,6 @@ import java.util.concurrent.ExecutionException;
 백그라운드
  */
 
-
-
 public class ListenerService extends WearableListenerService {
     String TAG = "mobile Listener";
     AppDatabase db;
@@ -34,9 +32,9 @@ public class ListenerService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         db = AppDatabase.getInstance(ListenerService.this);
-        if (messageEvent.getPath().equals("/message_path")) {
 
-            final String message = new String(messageEvent.getData());
+        if (messageEvent.getPath().equals("/message_path")) {
+            final String message = new String(messageEvent.getData());      // message -> 'n,nnn원'(실시간 반영 전 setText 돼있던 금액)
             Log.v(TAG, "Message path received on phone is: " + messageEvent.getPath());
             Log.v(TAG, "Message received on phone is: " + message);
 
@@ -45,22 +43,25 @@ public class ListenerService extends WearableListenerService {
             Intent messageIntent = new Intent();
             messageIntent.setAction(Intent.ACTION_SEND);
             messageIntent.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);   // WearAc 의 onReceive()함수가 실행됨
 
             selectedDate = LocalDate.now();
-            if (db.dao().getAmount(monthYearFromDate(selectedDate))!=null){
+            if (db.dao().getAmount(monthYearFromDate(selectedDate)) != null){
                 new SendThread("/message_path", db.dao().getAmount(monthYearFromDate(selectedDate))+"원").start();
             }
             else{
                 new SendThread("/message_path", "0원").start();
             }
 
-
         }
         else {
             super.onMessageReceived(messageEvent);
         }
+
     }
+
+
+
     class SendThread extends Thread {
         String path;
         String message;
@@ -86,7 +87,7 @@ public class ListenerService extends WearableListenerService {
                 //Now send the message to each device.
                 for (Node node : nodes) {
                     Task<Integer> sendMessageTask =
-                            Wearable.getMessageClient(ListenerService.this).sendMessage(node.getId(), path, message.getBytes());
+                            Wearable.getMessageClient(ListenerService.this).sendMessage(node.getId(), path, message.getBytes());    // 워치로 sum 금액을 보냄
 
                     try {
                         // Block on a task and get the result synchronously (because this is on a background
@@ -115,9 +116,14 @@ public class ListenerService extends WearableListenerService {
 
         }
     }
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
+
+
 }

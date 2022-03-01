@@ -37,27 +37,33 @@ import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends WearableActivity {
-
     private final static String TAG = "Wear MainActivity";
     private TextView mTextView;
+
     Button myButton;
     String datapath = "/message_path";
     AppDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = AppDatabase.getInstance(this);
-        //send a message from the wear.  This one will not have response.
+
         mTextView =  findViewById(R.id.text);
         myButton =  findViewById(R.id.wrbutton);
+
+        db = AppDatabase.getInstance(this);
+
+        //send a message from the wear.  This one will not have response.
         new SendThread(datapath, "amount").start();
+
         if (db.dao().get("test")!=null) {
             mTextView.setText(db.dao().get("test"));
         }
         else {
             mTextView.setText("0원");
         }
+
         // Register the local broadcast receiver to receive messages from the listener.
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         MessageReceiver messageReceiver = new MessageReceiver();
@@ -71,9 +77,12 @@ public class MainActivity extends WearableActivity {
         }));
     }
 
+
+
+    // 워치 Listener.java 파일에서 메세지를 받으면 실행되는 부분. ★필요 없을거같음.
     public class MessageReceiver extends BroadcastReceiver {
         @Override
-        public void onReceive(Context context, Intent intent) { //데이터를 받으면
+        public void onReceive(Context context, Intent intent) {     // 데이터를 받으면
             String message = intent.getStringExtra("message");
             Log.v(TAG, "Main activity received message: " + message);
             // Display message in UI
@@ -81,6 +90,8 @@ public class MainActivity extends WearableActivity {
 
         }
     }
+
+
 
     //This actually sends the message to the wearable device.
     class SendThread extends Thread {
@@ -107,7 +118,7 @@ public class MainActivity extends WearableActivity {
                 //Now send the message to each device.
                 for (Node node : nodes) {
                     Task<Integer> sendMessageTask =
-                            Wearable.getMessageClient(MainActivity.this).sendMessage(node.getId(), path, message.getBytes());
+                            Wearable.getMessageClient(MainActivity.this).sendMessage(node.getId(), path, message.getBytes());   // 앱으로 메세지를 보냄.(아무거나 보내 sum 금액을 받음)
 
                     try {
                         // Block on a task and get the result synchronously (because this is on a background
@@ -132,4 +143,6 @@ public class MainActivity extends WearableActivity {
             }
         }
     }
+
+
 }

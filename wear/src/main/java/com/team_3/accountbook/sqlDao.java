@@ -9,10 +9,18 @@ import androidx.room.Query;
 
 @Dao
 public interface sqlDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Data data);
+
+
     @Delete
     void delete(Data data);
+
+
     @Query("SELECT amount from data where name = :name")
     String get(String name);
+
+
+
 }
