@@ -89,40 +89,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         hour = c.get(Calendar.HOUR_OF_DAY);
         minute = c.get(Calendar.MINUTE);
 
-        if (!mDate.getText().toString().equals("")) {   // date 가 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
-            year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
-            month = Integer.parseInt(mDate.getText().toString().substring(6, 8)) - 1;
-            day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
-            hour = Integer.parseInt(mDate.getText().toString().substring(14, 16));
-            minute = Integer.parseInt(mDate.getText().toString().substring(17, 19));
-        }
 
-        timePickerDialog = new TimePickerDialog(this, (view, h, m) -> {
-            // 확인 눌렀을때 실행되는 곳
-            hh = Integer.toString(h);
-            mm = Integer.toString(m);
-            if (h < 9) {
-                hh = "0" + h;
-            }          // 한자리 일시 앞에 0추가
-            if (m < 10) {
-                mm = "0" + m;
-            }          // 한자리 일시 앞에 0추가
-            mDate.setText(mDate.getText().toString().substring(0, 14) + hh + ":" + mm);
-        }, hour, minute, true);                    // TimePicker 초기 값 현재 시각 or edittext 값 받아와서
-
-        datePickerDialog = new DatePickerDialog(this, (view, y, m, d) -> {
-            // 확인 눌렀을때 실행되는 곳
-            mm = Integer.toString(m + 1);
-            dd = Integer.toString(d);
-            if (m < 9) {
-                mm = "0" + (m + 1);
-            }       // 한자리 일시 앞에 0추가
-            if (d < 10) {
-                dd = "0" + d;
-            }          // 한자리 일시 앞에 0추가
-            mDate.setText(y + "년 " + mm + "월 " + dd + "일 00:00");     // y m d 피커에서 받아온 년월일을 edittext 에 설정
-            timePickerDialog.show();             // 타임피커 띠우기
-        }, year, month, day);                    // datePicker 초기 값  현재 년 월 일 or edittext 값 받아와서
 
         callValue = getIntent().getStringExtra("flag");
         if (callValue.equals("ListInAsset_modify")) {
@@ -164,7 +131,44 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mExpense.setSelected(true);
             mSave.setSelected(true);
         }
+        if (!mDate.getText().toString().equals("")) {   // date 가 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
+            Log.d("Test","notEmpty");
+            year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
+            month = Integer.parseInt(mDate.getText().toString().substring(6, 8)) - 1;
+            day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
+            hour = Integer.parseInt(mDate.getText().toString().substring(14, 16));
+            minute = Integer.parseInt(mDate.getText().toString().substring(17, 19));
+            Log.d("test",mDate.getText().toString().substring(0, 4));
+            Log.d("test",mDate.getText().toString().substring(6, 8));
+            Log.d("test",mDate.getText().toString().substring(10, 12));
+        }
 
+        timePickerDialog = new TimePickerDialog(this, (view, h, m) -> {
+            // 확인 눌렀을때 실행되는 곳
+            hh = Integer.toString(h);
+            mm = Integer.toString(m);
+            if (h < 9) {
+                hh = "0" + h;
+            }          // 한자리 일시 앞에 0추가
+            if (m < 10) {
+                mm = "0" + m;
+            }          // 한자리 일시 앞에 0추가
+            mDate.setText(mDate.getText().toString().substring(0, 14) + hh + ":" + mm);
+        }, hour, minute, true);                    // TimePicker 초기 값 현재 시각 or edittext 값 받아와서
+
+        datePickerDialog = new DatePickerDialog(this, (view, y, m, d) -> {
+            // 확인 눌렀을때 실행되는 곳
+            mm = Integer.toString(m + 1);
+            dd = Integer.toString(d);
+            if (m < 9) {
+                mm = "0" + (m + 1);
+            }       // 한자리 일시 앞에 0추가
+            if (d < 10) {
+                dd = "0" + d;
+            }          // 한자리 일시 앞에 0추가
+            mDate.setText(y + "년 " + mm + "월 " + dd + "일 00:00");     // y m d 피커에서 받아온 년월일을 edittext 에 설정
+            timePickerDialog.show();             // 타임피커 띠우기
+        }, year, month, day);                    // datePicker 초기 값  현재 년 월 일 or edittext 값 받아와서
     }
 
 
