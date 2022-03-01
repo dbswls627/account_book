@@ -51,6 +51,7 @@ public class MainActivity extends WearableActivity {
         //send a message from the wear.  This one will not have response.
         mTextView =  findViewById(R.id.text);
         myButton =  findViewById(R.id.wrbutton);
+        new SendThread(datapath, "amount").start();
         if (db.dao().get("test")!=null) {
             mTextView.setText(db.dao().get("test"));
         }
