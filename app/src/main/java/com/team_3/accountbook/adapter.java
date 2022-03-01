@@ -17,7 +17,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
-    private DecimalFormat myFormatter = new DecimalFormat("###,###");
+    private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private ArrayList<Cost> arrayList;
     private Context context;
     private String formatAmount = "";
