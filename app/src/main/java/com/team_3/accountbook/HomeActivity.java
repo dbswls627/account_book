@@ -1,21 +1,20 @@
 package com.team_3.accountbook;
 
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -122,6 +121,17 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             }
             else {
                 daysInMonthArray.add(String.valueOf(i - dayOfWeek));
+            }
+        }
+        boolean b = true;
+        for (int i = 0; i < 7; i++){            //맨앞 7까지 숫자가 있으면 false
+            if (daysInMonthArray.get(i)!=""){
+                b = false;
+            }
+        }
+        if (b){
+            for (int i = 0; i < 7; i++){    //맨앞 7번 삭제
+                daysInMonthArray.remove(0);
             }
         }
         return  daysInMonthArray;                                      // 완성한 달력 배열 반환.
