@@ -144,7 +144,13 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
                 break;
 
             case R.id.fab_reWrite:
-                Toast.makeText(this, "Way 편집으로 이동 예정", Toast.LENGTH_SHORT).show();
+                Way wayData = db.dao().getWayData(wayName);
+
+                Intent intent2 = new Intent(this, EditWayActivity.class);
+                intent2.putExtra("assetName", db.dao().getAssetName(wayData.getFK_assetId()));
+                intent2.putExtra("wayName", wayName);
+                intent2.putExtra("balance", wayData.getWayBalance());
+                startActivityForResult(intent2, 0);
 
                 break;
 
@@ -189,6 +195,9 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         }
 
     }
+
+
+
 
 
 

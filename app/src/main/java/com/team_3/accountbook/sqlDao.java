@@ -253,6 +253,12 @@ public interface sqlDao {
     @Query("SELECT sum(c.amount) FROM Cost c WHERE substr(c.useDate,0,10) = :date AND c.FK_wayName = :wayName AND c.division = :division")
     Integer getAmountOfMonth(String date, String wayName, String division);
 
+    @Query("SELECT * FROM Way w WHERE w.wayName = :wayName")
+    Way getWayData(String wayName);
+
+    @Query("SELECT a.assetName FROM Asset a WHERE a.assetId = :assetId")
+    String getAssetName(int assetId);
+
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
     List<AssetWithWay> getAssetWithWays();

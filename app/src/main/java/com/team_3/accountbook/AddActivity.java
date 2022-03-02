@@ -652,7 +652,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
 
-    private class NumberTextWatcher implements TextWatcher {
+    public final static class NumberTextWatcher implements TextWatcher {
         private DecimalFormat dfnd;        // ~ ~ DecimalFormat 클래스 객체 dfnd
         private EditText edit_sum;
 
@@ -701,6 +701,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
     }
+
+
+
     class SendThread extends Thread {
         String path;
         String message;
@@ -753,11 +756,17 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             }
         }
     }
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
+
+
+
     void bluetooth(){
         if (db.dao().getAmount(monthYearFromDate(selectedDate))!=null){
             new SendThread("/message_path", db.dao().getAmount(monthYearFromDate(selectedDate))+"원").start();
@@ -766,5 +775,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             new SendThread("/message_path", "0원").start();
         }
     }
+
+
 
 }
