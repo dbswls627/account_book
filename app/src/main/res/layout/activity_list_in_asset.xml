@@ -161,14 +161,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/green"
+        android:onClick="mOnClick"
+        app:fabSize="mini"
+        app:borderWidth="0dp"
+        app:tint="@null"
+        app:srcCompat="@drawable/ic_baseline_add_24"
+        app:layout_constraintTop_toTopOf="@+id/fab_main"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_main"
+        app:layout_constraintStart_toStartOf="@+id/fab_main"
+        app:layout_constraintEnd_toEndOf="@+id/fab_main" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_reWrite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/green"
+        android:onClick="mOnClick"
+        app:fabSize="mini"
+        app:borderWidth="0dp"
+        app:tint="@null"
+        app:srcCompat="@drawable/ic_baseline_mode_edit_24"
+        app:layout_constraintTop_toTopOf="@+id/fab_main"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_main"
+        app:layout_constraintStart_toStartOf="@+id/fab_main"
+        app:layout_constraintEnd_toEndOf="@+id/fab_main" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="30dp"
-        android:backgroundTint="@color/green"
         android:onClick="mOnClick"
         app:fabSize="normal"
         app:borderWidth="0dp"
         app:tint="@null"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
+        app:backgroundTint="@color/green"
+        app:srcCompat="@drawable/ic_baseline_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

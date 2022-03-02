@@ -3,17 +3,24 @@ package com.team_3.accountbook;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -24,6 +31,8 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class ListInAssetActivity extends AppCompatActivity implements adapter.OnItemClickInListInAsset{
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
+    private FloatingActionButton mFabAdd, mFabReWrite, mFabMain;
+    private boolean isFabOpen = false;
     ArrayList<String> dateList = new ArrayList<>();
     RecyclerView mRV_listInAsset;
     adapter2 adapter2;
@@ -48,6 +57,9 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         mLayoutNoData = findViewById(R.id.layout_noData);
         mRV_listInAsset = findViewById(R.id.rv_listInAsset);
         mNowMonth = findViewById(R.id.nowMonth);
+        mFabAdd = findViewById(R.id.fab_add2);
+        mFabReWrite = findViewById(R.id.fab_reWrite);
+        mFabMain = findViewById(R.id.fab_main);
 
         db = AppDatabase.getInstance(this);
 
@@ -118,11 +130,21 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void mOnClick(View v){
         switch (v.getId()){
+            case R.id.fab_main:
+                toggleFab();
+
+                break;
+
             case R.id.fab_add2:
                 Intent intent = new Intent(this, AddActivity.class);
                 intent.putExtra("wayName", wayName);
                 intent.putExtra("flag", "ListInAsset_add");
                 startActivityForResult(intent, 0);
+
+                break;
+
+            case R.id.fab_reWrite:
+                Toast.makeText(this, "Way 편집으로 이동 예정", Toast.LENGTH_SHORT).show();
 
                 break;
 
@@ -138,6 +160,34 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
                 break;
         }
+    }
+
+
+    private void toggleFab() {
+        if (isFabOpen) {
+            mFabMain.setImageResource(R.drawable.ic_baseline_list);
+            mFabMain.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green)));
+
+            ObjectAnimator ani = ObjectAnimator.ofFloat(mFabAdd, "translationY", 0f);
+            ani.start();
+            ani = ObjectAnimator.ofFloat(mFabReWrite, "translationY", 0f);
+            ani.start();
+
+            isFabOpen = false;
+
+        } else {
+            mFabMain.setImageResource(R.drawable.ic_baseline_clear_24);
+            mFabMain.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.lightGray)));
+
+            ObjectAnimator ani = ObjectAnimator.ofFloat(mFabAdd, "translationY", -190f);
+            ani.start();
+            ani = ObjectAnimator.ofFloat(mFabReWrite, "translationY", -360f);
+            ani.start();
+
+            isFabOpen = true;
+
+        }
+
     }
 
 
