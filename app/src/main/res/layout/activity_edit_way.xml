@@ -191,7 +191,7 @@
         android:textSize="14dp"
         android:textStyle="bold"
         android:gravity="center"
-        android:textColor="@color/green"/>
+        android:textColor="@color/hardGreen"/>
 
 
 
