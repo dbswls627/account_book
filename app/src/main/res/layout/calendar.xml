@@ -12,13 +12,15 @@
             android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/white">
             <TextView
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:id="@+id/cellDayText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="날짜" />
             <TextView
                 android:gravity="center"
