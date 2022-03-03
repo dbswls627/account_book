@@ -21,7 +21,8 @@ public interface sqlDao {
     @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
     void insertSort(String name, String division);
 
-    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms) VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms)")
+    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms) " +
+            "VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms)")
     void insertCost(String date, String FK_wayName, String sortName, int amount, String content, int balance, String division, long ms);
 
 
@@ -29,11 +30,6 @@ public interface sqlDao {
     @Update
     void update(Asset asset);
 
-    @Query("UPDATE Way SET wayBalance = wayBalance - :amount  WHERE wayName = :wayName")
-    void updateWayBalanceOfEx(String wayName, int amount);
-
-    @Query("UPDATE Way SET wayBalance = wayBalance + :amount  WHERE wayName = :wayName")
-    void updateWayBalanceOfIn(String wayName, int amount);
 
 
     // AddActivity 에서 사용
@@ -51,38 +47,15 @@ public interface sqlDao {
     void update_CostData(String useDate, String wayName, String sortName, int amount, int balance, String content, String division, long ms, int costId);
 
 
+    @Query("UPDATE Way " +
+            "SET FK_assetId = :id, wayName = :name, wayBalance = :balance, wayMemo = :memo, phoneNumber = :phoneNumber, delimiter = :delimiter " +
+            "WHERE wayName = :wayName")
+    void updateWayData(int id, String name, int balance, String memo, String phoneNumber, String delimiter, String wayName);
 
-    @Query("UPDATE Cost " +
-            "SET division = :division, useDate = :useDate, FK_wayName = :wayName, sortName = :sortName, amount = :amount, content = :content " +
-            "WHERE costId = :costId")
-    void updateCostInfo(int costId, String division, String useDate, String wayName, String sortName, int amount, String content);
+    @Query("UPDATE Cost SET FK_wayName = :afterName WHERE FK_wayName = :beforeName")
+    void updateCostWayName(String beforeName, String afterName);
 
-    @Query("UPDATE Cost SET balance = balance + :margin WHERE FK_wayName = :wayName AND useDate >= :date")
-    void updateCostUnderBalanceOfEx(String date, String wayName, int margin);
 
-    @Query("UPDATE Cost SET balance = balance - :margin WHERE FK_wayName = :wayName AND useDate >= :date")
-    void updateCostOverBalanceOfEx(String date, String wayName, int margin);
-
-    @Query("UPDATE Cost SET balance = balance - :margin WHERE FK_wayName = :wayName AND useDate >= :date")
-    void updateCostUnderBalanceOfIn(String date, String wayName, int margin);
-
-    @Query("UPDATE Cost SET balance = balance + :margin WHERE FK_wayName = :wayName AND useDate >= :date")
-    void updateCostOverBalanceOfIn(String date, String wayName, int margin);
-
-    @Query("UPDATE Cost SET balance = balance - :margin WHERE FK_wayName = :wayName AND useDate > :date")
-    void updateCostOverBalanceOfExNew(String date, String wayName, int margin);
-
-    @Query("UPDATE Cost SET balance = balance + :margin WHERE FK_wayName = :wayName AND useDate > :date")
-    void updateCostOverBalanceOfInNew(String date, String wayName, int margin);
-
-    @Query("UPDATE Cost SET balance = :balance WHERE useDate = :useDate AND FK_wayName = :wayName")
-    void updateNextBalance(int balance, String useDate, String wayName);
-
-    @Query("UPDATE Cost SET balance = balance - :balance WHERE useDate = :useDate AND FK_wayName = :wayName")
-    void updateNextBalance2(int balance, String useDate, String wayName);
-
-//    @Query("UPDATE Cost SET balance = :balance WHERE FK_wayName = :wayName AND ")
-//    void updateTest(int balance, String wayName, );
 
 
 
@@ -258,6 +231,9 @@ public interface sqlDao {
 
     @Query("SELECT a.assetName FROM Asset a WHERE a.assetId = :assetId")
     String getAssetName(int assetId);
+
+    @Query("SELECT a.assetId FROM Asset a WHERE a.assetName = :name")
+    Integer getAssetId(String name);
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")

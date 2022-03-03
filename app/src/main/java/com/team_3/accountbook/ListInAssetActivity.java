@@ -38,7 +38,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     adapter2 adapter2;
 
     LinearLayout mLayoutNoData;
-    TextView mNowMonth, mIncomeTotal, mExpenseTotal;
+    TextView mTopWayName, mNowMonth, mIncomeTotal, mExpenseTotal;
     LocalDate localDate;
     String formatAmount = "";
 
@@ -52,6 +52,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_in_asset);
 
+        mTopWayName = findViewById(R.id.listInAsset_wayName);
         mIncomeTotal = findViewById(R.id.income_total);
         mExpenseTotal = findViewById(R.id.expense_total);
         mLayoutNoData = findViewById(R.id.layout_noData);
@@ -75,6 +76,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthList(){
+        mTopWayName.setText(wayName);
         mNowMonth.setText(monthFromLocalDate(localDate));
 
         int totalAmount = 0;
@@ -130,6 +132,12 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void mOnClick(View v){
         switch (v.getId()){
+            case R.id.toBack:
+                setResult(RESULT_OK);
+                finish();
+
+                break;
+
             case R.id.fab_main:
                 toggleFab();
 
@@ -150,6 +158,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
                 intent2.putExtra("assetName", db.dao().getAssetName(wayData.getFK_assetId()));
                 intent2.putExtra("wayName", wayName);
                 intent2.putExtra("balance", wayData.getWayBalance());
+                intent2.putExtra("flag", "modify");
                 startActivityForResult(intent2, 0);
 
                 break;
@@ -218,6 +227,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
         if(requestCode == 0){
             if(resultCode == RESULT_OK){
+                if (data != null) { wayName = data.getStringExtra("wayName"); }
                 setMonthList();      // adapter2.NotifyDataSetChanged();를 해도 새로고침이 안되어있어 그냥 다시 연결해버림.
             }
         }
