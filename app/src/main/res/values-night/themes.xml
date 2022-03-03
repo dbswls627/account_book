@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Accountbook" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Accountbook" parent="Theme.MaterialComponents.Light.DarkActionBar">  <!--[다크모드 활성화]Light -> DayNight-->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/green</item>        <!-- 기본 버튼색-->
         <item name="colorPrimaryVariant">@color/green</item> <!--여기가 상단바색-->

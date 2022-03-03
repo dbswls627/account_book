@@ -2,21 +2,18 @@ package com.team_3.accountbook;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
@@ -78,7 +75,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         holder.dayOfMonth.setText(daysOfMonth.get(position));
         holder.expense.setText(expense);     // 날짜의 총 지출값 출력
         holder.income.setText(income);     // 날짜의 총 수입값 출력
-
+        if(daysOfMonth.get(position).contains("!")){
+            holder.layout.setBackground(ContextCompat.getDrawable(context, R.color.lightGray));
+            holder.dayOfMonth.setText(daysOfMonth.get(position).replace("!",""));
+        }
         holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
             arrayList.clear();
             arrayList = (ArrayList<Cost>) db.dao().getItemList(ym + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
@@ -92,9 +92,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
 
     public class CalendarViewHolder extends RecyclerView.ViewHolder {
         TextView dayOfMonth, expense , income;        // 일, 지출액수, 수입액수
-
+        LinearLayout layout;
         public CalendarViewHolder(@NonNull View itemView) {
             super(itemView);
+            layout = itemView.findViewById(R.id.layout);
             dayOfMonth = itemView.findViewById(R.id.cellDayText);
             expense = itemView.findViewById(R.id.expense);
             income = itemView.findViewById(R.id.income);
