@@ -147,7 +147,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             // 확인 눌렀을때 실행되는 곳
             hh = Integer.toString(h);
             mm = Integer.toString(m);
-            if (h < 9) {
+            if (h < 10) {
                 hh = "0" + h;
             }          // 한자리 일시 앞에 0추가
             if (m < 10) {
