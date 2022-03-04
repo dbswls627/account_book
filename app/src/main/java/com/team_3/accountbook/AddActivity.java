@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +40,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@SuppressWarnings("deprecation")
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.touchItem {
     List<String> WayAndSortList;
@@ -372,7 +375,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
             case R.id.toEditWay_add:
                 if(focus.equals("way")){
-
+                    Intent intent = new Intent(this, AssetForEditActivity.class);
+                    startActivityForResult(intent, 0);
                 }
                 else if(focus.equals("sort")){
 
@@ -677,6 +681,15 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSort.setText(itemName);
         }
     }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
 
 
     public final static class NumberTextWatcher implements TextWatcher {

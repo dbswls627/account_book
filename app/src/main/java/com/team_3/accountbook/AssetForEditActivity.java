@@ -1,0 +1,120 @@
+package com.team_3.accountbook;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("deprecation")
+public class AssetForEditActivity extends AppCompatActivity implements AssetInAdapter.OnItemClickInAssetAc{
+    private BottomNavigationView mBottom_menu;
+    private RecyclerView mAssetRV;
+    private AppDatabase db;
+    private ArrayList<String> assetNameList = new ArrayList<>();
+    private Intent intent;
+    private String wayName = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_asset_for_edit);
+
+        mAssetRV = findViewById(R.id.rv_AssetAndWay2);
+
+        db = AppDatabase.getInstance(this);
+
+        buildList();
+        settingBottomMenu();
+    }
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.toBack_assetFotEdit:
+                setResult(RESULT_OK);
+                finish();
+
+                break;
+
+        }
+    }
+
+
+
+    @Override
+    public void listItemClick(String wayName2) {
+        this.wayName = wayName2;
+
+        Intent intent = new Intent(this, EditWayActivity.class);
+        intent.putExtra("wayName", wayName);
+        intent.putExtra("flag", "modify");
+        startActivityForResult(intent, 0);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 0){
+            if(resultCode == RESULT_OK){
+                buildList();
+            }
+        }
+    }
+
+
+
+    private void buildList(){
+        List<AssetNameWayNameAndBalance> ANWNList = db.dao().getAnWnWb();
+        for (int i = 0; i < ANWNList.size(); i++) {
+            if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
+                assetNameList.add(ANWNList.get(i).getAssetName());
+            }
+        }
+
+        mAssetRV.setAdapter(new AssetOutAdapter(ANWNList, assetNameList, this));
+        mAssetRV.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+
+
+    private void settingBottomMenu(){
+        mBottom_menu = findViewById(R.id.bottom_menu);
+        mBottom_menu.setSelectedItemId(R.id.setting);
+        mBottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
+
+            switch (menuItem.getItemId()) {
+                case R.id.home:
+                    intent = new Intent(this, HomeActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.graph:
+                    intent = new Intent(this, GraphActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.assets:
+                    intent = new Intent(this, AssetsActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.setting:
+                    intent = new Intent(this, SettingActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+            return true;
+        });
+    }
+}

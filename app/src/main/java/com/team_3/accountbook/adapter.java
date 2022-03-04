@@ -48,20 +48,18 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     @Override
     public adapter.CumstomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        CumstomViewHolder holder = null;
+        View view = null;
 
         if (context instanceof HomeActivity){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forhome, parent, false);
-            holder = new CumstomViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forhome, parent, false);
         }
         else if (context instanceof ListInAssetActivity){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forasset, parent, false);
-            holder = new CumstomViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forasset, parent, false);
         }
         else{
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
-            holder = new CumstomViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
         }
+        CumstomViewHolder holder = new CumstomViewHolder(view);
 
         return holder;
     }
