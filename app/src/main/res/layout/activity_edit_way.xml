@@ -9,191 +9,296 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:background="@color/green">
+        <ImageView
+            android:id="@+id/toBack_editWay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingLeft="20dp"
+            android:onClick="mOnClick"
+            app:tint="@color/white"
+            android:src="@drawable/ic_baseline_arrow_back" />
+        <TextView
+            android:id="@+id/wayName_editWay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:text="wayName" />
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:text=" 정보" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
-                android:text="자산"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="20dp"
-                android:text="수단명"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="20dp"
-                android:text="금액"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="20dp"
-                android:text="메모"/>
+            <ImageView
+                android:id="@+id/delete_wayData"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right"
+                android:paddingTop="10dp"
+                android:layout_marginRight="10dp"
+                android:paddingBottom="10dp"
+                android:onClick="mOnClick"
+                android:src="@drawable/ic_baseline_delete_forever_24"
+                tools:ignore="OnClick" />
+
         </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.4">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="10dp"
             android:orientation="vertical">
-            <EditText
-                android:id="@+id/editWay_assetName"
-                android:theme="@style/editText_income"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/editWay_wayName"
-                android:theme="@style/editText_income"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/editWay_balance"
-                    android:theme="@style/editText_income"
-                    android:layout_width="fill_parent"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="20dp"
+                        android:text="자산"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginRight="20dp"
+                        android:text="수단명"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginRight="20dp"
+                        android:text="금액"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginRight="20dp"
+                        android:text="메모"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="date"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="7dp"
-                    android:layout_marginBottom="2dp"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:background="@drawable/box_won"
-                    app:backgroundTint="@null"
-                    android:textColor="@color/darkGray"
-                    android:text="원"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/editWay_assetName"
+                        android:theme="@style/editText_income"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/editWay_wayName"
+                        android:theme="@style/editText_income"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/editWay_balance"
+                            android:theme="@style/editText_income"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:inputType="date"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="2dp"
+                            android:padding="5dp"
+                            android:gravity="center"
+                            android:background="@drawable/box_won"
+                            app:backgroundTint="@null"
+                            android:textColor="@color/darkGray"
+                            android:text="원"/>
+                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/editWay_memo"
+                        android:theme="@style/editText_income"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
             </LinearLayout>
-            <EditText
-                android:id="@+id/editWay_memo"
-                android:theme="@style/editText_income"
+
+
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:background="@color/lightGray" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/hardLightGray" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:background="@color/lightGray" />
+                android:layout_height="0.7dp"
+                android:background="@color/lightGray" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/hardLightGray" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:background="@color/lightGray" />
 
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="20dp"
+                        android:text="번호"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginRight="20dp"
+                        android:text="구분어"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/editWay_phoneNumber"
+                        android:theme="@style/editText_income"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/editWay_delimiter"
+                        android:theme="@style/editText_income"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:background="@color/lightGray" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/hardLightGray" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:background="@color/lightGray" />
+
+
+
             <TextView
+                android:id="@+id/tv_save_editWay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
+                android:layout_height="40dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
-                android:text="번호"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="20dp"
-                android:text="구분어"/>
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                android:onClick="mOnClick"
+                android:background="@drawable/save_state"
+                app:backgroundTint="@null"
+                android:text="저장하기"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/hardGreen"/>
+
         </LinearLayout>
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/layout_editWayBottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-            <EditText
-                android:id="@+id/editWay_phoneNumber"
-                android:theme="@style/editText_income"
+            android:layout_height="35dp"
+            android:background="#3B3B3B">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:text="자산"/>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/editWay_delimiter"
-                android:theme="@style/editText_income"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right">
+                    <ImageView
+                        android:id="@+id/clearList_editWay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="5dp"
+                        android:layout_marginRight="5dp"
+                        android:onClick="mOnClick"
+                        android:src="@drawable/ic_baseline_clear_24"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_editWay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
-
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:background="@color/lightGray" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/hardLightGray" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:background="@color/lightGray" />
-
-
-
-    <TextView
-        android:id="@+id/tv_save_editWay"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:onClick="mOnClick"
-        android:background="@drawable/save_state"
-        app:backgroundTint="@null"
-        android:text="저장하기"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="@color/hardGreen"/>
-
-
-
 
 </LinearLayout>

@@ -187,7 +187,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     @SuppressLint("ClickableViewAccessibility")
     private void reRun(String predate, String preWay, String preSum, String preBody) {
         mTopDivision = findViewById(R.id.topDivision);  // 액션바 구분 Text
-        mLayout = findViewById(R.id.l_layout);      // RV 상단바
+        mLayout = findViewById(R.id.l_layout);      // RV 레이아웃
         mFlag = findViewById(R.id.tv_flag);         // RV 상단바 내부 text
         mToEditWay = findViewById(R.id.toEditWay_add);  // RV 상단바 편집버튼
         mClear = findViewById(R.id.clearList_add);  // RV 상단바 리스트 닫기버튼
@@ -283,7 +283,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         if (!focus.equals("")) {
             if (focus.equals("way")) {
                 WayAndSortList = db.dao().getWayNames();
-                mFlag.setText(" [ 자산 ] ");
+                mFlag.setText(" [ 자산 - 수단 ] ");
             } else if (focus.equals("sort")) {
                 WayAndSortList = db.dao().getSortNames(action);
                 mFlag.setText(" [ 분류 ] ");
@@ -379,7 +379,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     startActivityForResult(intent, 0);
                 }
                 else if(focus.equals("sort")){
-
+                    Toast.makeText(this, "분류 편집 이동예정", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -688,7 +688,25 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == 0){
+            if(resultCode == RESULT_OK){
+                setWayAndSortRV(focus);
+            }
+        }
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+        if(mLayout.getVisibility() == View.VISIBLE){
+            mLayout.setVisibility(View.GONE);
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
+
 
 
 

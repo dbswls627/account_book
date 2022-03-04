@@ -18,6 +18,9 @@ public interface sqlDao {
     @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId) VALUES(:name, :balance, :id)")
     void insertWay(String name, int balance, int id);
 
+    @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId, wayMemo, phoneNumber, delimiter) VALUES(:name, :balance, :id, :memo, :pn, :delimiter)")
+    void insertWayAll(String name, int balance, int id, String memo, String pn, String delimiter);
+
     @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
     void insertSort(String name, String division);
 
@@ -72,6 +75,9 @@ public interface sqlDao {
 
     @Query("DELETE FROM Cost WHERE costId = :costId")
     void deleteCostData(int costId);
+
+    @Query("DELETE FROM Way WHERE wayName = :wayName")
+    void deleteWayData(String wayName);
 
 
 
@@ -231,6 +237,9 @@ public interface sqlDao {
 
     @Query("SELECT a.assetName FROM Asset a WHERE a.assetId = :assetId")
     String getAssetName(int assetId);
+
+    @Query("SELECT a.assetName FROM Asset a")
+    List<String> getAssetNameAll();
 
     @Query("SELECT a.assetId FROM Asset a WHERE a.assetName = :name")
     Integer getAssetId(String name);

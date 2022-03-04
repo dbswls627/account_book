@@ -33,6 +33,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     private FloatingActionButton mFabAdd, mFabReWrite, mFabMain;
     private boolean isFabOpen = false;
     private long now = 0;
+    private String backFlag = "";
     ArrayList<String> dateList = new ArrayList<>();
     RecyclerView mRV_listInAsset;
     adapter2 adapter2;
@@ -167,7 +168,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
             case R.id.fab_reWrite:
                 Intent intent2 = new Intent(this, EditWayActivity.class);
                 intent2.putExtra("wayName", wayName);
-                intent2.putExtra("flag", "modify");
+                intent2.putExtra("flag", "modify_LIA");
                 startActivityForResult(intent2, 0);
 
                 break;
@@ -216,9 +217,6 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
 
 
-
-
-
     @Override
     public void onClick(Cost cost) {
         Intent intent = new Intent(this, AddActivity.class);
@@ -236,8 +234,16 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
         if(requestCode == 0){
             if(resultCode == RESULT_OK){
-                if (data != null) { wayName = data.getStringExtra("wayName"); }
-                setMonthList();      // adapter2.NotifyDataSetChanged();를 해도 새로고침이 안되어있어 그냥 다시 연결해버림.
+                if (data != null) {
+                    wayName = data.getStringExtra("wayName");
+                    backFlag = data.getStringExtra("backFlag");
+                }
+
+                if(backFlag.equals("double")){
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                else{ setMonthList(); }
             }
         }
     }

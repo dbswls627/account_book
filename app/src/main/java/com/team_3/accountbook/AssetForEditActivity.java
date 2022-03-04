@@ -48,6 +48,12 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
                 break;
 
+            case R.id.addWay:
+                Intent intent = new Intent(this, EditWayActivity.class);
+                intent.putExtra("flag", "new");
+                startActivityForResult(intent, 0);
+
+                break;
         }
     }
 
@@ -59,7 +65,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
         Intent intent = new Intent(this, EditWayActivity.class);
         intent.putExtra("wayName", wayName);
-        intent.putExtra("flag", "modify");
+        intent.putExtra("flag", "modify_AFE");
         startActivityForResult(intent, 0);
     }
 
@@ -79,6 +85,8 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
     private void buildList(){
         List<AssetNameWayNameAndBalance> ANWNList = db.dao().getAnWnWb();
+
+        assetNameList.clear();
         for (int i = 0; i < ANWNList.size(); i++) {
             if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
                 assetNameList.add(ANWNList.get(i).getAssetName());
@@ -116,5 +124,12 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
             }
             return true;
         });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 }
