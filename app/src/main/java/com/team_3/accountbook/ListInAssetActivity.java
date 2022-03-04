@@ -15,14 +15,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,12 +32,13 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private FloatingActionButton mFabAdd, mFabReWrite, mFabMain;
     private boolean isFabOpen = false;
+    private long now = 0;
     ArrayList<String> dateList = new ArrayList<>();
     RecyclerView mRV_listInAsset;
     adapter2 adapter2;
 
     LinearLayout mLayoutNoData;
-    TextView mTopWayName, mNowMonth, mIncomeTotal, mExpenseTotal;
+    TextView mTopWayName, mDuration, mNowMonth, mIncomeTotal, mExpenseTotal;
     LocalDate localDate;
     String formatAmount = "";
 
@@ -53,6 +53,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         setContentView(R.layout.activity_list_in_asset);
 
         mTopWayName = findViewById(R.id.listInAsset_wayName);
+        mDuration = findViewById(R.id.duration);
         mIncomeTotal = findViewById(R.id.income_total);
         mExpenseTotal = findViewById(R.id.expense_total);
         mLayoutNoData = findViewById(R.id.layout_noData);
@@ -66,6 +67,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
         mLayoutNoData.setVisibility(View.GONE);
         localDate = LocalDate.now();
+        now = System.currentTimeMillis();
 
         wayName = getIntent().getStringExtra("wayName");
         setMonthList();
@@ -77,6 +79,17 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthList(){
         mTopWayName.setText(wayName);
+
+        LocalDate fistDate = localDate.withDayOfMonth(1);                           // 월의 첫째 날
+        LocalDate lastDate = localDate.withDayOfMonth(localDate.lengthOfMonth());   // 월의 마지막 날
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        if(!fistDate.format(DateTimeFormatter.ofPattern("yyyy")).equals(sdf.format(now))){      // 현재 년도랑 이동한 달의 년도랑 다르면~
+            mDuration.setText(fistDate.format(DateTimeFormatter.ofPattern("yy.MM.dd")) + " ~ " + lastDate.format(DateTimeFormatter.ofPattern("yy.MM.dd")));
+        }
+        else {
+            mDuration.setText(fistDate.format(DateTimeFormatter.ofPattern("MM.dd")) + " ~ " + lastDate.format(DateTimeFormatter.ofPattern("MM.dd")));
+        }
+
         mNowMonth.setText(monthFromLocalDate(localDate));
 
         int totalAmount = 0;
@@ -123,7 +136,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String monthFromLocalDate(LocalDate ld){        // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return ld.format(formatter);
     }
 
@@ -132,7 +145,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void mOnClick(View v){
         switch (v.getId()){
-            case R.id.toBack:
+            case R.id.toBack_listInAsset:
                 setResult(RESULT_OK);
                 finish();
 
@@ -152,12 +165,8 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
                 break;
 
             case R.id.fab_reWrite:
-                Way wayData = db.dao().getWayData(wayName);
-
                 Intent intent2 = new Intent(this, EditWayActivity.class);
-                intent2.putExtra("assetName", db.dao().getAssetName(wayData.getFK_assetId()));
                 intent2.putExtra("wayName", wayName);
-                intent2.putExtra("balance", wayData.getWayBalance());
                 intent2.putExtra("flag", "modify");
                 startActivityForResult(intent2, 0);
 

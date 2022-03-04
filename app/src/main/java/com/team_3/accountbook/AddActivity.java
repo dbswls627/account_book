@@ -44,11 +44,11 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     LocalDate selectedDate = LocalDate.now();
     LinearLayout mLayout;
     EditText mDate, mWay, mSort, mSum, mBody;
-    TextView mIncome, mExpense, mSave, mFlag, mDelete;
+    TextView mTopDivision, mIncome, mExpense, mSave, mFlag, mDelete;
     AppDatabase db;
     long ms;
     boolean checkIncome = false, checkExpense = true;
-    String action = "expense";
+    String action = "expense", actionKorean = "지출";
     String focus = "";
     int cursorPosition = -1;
     private String callValue = "nothing";
@@ -74,7 +74,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         setContentView(R.layout.activity_add);
 
         reRun(preDate, preWay, preSum, preBody);
-
 
 
         long now = System.currentTimeMillis();
@@ -182,6 +181,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     @SuppressLint("ClickableViewAccessibility")
     private void reRun(String predate, String preWay, String preSum, String preBody) {
+        mTopDivision = findViewById(R.id.topDivision);  // 액션바 구분 Text
         mLayout = findViewById(R.id.l_layout);      // RV 상단바
         mFlag = findViewById(R.id.tv_flag);         // RV 상단바 내부 text
         mIncome = findViewById(R.id.tv_income);     // 수입버튼
@@ -200,6 +200,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);   //키보드 내리기 할 때 필요한 객체
         mSum.addTextChangedListener(new NumberTextWatcher(mSum));            // 금액 입력반응
 
+        mTopDivision.setText(actionKorean);
         // 다시 그리며 이전 값들 들고오기
         mDate.setText(predate);
         mWay.setText(preWay);
@@ -311,6 +312,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     private void setColorOfDivision(String division) {
         if (division.equals("income")) {
             action = "income";
+            actionKorean = "수입";
             setColorOfTheme(action);
 
             checkIncome = true;
@@ -326,6 +328,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         }
         else if (division.equals("expense")) {
             action = "expense";
+            actionKorean = "지출";
             setColorOfTheme(action);
 
             checkIncome = false;
@@ -345,6 +348,11 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     public void mOnClick(View v) {
         switch (v.getId()) {
+            case R.id.toBack_add:
+                finish();
+
+                break;
+
             case R.id.tv_income:
                 if (!checkIncome) {
                     setColorOfDivision("income");

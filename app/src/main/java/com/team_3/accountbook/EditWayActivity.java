@@ -38,14 +38,19 @@ public class EditWayActivity extends AppCompatActivity {
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
         if(flag.equals("modify")){
-            assetName = intent.getStringExtra("assetName");
             wayName = intent.getStringExtra("wayName");
-            balance = intent.getIntExtra("balance", 0);
+            Way wayData = db.dao().getWayData(wayName);
+
+            assetName = db.dao().getAssetName(wayData.getFK_assetId());
+            balance = wayData.getWayBalance();
             formatBalance = myFormatter.format(balance);
 
             mAssetName.setText(assetName);
             mWayName.setText(wayName);
             mBalance.setText(formatBalance + "");
+            mMemo.setText(wayData.getWayMemo());
+            mPhoneNumber.setText(wayData.getPhoneNumber());
+            mDelimiter.setText(wayData.getDelimiter());
         }
 
         mBalance.addTextChangedListener(new AddActivity.NumberTextWatcher(mBalance));

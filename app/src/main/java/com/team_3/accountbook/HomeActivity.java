@@ -107,25 +107,30 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     @RequiresApi(api = Build.VERSION_CODES.O)
     private ArrayList<String> daysInMonthArray(LocalDate date) {   // 월에 맞게 날짜들을 표시하는 함수.
         ArrayList<String> daysInMonthArray = new ArrayList<>();        // String 배열 daysInMonthArray 생성.
+
         YearMonth yearMonth = YearMonth.from(date);                    // ex)2022-03  .from(date): date 의 인스턴스를 가져온다.    *안드로이드 developers 설명: from(TemporalAccessor temporal) - Obtains an instance of YearMonth from a temporal object.
         YearMonth yearPreMonth = YearMonth.from(date.minusMonths(1));
+
         int daysInMonth = yearMonth.lengthOfMonth();                   // 월의 길이(1월이면 31 2월이면 28...).            .lengthOfMonth(): 연도를 고려하여 월의 길이를 반환함.
         int daysInPreMonth = yearPreMonth.lengthOfMonth();
+
         LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);       // 달 첫째 날짜.ex)2022-03-01         .withDayOfMonth(i): 달의 i일 날짜를 반환함.
         int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();        // 달 첫째 날의 요일.(0-일 1-월 ... 6-토)      .getDayOfWeek(): 요일 반환 메소드.
+
         int d = 1;
         for(int i = 1; i <= 42; i++) {                                 // 그리드뷰의 첫번째 칸부터 마지막 칸까지
-            if(i <= dayOfWeek) {        // i가 달의 첫째 날보다 작거나 마지막 날보다 크면~
-                daysInMonthArray.add(String.valueOf(daysInPreMonth-(dayOfWeek-i))+"!");                              // ~빈칸으로 만듦.
+            if(i <= dayOfWeek) {        // i가 달의 첫째 날보다 작을 때~
+                daysInMonthArray.add((daysInPreMonth-(dayOfWeek-i))+"!");                              // ~빈칸으로 만듦.
             }
-            else if(i > daysInMonth + dayOfWeek){
-                daysInMonthArray.add(String.valueOf(d++)+"!");
+            else if(i > daysInMonth + dayOfWeek){   // i가 달의 마지막 날보다 클 때~
+                daysInMonthArray.add((d++)+"!");
             }
             else {
                 daysInMonthArray.add(String.valueOf(i - dayOfWeek));
 
             }
         }
+
         boolean front = true;
         boolean back = true;
 
