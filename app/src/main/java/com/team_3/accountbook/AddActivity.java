@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     RecyclerView mRV_WayAndSort;
     LocalDate selectedDate = LocalDate.now();
     LinearLayout mLayout;
+    private ImageView mToEditWay, mClear;
     EditText mDate, mWay, mSort, mSum, mBody;
     TextView mTopDivision, mIncome, mExpense, mSave, mFlag, mDelete;
     AppDatabase db;
@@ -184,6 +186,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mTopDivision = findViewById(R.id.topDivision);  // 액션바 구분 Text
         mLayout = findViewById(R.id.l_layout);      // RV 상단바
         mFlag = findViewById(R.id.tv_flag);         // RV 상단바 내부 text
+        mToEditWay = findViewById(R.id.toEditWay_add);  // RV 상단바 편집버튼
+        mClear = findViewById(R.id.clearList_add);  // RV 상단바 리스트 닫기버튼
         mIncome = findViewById(R.id.tv_income);     // 수입버튼
         mExpense = findViewById(R.id.tv_expense);   // 지출버튼
         mDate = findViewById(R.id.date);            // 날짜
@@ -364,6 +368,21 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 if (!checkExpense) {
                     setColorOfDivision("expense");
                 }
+                break;
+
+            case R.id.toEditWay_add:
+                if(focus.equals("way")){
+
+                }
+                else if(focus.equals("sort")){
+
+                }
+
+                break;
+
+            case R.id.clearList_add:
+                mLayout.setVisibility(View.GONE);
+
                 break;
 
             case R.id.tv_save:
