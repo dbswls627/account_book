@@ -1,13 +1,5 @@
 package com.team_3.accountbook;
 
-import static java.lang.Integer.parseInt;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -16,6 +8,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +32,24 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     Context context;
 
-    
+    @Override
+    protected void onRestart() {
+        arrayList.clear();
+        super.onRestart();
+        readSMSMessage();
+
+        ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
+        for (Cost cost : arrayList) {
+            if(!dateArray.contains(cost.getUseDate().substring(0, 14))) {
+                dateArray.add(cost.getUseDate().substring(0, 14));
+            }
+        }
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
+        mRecyclerView.setAdapter(new adapter2(context, arrayList, dateArray));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
