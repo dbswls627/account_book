@@ -89,6 +89,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.gray));
             holder.dayOfMonth.setText(day1);
             holder.expense.setText(preExpense);     // 날짜의 총 지출값 출력
+            holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.income.setText(preIncome);     // 날짜의 총 수입값 출력
             holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
                 arrayList.clear();
@@ -101,6 +102,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             holder.layout.setBackground(ContextCompat.getDrawable(context, R.color.hardLightGray));
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.gray));
             holder.dayOfMonth.setText(day1);
+            holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.expense.setText(nextExpense);     // 날짜의 총 지출값 출력
             holder.income.setText(nextIncome);     // 날짜의 총 수입값 출력
             holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
