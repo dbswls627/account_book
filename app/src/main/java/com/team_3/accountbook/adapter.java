@@ -80,6 +80,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
             else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.red)); }
         }
+
         else if (context instanceof ListInAssetActivity){   // ListInAssetActivity 에서의 세팅
             holder.mSortName_da.setText(arrayList.get(position).getSortName());
             holder.mBody_da.setText(arrayList.get(position).getContent());
@@ -96,6 +97,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
                 mOnItemClick.onClick(cost);
             }));
         }
+
         else{       // 그 외 세팅
             holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
             holder.bd.setText(arrayList.get(position).getContent());

@@ -1,12 +1,15 @@
 package com.team_3.accountbook;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -14,27 +17,36 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
     private ArrayList<String> daysOfMonth;
+    private List<String> yyyyMM;
     private OnItemClick mCallback;
     public interface OnItemClick {
-        void onClick (ArrayList<Cost> arrayList, String md);
+        void onClick (ArrayList<Cost> arrayList, String yyyyMM, String dd, int dayType);
     }
-    ArrayList<Cost> arrayList = new ArrayList<>();      // arrayList2에서 item 으로 추린 리스트
+    ArrayList<Cost> arrayList = new ArrayList<>();
 
     Context context;
-    String ym,preYm,nextYm;                  // yyyy년 MM월
+    String nowYM, preYearMonth, nextYearMonth;             // yyyy년 MM월
     AppDatabase db;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, String ym, String preYm, String nextYm, Context context, OnItemClick listener) {
+
+    public CalendarAdapter(ArrayList<String> daysOfMonth, List<String> yyyyMM, String ym, String preYm, String nextYm, Context context, OnItemClick listener) {
         this.daysOfMonth = daysOfMonth;
+        this.yyyyMM = yyyyMM;
         this.context=context;
         this.mCallback = listener;
-        this.ym = ym;
-        this.preYm = preYm;
-        this.nextYm =nextYm;
+        this.nowYM = ym;
+        this.preYearMonth = preYm;
+        this.nextYearMonth =nextYm;
     }
 
     @Override
@@ -69,61 +81,92 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
 
         DecimalFormat decFormat = new DecimalFormat("###,###");
 
-        String expense = db.dao().getAmount(ym + " " + day1 + "일", "expense");                                             // 해당 일 총 지출값
-        String income  = db.dao().getAmount(ym + " " + day1 + "일", "income");                                              // 해당 일 총 수입값
-        String preExpense = db.dao().getAmount(preYm + " " + day1 + "일", "expense");      // 전월 해당 일 총 지출값
-        String preIncome  = db.dao().getAmount(preYm + " " + day1 + "일", "income");       // 전월 해당 일 총 수입값
-        String nextExpense = db.dao().getAmount(nextYm + " " + day1 + "일", "expense");    // 다음월 해당 일 총 지출값
-        String nextIncome  = db.dao().getAmount(nextYm + " " + day1 + "일", "income");     // 다음월 해당 일 총 수입값
+        if(daysOfMonth.get(position).contains("!")){        // 이전월 일 때~
+            String preExpense = db.dao().getAmount(preYearMonth + " " + day1 + "일", "expense");      // 전월 해당 일 총 지출값
+            String preIncome  = db.dao().getAmount(preYearMonth + " " + day1 + "일", "income");       // 전월 해당 일 총 수입값
 
-        if(expense != null) { expense = decFormat.format(Integer.parseInt(expense)); }                  //null 일때 변환하면 팅김
-        if(income != null)  { income  = decFormat.format(Integer.parseInt(income)); }                   //null 일때 변환하면 팅김
-        if(preExpense != null) { preExpense = decFormat.format(Integer.parseInt(preExpense)); }         //null 일때 변환하면 팅김
-        if(preIncome != null)  { preIncome  = decFormat.format(Integer.parseInt(preIncome)); }          //null 일때 변환하면 팅김
-        if(nextExpense != null) { nextExpense = decFormat.format(Integer.parseInt(nextExpense)); }      //null 일때 변환하면 팅김
-        if(nextIncome != null)  { nextIncome  = decFormat.format(Integer.parseInt(nextIncome)); }       //null 일때 변환하면 팅김
+            if(preExpense != null) { preExpense = decFormat.format(Integer.parseInt(preExpense)); }         //null 일때 변환하면 팅김
+            if(preIncome != null)  { preIncome  = decFormat.format(Integer.parseInt(preIncome)); }          //null 일때 변환하면 팅김
 
-
-        if(daysOfMonth.get(position).contains("!")){                 //전월 일때
             holder.layout.setBackground(ContextCompat.getDrawable(context, R.color.hardLightGray));
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.gray));
             holder.dayOfMonth.setText(day1);
-            holder.expense.setText(preExpense);     // 날짜의 총 지출값 출력
+            holder.expense.setText(preExpense);             // 날짜의 총 지출값 출력
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
-            holder.income.setText(preIncome);     // 날짜의 총 수입값 출력
-            holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
+            holder.income.setText(preIncome);               // 날짜의 총 수입값 출력
+
+            holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
-                arrayList = (ArrayList<Cost>) db.dao().getItemList(preYm + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+                arrayList = (ArrayList<Cost>) db.dao().getItemList(preYearMonth + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
                 // 클릭하면 나오는 리스트뷰에 넣을 리스트와 제목테스트(월/일) 매개변수로 전달
-                mCallback.onClick(arrayList, preYm.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
+                mCallback.onClick(arrayList, yyyyMM.get(0), day1+"일", getDayOfWeek(replaceYMText(preYearMonth)+day1));   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
             });
         }
-        else if(daysOfMonth.get(position).contains("?")){           //다음월 일때
+
+        else if(daysOfMonth.get(position).contains("?")){   // 다음월 일 때~
+            String nextExpense = db.dao().getAmount(nextYearMonth + " " + day1 + "일", "expense");    // 다음월 해당 일 총 지출값
+            String nextIncome  = db.dao().getAmount(nextYearMonth + " " + day1 + "일", "income");     // 다음월 해당 일 총 수입값
+
+            if(nextExpense != null) { nextExpense = decFormat.format(Integer.parseInt(nextExpense)); }      //null 일때 변환하면 팅김
+            if(nextIncome != null)  { nextIncome  = decFormat.format(Integer.parseInt(nextIncome)); }       //null 일때 변환하면 팅김
+
             holder.layout.setBackground(ContextCompat.getDrawable(context, R.color.hardLightGray));
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.gray));
             holder.dayOfMonth.setText(day1);
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
-            holder.expense.setText(nextExpense);     // 날짜의 총 지출값 출력
-            holder.income.setText(nextIncome);     // 날짜의 총 수입값 출력
-            holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
+            holder.expense.setText(nextExpense);            // 날짜의 총 지출값 출력
+            holder.income.setText(nextIncome);              // 날짜의 총 수입값 출력
+
+            holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
-                arrayList = (ArrayList<Cost>) db.dao().getItemList(nextYm + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+                arrayList = (ArrayList<Cost>) db.dao().getItemList(nextYearMonth + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+
                 // 클릭하면 나오는 리스트뷰에 넣을 리스트와 제목테스트(월/일) 매개변수로 전달
-                mCallback.onClick(arrayList, nextYm.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
+                mCallback.onClick(arrayList, yyyyMM.get(2), day1+"일", getDayOfWeek(replaceYMText(nextYearMonth)+day1));   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
             });
         }
-        else{                                                       //현재월 일때
+
+        else{                                                // 현재월 일 때~
+            String expense = db.dao().getAmount(nowYM + " " + day1 + "일", "expense");                      // 현재 해당 일 총 지출값
+            String income  = db.dao().getAmount(nowYM + " " + day1 + "일", "income");                       // 현재 해당 일 총 수입값
+
+            if(expense != null) { expense = decFormat.format(Integer.parseInt(expense)); }                  //null 일때 변환하면 팅김
+            if(income != null)  { income  = decFormat.format(Integer.parseInt(income)); }                   //null 일때 변환하면 팅김
+
             holder.dayOfMonth.setText(daysOfMonth.get(position));
-            holder.expense.setText(expense);     // 날짜의 총 지출값 출력
-            holder.income.setText(income);     // 날짜의 총 수입값 출력
-            holder.itemView.setOnClickListener((i)->{    // 달력 날짜 클릭시
+            holder.expense.setText(expense);                // 날짜의 총 지출값 출력
+            holder.income.setText(income);                  // 날짜의 총 수입값 출력
+            holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
-                arrayList = (ArrayList<Cost>) db.dao().getItemList(ym + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
+                arrayList = (ArrayList<Cost>) db.dao().getItemList(nowYM + " " + day1 + "일");       // 클릭한 날짜의 Cost 테이블 정보만 받아옴
                 // 클릭하면 나오는 리스트뷰에 넣을 리스트와 제목테스트(월/일) 매개변수로 전달
-                mCallback.onClick(arrayList, ym.substring(5)+day1+"일");   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
+                mCallback.onClick(arrayList, yyyyMM.get(1), day1+"일", getDayOfWeek(replaceYMText(nowYM)+day1));   // 만든 arrayList 를 연결해야 하지만 어댑터에서 하지 못함. interface 사용해 HomeActivity 로 리스트를 넘김.
             });
         }
 
+    }
+
+
+
+    @SuppressLint("LongLogTag")
+    private int getDayOfWeek(String selectDate){
+        SimpleDateFormat dtf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c = Calendar.getInstance();
+        Date date = null;
+
+        try { date = dtf.parse(selectDate); }
+        catch (Exception e) { Log.d("error_CalenderAdapter_getDatOfWeek()", "parsing dateFormat Error"); }
+        c.setTime(date);
+
+        return c.get(Calendar.DAY_OF_WEEK);
+    }
+
+
+
+    private String replaceYMText(String allText){
+        String afterText = allText.replaceAll("[년 월]","");
+
+        return afterText;
     }
 
 

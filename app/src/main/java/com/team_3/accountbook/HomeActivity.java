@@ -1,5 +1,6 @@
 package com.team_3.accountbook;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,12 +24,13 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    private TextView monthYearText, date;
+    private TextView monthYearText, mYearMonth, date, mDayInfo;
     private RecyclerView calendarRecyclerView, listRv;
-    private LinearLayout mDateLayout;
+    private LinearLayout mDateLayout, mNoDataLayout;
     private ImageView pre,next;
     AppDatabase db;
 
@@ -59,7 +61,10 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         listRv = findViewById(R.id.listRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
         mDateLayout = findViewById(R.id.homeLayout_data);
+        mYearMonth = findViewById(R.id.yearMonth_home);
         date = findViewById(R.id.date);
+        mDayInfo = findViewById(R.id.dayInfo);
+        mNoDataLayout = findViewById(R.id.homeLayout_noDataInfo);
         pre = findViewById(R.id.toPreMonth);
         next = findViewById(R.id.toNextMonth);
         db = AppDatabase.getInstance(this);
@@ -90,6 +95,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         setMonthView();
         mDateLayout.setVisibility(View.GONE);
+        mNoDataLayout.setVisibility(View.GONE);
 
         pre.setOnClickListener((i)->{
             selectedDate = selectedDate.minusMonths(1);
@@ -159,7 +165,13 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        return date.format(formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String monthYearFromDateOnlyNum(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 'yyyy.MMMM' 형식으로 변환하는 함수
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
 
@@ -168,27 +180,85 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthView() {// 달력 이동 버튼 클릭시, 해당 달의 달력을 그리는 함수
+        List<String> yyyyMM = new ArrayList<>();
+        yyyyMM.add(monthYearFromDateOnlyNum(selectedDate.minusMonths(1)));
+        yyyyMM.add(monthYearFromDateOnlyNum(selectedDate));
+        yyyyMM.add(monthYearFromDateOnlyNum(selectedDate.plusMonths(1)));
 
         monthYearText.setText(monthYearFromDate(selectedDate));                    // 현재 년/월을 setText
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);            // 해당 달의 달력 배열을 만들어 daysInMonth 에 저장
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, monthYearFromDate(selectedDate),monthYearFromDate(selectedDate.minusMonths(1)),monthYearFromDate(selectedDate.plusMonths(1)),this,this);   // 달력 배열을 가지는 Adapter 생성
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, yyyyMM, monthYearFromDate(selectedDate),
+                monthYearFromDate(selectedDate.minusMonths(1)), monthYearFromDate(selectedDate.plusMonths(1)), this, this);   // 달력 배열을 가지는 Adapter 생성
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);   // 가로 7칸의 그리드뷰(퍼즐 형식)로 만드는 리사이클러뷰 레이아웃 매니저 layoutManager 생성
         calendarRecyclerView.setLayoutManager(layoutManager);                      // 레이아웃 매니저를 layoutManager 로 지정
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
+
+
     @Override
-    public void onClick(ArrayList<Cost> arrayList, String md) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
+    public void onClick(ArrayList<Cost> arrayList, String yyyyMM, String dd, int dayType) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
+        if(!arrayList.isEmpty()){
+            mNoDataLayout.setVisibility(View.GONE);
+            listRv.setVisibility(View.VISIBLE);
             listRv.setAdapter(new adapter(arrayList));
             listRv.setLayoutManager(new LinearLayoutManager(this));
-            mDateLayout.setVisibility(View.VISIBLE);
-            date.setText(md);
+        }
+        else {
+            mNoDataLayout.setVisibility(View.VISIBLE);
+            listRv.setVisibility(View.GONE);
+        }
+
+        mDateLayout.setVisibility(View.VISIBLE);
+        mYearMonth.setText(yyyyMM);
+        date.setText(dd);
+        parseForKoreanDay(dayType);
+    }
+
+
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void parseForKoreanDay(int dayType){
+        if(dayType == 1){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekend_sunday));
+            mDayInfo.setText("일");
+        }
+        else if(dayType == 2){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekday));
+            mDayInfo.setText("월");
+        }
+        else if(dayType == 3){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekday));
+            mDayInfo.setText("화");
+        }
+        else if(dayType == 4){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekday));
+            mDayInfo.setText("수");
+        }
+        else if(dayType == 5){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekday));
+            mDayInfo.setText("목");
+        }
+        else if(dayType == 6){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekday));
+            mDayInfo.setText("금");
+        }
+        else if(dayType == 7){
+            mDayInfo.setBackground(getResources().getDrawable(R.drawable.weekend_saturday));
+            mDayInfo.setText("토");
+        }
+
     }
 
 
 
     public void mOnClick(View v){
         switch (v.getId()){
+            case R.id.clearList_home:
+                mDateLayout.setVisibility(View.GONE);
+
+                break;
+
             case R.id.fab_add:
                 Intent intent = new Intent(this, AddActivity.class);
                 intent.putExtra("flag", "nothing");
