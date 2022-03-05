@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private TextView monthYearText, date;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout;
+    private ImageView pre,next;
     AppDatabase db;
 
     BottomNavigationView bottom_menu;
@@ -40,6 +42,12 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         bottom_menu.setSelectedItemId(R.id.home);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setMonthView();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -52,7 +60,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         monthYearText = findViewById(R.id.monthYearTV);
         mDateLayout = findViewById(R.id.homeLayout_data);
         date = findViewById(R.id.date);
-
+        pre = findViewById(R.id.toPreMonth);
+        next = findViewById(R.id.toNextMonth);
         db = AppDatabase.getInstance(this);
 
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
@@ -82,6 +91,15 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         setMonthView();
         mDateLayout.setVisibility(View.GONE);
 
+        pre.setOnClickListener((i)->{
+            selectedDate = selectedDate.minusMonths(1);
+            setMonthView();
+        });
+
+        next.setOnClickListener((i)->{
+            selectedDate = selectedDate.plusMonths(1);
+            setMonthView();
+        });
         if(db.dao().getSortNames("income").toString() == "[]") {     // 비어있으면 추가.  초기설정!
             buildTableData();
         }
@@ -146,18 +164,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void previousMonthAction(View view) {    // 이전 달 이동 버튼 클릭. setOnClickListener 로 바꿔도 됨.
-        selectedDate = selectedDate.minusMonths(1); // 현재 달 - 1
-        setMonthView();
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void nextMonthAction(View view) {        // 다음 달 이동 버튼 클릭. setOnClickListener 로 바꿔도 됨.
-        selectedDate = selectedDate.plusMonths(1);  // 현재 달 + 1
-        setMonthView();
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
