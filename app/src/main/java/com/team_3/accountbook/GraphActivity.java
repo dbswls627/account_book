@@ -1,20 +1,21 @@
 package com.team_3.accountbook;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -36,6 +37,7 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     BottomNavigationView bottom_menu;
     Button preButton,nextButton;
     private TextView monthYearText,sortName;
+    LinearLayout listLayout,chartLayout,noData;
     PieChart pieChart;
     RecyclerView rv;
     AppDatabase db;
@@ -61,6 +63,9 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
         nextButton = findViewById(R.id.nextButton);
         rv = findViewById(R.id.rv);
         sortName = findViewById(R.id.sortName);
+        listLayout = findViewById(R.id.listLayout);
+        chartLayout = findViewById(R.id.chartLayout);
+        noData = findViewById(R.id.layout_noData);
 
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
 
@@ -115,6 +120,17 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setChart() {
+        if (db.dao().getMDate(monthYearFromDate(selectedDate)).isEmpty()){
+            listLayout.setVisibility(View.GONE);
+            chartLayout.setVisibility(View.GONE);
+            noData.setVisibility(View.VISIBLE);
+        }
+        else {
+            listLayout.setVisibility(View.VISIBLE);
+            chartLayout.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.GONE);
+        }
+
         sortName.setText("전체");
         monthYearText.setText(monthYearFromDate(selectedDate));
         setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate)));

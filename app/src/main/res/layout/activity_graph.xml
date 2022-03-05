@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     tools:context=".GraphActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,6 +39,27 @@
 
     </LinearLayout>
     <LinearLayout
+        android:layout_weight="1"
+        android:id="@+id/layout_noData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="150dp"
+            android:src="@drawable/ic_baseline_no_data"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/gray"
+            android:textSize="12.5dp"
+            android:text="데이터가 없습니다."/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/chartLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -50,6 +70,7 @@
         </com.github.mikephil.charting.charts.PieChart>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/listLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
