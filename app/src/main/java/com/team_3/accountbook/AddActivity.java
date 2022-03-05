@@ -401,15 +401,22 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         String initDivision = costAll.getDivision();
                         String changeDate = mDate.getText().toString(), initDate = costAll.getUseDate();
                         String changeWay = mWay.getText().toString(), initWay = costAll.getFK_wayName();
+                        String changeSort = mSort.getText().toString(), initSort = costAll.getSortName();
                         int changeAmount = Integer.parseInt(amount), initAmount = costAll.getAmount();
                         String changeContent = mBody.getText().toString(), initContent = costAll.getContent();
 
                         if(!action.equals(initDivision) || !changeDate.equals(initDate) || !changeWay.equals(initWay) ||
-                                changeAmount != initAmount || !changeContent.equals(initContent)){        // 날짜/자산/금액/내용 중 하나라도 바뀌면 실행
+                                !changeSort.equals(initSort) || changeAmount != initAmount || !changeContent.equals(initContent)){          // 날짜/자산/금액/내용 중 하나라도 바뀌면 실행
                             if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) &&
-                                    changeAmount != initAmount && changeContent.equals(initContent)){     // 값만 변경시~
+                                    changeSort.equals(initSort) && changeAmount != initAmount && changeContent.equals(initContent)) {       // 값만 변경시~
 
                                 updateBalanceOnByDelete(initDate, changeWay, changeAmount, "onlyMoney");
+
+                            }
+                            else if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) &&
+                                    !changeSort.equals(initSort) && changeAmount == initAmount && changeContent.equals(initContent)){       //
+                                Log.d("onlySort", "yes");
+                                updateCostData(initAmount, costAll.getBalance());
 
                             }
 
