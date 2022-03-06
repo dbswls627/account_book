@@ -15,6 +15,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class MyTileService extends TileService {
     private static final String RESOURCES_VERSION = "1";
     AppDatabase db;
+
     @NonNull
     @Override
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
@@ -25,7 +26,7 @@ public class MyTileService extends TileService {
                         .addTimelineEntry(new TimelineBuilders.TimelineEntry.Builder()
                                 .setLayout(new LayoutElementBuilders.Layout.Builder()
                                         .setRoot(new Text.Builder()
-                                                .setText(db.dao().get("text")).build()
+                                                .setText(db.dao().get("test")).build()
                                         ).build()
                                 ).build()
                         ).build()

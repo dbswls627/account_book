@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.wear.tiles.TileService;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -32,6 +33,7 @@ public class ListenerService extends WearableListenerService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);   // MainAc 의 onReceive()함수가 실행됨
 
             db.dao().insert(new Data("test",message));      // 데이터를 받으면 db에 추가. name은 고정이라 amount 값만 바뀜
+            TileService.getUpdater(this).requestUpdate(MyTileService.class);    //타일 업데이트
         }
         else {
             super.onMessageReceived(messageEvent);
