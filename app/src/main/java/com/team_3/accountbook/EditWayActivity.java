@@ -96,6 +96,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
         switch (v.getId()){
             case R.id.toBack_editWay:
                 finish();
+                fadeOutActivity();
 
                 break;
 
@@ -170,6 +171,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                     }
 
                     finishForResult();
+                    fadeOutActivity();
 
                 }
                 catch (Exception e){
@@ -284,6 +286,18 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
         }
         else{
             super.onBackPressed();
+            fadeOutActivity();
+        }
+    }
+
+
+
+    private void fadeOutActivity(){
+        if(flag.equals("new")){
+            overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+        }
+        else{
+            overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);
         }
     }
 }

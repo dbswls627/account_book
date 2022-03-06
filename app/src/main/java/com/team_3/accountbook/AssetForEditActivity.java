@@ -45,6 +45,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
             case R.id.toBack_assetFotEdit:
                 setResult(RESULT_OK);
                 finish();
+                overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
 
@@ -52,6 +53,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
                 Intent intent = new Intent(this, EditWayActivity.class);
                 intent.putExtra("flag", "new");
                 startActivityForResult(intent, 0);
+                overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
         }
@@ -67,6 +69,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
         intent.putExtra("wayName", wayName);
         intent.putExtra("flag", "modify_AFE");
         startActivityForResult(intent, 0);
+        overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 
 
@@ -131,5 +134,6 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
     public void onBackPressed() {
         setResult(RESULT_OK);
         super.onBackPressed();
+        overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 }

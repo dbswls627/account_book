@@ -100,6 +100,7 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
         Toast.makeText(this, wayName+"(으)로 이동", Toast.LENGTH_SHORT).show();   // 테스트용
 
         startActivityForResult(intent, 10);
+        overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 
 

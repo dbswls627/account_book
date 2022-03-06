@@ -149,6 +149,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
             case R.id.toBack_listInAsset:
                 setResult(RESULT_OK);
                 finish();
+                overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
 
@@ -162,6 +163,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
                 intent.putExtra("wayName", wayName);
                 intent.putExtra("flag", "ListInAsset_add");
                 startActivityForResult(intent, 0);
+                overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
 
@@ -170,6 +172,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
                 intent2.putExtra("wayName", wayName);
                 intent2.putExtra("flag", "modify_LIA");
                 startActivityForResult(intent2, 0);
+                overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
 
@@ -223,6 +226,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         intent.putExtra("costId", cost.getCostId());
         intent.putExtra("flag", "ListInAsset_modify");
         startActivityForResult(intent, 0);
+        overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 
 
@@ -254,6 +258,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
     public void onBackPressed() {
         setResult(RESULT_OK);
         super.onBackPressed();
+        overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 }
 

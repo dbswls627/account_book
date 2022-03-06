@@ -263,6 +263,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                 Intent intent = new Intent(this, AddActivity.class);
                 intent.putExtra("flag", "nothing");
                 startActivity(intent);
+                overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
         }

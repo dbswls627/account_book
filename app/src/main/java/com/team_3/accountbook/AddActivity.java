@@ -357,6 +357,12 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         switch (v.getId()) {
             case R.id.toBack_add:
                 finish();
+                if(callValue.equals("ListInAsset_add") || callValue.equals("nothing")){
+                    overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+                }
+                else{
+                    overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+                }
 
                 break;
 
@@ -377,6 +383,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 if(focus.equals("way")){
                     Intent intent = new Intent(this, AssetForEditActivity.class);
                     startActivityForResult(intent, 0);
+                    overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                 }
                 else if(focus.equals("sort")){
                     Toast.makeText(this, "분류 편집 이동예정", Toast.LENGTH_SHORT).show();
@@ -449,6 +456,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                         setResult(RESULT_OK);
                         finish();
+                        overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);
                     }
 
                     /*  ※첫 List<Cost> 4줄 설명※
@@ -483,6 +491,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                         if(callValue.equals("ListInAsset_add")){ setResult(RESULT_OK); }
                         finish();
+                        overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                     }
                 }
                 else {
@@ -711,6 +720,12 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         }
         else{
             super.onBackPressed();
+            if(callValue.equals("ListInAsset_add") || callValue.equals("nothing")){
+                overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+            }
+            else{
+                overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+            }
         }
     }
 
