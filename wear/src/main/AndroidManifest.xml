@@ -28,6 +28,16 @@
 
             </intent-filter>
         </service>
+        <service
+            android:name=".MyTileService"
+
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>

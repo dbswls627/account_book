@@ -38,5 +38,21 @@ dependencies {
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    // Use to implement support for wear tiles
+    implementation "androidx.wear.tiles:tiles:1.1.0-alpha03"
+    // Use to utilize components and layouts with Material design in your tiles
+    implementation "androidx.wear.tiles:tiles-material:1.1.0-alpha03"
+    // Use to preview wear tiles in your own app
+    debugImplementation "androidx.wear.tiles:tiles-renderer:1.1.0-alpha03"
+    // Use to fetch tiles from a tile provider in your tests
+    testImplementation "androidx.wear.tiles:tiles-testing:1.1.0-alpha03"
+
+    implementation "com.google.guava:guava:31.0.1-android"
+
+    // To use CallbackToFutureAdapter
+    implementation "androidx.concurrent:concurrent-futures:1.1.0"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0"
 
 }
