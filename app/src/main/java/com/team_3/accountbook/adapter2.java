@@ -63,10 +63,15 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
             }
         }
 
-        holder.dt.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"만 남기고 삭제
+        if(context instanceof ListInAssetActivity){
+            holder.dt.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"만 남기고 삭제
 
-        String numDate = dateArray.get(position).replaceAll("[년월일 ]","");
-        makeKoreanDay(holder, getDayOfWeek(numDate));   // 요일에 맞는 TextView 세팅
+            String numDate = dateArray.get(position).replaceAll("[년월일 ]","");
+            makeKoreanDay(holder, getDayOfWeek(numDate));   // 요일에 맞는 TextView 세팅
+        }
+        else{
+            holder.dt.setText(dateArray.get(position));
+        }
 
         holder.rv.setAdapter(new adapter(costDataArray, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
         holder.rv.setLayoutManager(new LinearLayoutManager(context));
