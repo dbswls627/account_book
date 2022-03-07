@@ -16,6 +16,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,7 +99,25 @@ public class MainActivity extends AppCompatActivity {
         Date timeInDate;
         while (c2.moveToNext()) {   //RCS
             String body2 = c2.getString(0); //바디 찍기
-            Log.d("test",body2);
+            try{
+                JSONObject jObject = new JSONObject(body2);
+                JSONArray jArray;
+
+                jObject = jObject.getJSONObject("layout");
+                jArray = jObject.getJSONArray("children");
+                jObject = (JSONObject) jArray.get(1);
+                jArray  = jObject.getJSONArray("children");
+                jObject = (JSONObject) jArray.get(0);
+
+                body2 = String.valueOf(jObject.get("text"));
+                Log.d("test",body2);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //Log.d("test", String.valueOf(jsonObject.get("layout")));
+
+            //Log.d("test",body2);
         }
         while (c.moveToNext()) {
 
