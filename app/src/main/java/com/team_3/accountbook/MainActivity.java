@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -77,17 +78,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void readSMSMessage() {
         Uri allMessage = Uri.parse("content://sms");   // 문자 접근
-
+        Uri rcs = Uri.parse("content://im/chat");     // RCS 접근
         String where = "address = 15881688";
 
         ContentResolver cr = getContentResolver();
+
         Cursor c = cr.query(allMessage,              // .query(from / select / ? / where / order by);
+                new String[]{"body", "date"},
+                where, null,
+                "date DESC");
+        Cursor c2 = cr.query(rcs,              //RCS
                 new String[]{"body", "date"},
                 where, null,
                 "date DESC");
 
         Date timeInDate;
-
+        while (c2.moveToNext()) {   //RCS
+            String body2 = c2.getString(0); //바디 찍기
+            Log.d("test",body2);
+        }
         while (c.moveToNext()) {
 
             String body = c.getString(0);
