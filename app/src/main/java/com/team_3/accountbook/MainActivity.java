@@ -97,42 +97,49 @@ public class MainActivity extends AppCompatActivity {
                 "date DESC");
 
         Date timeInDate;
-        while (c2.moveToNext()) {   //RCS
-            String body2 = c2.getString(0); //바디 찍기
+
+        /*
+        JSON: Key-Value 의 집합으로 중괄호'{ }'를 사용. 각 쌍들은 쉼표(,)로 구분된다.
+              ex) {"name":"abc", "age":20, "phone":"010-1234-5678"}
+              또한, 대괄호'[ ]'로 표현되는 배열을 제공하며, 배열의 각 요소는 기본 자료형/객체/배열이 될 수 있다.
+        */
+        while (c2.moveToNext()) {               // RCS
+            String body = c2.getString(0);      // rcs 의 body
             try{
-                JSONObject jObject = new JSONObject(body2);
+                JSONObject jObject = new JSONObject(body);      // body 전체를 담음
                 JSONArray jArray;
 
-                jObject = jObject.getJSONObject("layout");
-                jArray = jObject.getJSONArray("children");
-                jObject = (JSONObject) jArray.get(1);
-                jArray  = jObject.getJSONArray("children");
-                jObject = (JSONObject) jArray.get(0);
+                jObject = jObject.getJSONObject("layout");          // layout 키의 값을 담음
+                jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
+                jObject = (JSONObject) jArray.get(1);               // 배열의 두번째 값을 담음
+                jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
+                jObject = (JSONObject) jArray.get(0);               // 배열의 첫번째 값을 담음
 
-                body2 = String.valueOf(jObject.get("text"));
-                Log.d("test",body2);
+                body = String.valueOf(jObject.get("text"));         // text 키의 값(문자 내용)을 가져옴.
+                Log.d("test", body);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //Log.d("test", String.valueOf(jsonObject.get("layout")));
-
-            //Log.d("test",body2);
         }
-        while (c.moveToNext()) {
 
+        while (c.moveToNext()) {
             String body = c.getString(0);
             long timestamp = c.getLong(1);
-            if (!db.dao().getMs().contains(timestamp)){     //ms 값이 겹치지 않는 값들만 실행
+
+            if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
                 timeInDate = new Date(timestamp);
                 String date = sdf.format(timeInDate);
                 Cost cost = parsing(body, date, timestamp);
-                if (cost.getAmount()!=-1 && cost.getContent()!="") { //정규화되지 않았으면 리스트에 추가하지 않음
+
+                if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
                     arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                 }
             }
 
         }
+
+
     }
 
 
