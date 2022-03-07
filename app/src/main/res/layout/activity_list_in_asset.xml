@@ -177,7 +177,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dp"
-            android:background="@color/gray" />
+            android:background="@color/lightGray" />
 
         <LinearLayout
             android:id="@+id/layout_noData"
@@ -202,7 +202,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_listInAsset"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/hardLightGray"
             android:clipToPadding="false"
             android:paddingBottom="80dp" />
 

@@ -205,6 +205,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
         } else {
             mFabMain.setImageResource(R.drawable.ic_baseline_clear_24);
+            mFabMain.setColorFilter(getResources().getColor(R.color.black));            // 'X' 아이콘 색상을 검정으로 set
             mFabMain.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.lightGray)));
 
             ObjectAnimator ani = ObjectAnimator.ofFloat(mFabAdd, "translationY", -190f);

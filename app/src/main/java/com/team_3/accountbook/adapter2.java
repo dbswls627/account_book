@@ -1,17 +1,26 @@
 package com.team_3.accountbook;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
     private ArrayList<Cost> arrayList;
@@ -56,6 +65,9 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
         holder.dt.setText(dateArray.get(position));
 
+        String numDate = dateArray.get(position).replaceAll("[년월일 ]","");
+        holder.dtInfo.setText(parseForKoreanDay(getDayOfWeek(numDate)));
+
         holder.rv.setAdapter(new adapter(Array, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
         holder.rv.setLayoutManager(new LinearLayoutManager(context));
     }
@@ -63,13 +75,61 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
 
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
-        TextView dt;        // 날짜(yyyy년 MM월 dd일)
+        TextView dt, dtInfo;        // 날짜(yyyy년 MM월 dd일)
         RecyclerView rv;    // 하위 리스트
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
-            dt = itemView.findViewById(R.id.dt2);
+            dt = itemView.findViewById(R.id.date_data2);
+            dtInfo = itemView.findViewById(R.id.dayInfo_data2);
             rv = itemView.findViewById(R.id.item_rv);
         }
+    }
+
+
+
+    @SuppressLint("LongLogTag")
+    private int getDayOfWeek(String selectDate){
+        SimpleDateFormat dtf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c = Calendar.getInstance();
+        Date date = null;
+
+        try { date = dtf.parse(selectDate); }
+        catch (Exception e) { Log.d("error_Adapter2_getDatOfWeek()", "parsing dateFormat Error"); }
+        c.setTime(date);
+
+        return c.get(Calendar.DAY_OF_WEEK);
+    }
+
+
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private String parseForKoreanDay(int dayType){
+        String day = "";
+        switch (dayType){
+            case 1:
+                day = "일";
+                break;
+            case 2:
+                day = "월";
+                break;
+            case 3:
+                day = "화";
+                break;
+            case 4:
+                day = "수";
+                break;
+            case 5:
+                day = "목";
+                break;
+            case 6:
+                day = "금";
+                break;
+            case 7:
+                day = "토";
+                break;
+        }
+
+        return day;
     }
 }
