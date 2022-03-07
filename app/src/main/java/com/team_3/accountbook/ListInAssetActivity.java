@@ -239,7 +239,7 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
 
         if(requestCode == 0){
             if(resultCode == RESULT_OK){
-                if (data != null) {
+                if (data != null) {         // ListInAsset 에서 Way 편진하러 간 후 Way 를 삭제했을 때
                     wayName = data.getStringExtra("wayName");
                     backFlag = data.getStringExtra("backFlag");
                 }

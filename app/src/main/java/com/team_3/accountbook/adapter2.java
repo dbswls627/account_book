@@ -55,20 +55,20 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull adapter2.CumstomViewHolder holder, int position) {
-        ArrayList<Cost> Array = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
+        ArrayList<Cost> costDataArray = new ArrayList<>();          // 같은 상위날짜로 묶은 결제 정보를 담는 리스트
 
         for (Cost cost : arrayList) {       // arrayList 의 날짜 값이랑 같은 값만 adapter 로 넘겨주기 위함
             if(cost.getUseDate().substring(0, 14).equals(dateArray.get(position))){
-                Array.add(cost);
+                costDataArray.add(cost);
             }
         }
 
-        holder.dt.setText(dateArray.get(position));
+        holder.dt.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"만 남기고 삭제
 
         String numDate = dateArray.get(position).replaceAll("[년월일 ]","");
-        holder.dtInfo.setText(parseForKoreanDay(getDayOfWeek(numDate)));
+        makeKoreanDay(holder, getDayOfWeek(numDate));   // 요일에 맞는 TextView 세팅
 
-        holder.rv.setAdapter(new adapter(Array, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
+        holder.rv.setAdapter(new adapter(costDataArray, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
         holder.rv.setLayoutManager(new LinearLayoutManager(context));
     }
 
@@ -104,32 +104,37 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private String parseForKoreanDay(int dayType){
-        String day = "";
+    private void makeKoreanDay(adapter2.CumstomViewHolder holder, int dayType){
         switch (dayType){
             case 1:
-                day = "일";
+                holder.dtInfo.setText("일");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekend_sunday));
                 break;
             case 2:
-                day = "월";
+                holder.dtInfo.setText("월");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekday));
                 break;
             case 3:
-                day = "화";
+                holder.dtInfo.setText("화");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekday));
                 break;
             case 4:
-                day = "수";
+                holder.dtInfo.setText("수");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekday));
                 break;
             case 5:
-                day = "목";
+                holder.dtInfo.setText("목");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekday));
                 break;
             case 6:
-                day = "금";
+                holder.dtInfo.setText("금");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekday));
                 break;
             case 7:
-                day = "토";
+                holder.dtInfo.setText("토");
+                holder.dtInfo.setBackground(context.getResources().getDrawable(R.drawable.weekend_saturday));
                 break;
         }
 
-        return day;
     }
 }

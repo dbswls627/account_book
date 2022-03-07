@@ -226,7 +226,7 @@ public interface sqlDao {
     @Query("SELECT sum(amount) FROM Cost c WHERE substr(c.useDate,0,10) = :date")
     String getAmount(String date);
 
-    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date AND c.FK_wayName = :wayName")
+    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date AND c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getCostOfMonthAndWayName(String date, String wayName);
 
     @Query("SELECT sum(c.amount) FROM Cost c WHERE substr(c.useDate,0,10) = :date AND c.FK_wayName = :wayName AND c.division = :division")

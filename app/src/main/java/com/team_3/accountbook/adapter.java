@@ -30,8 +30,8 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         this.arrayList = arrayList;
     }
 
-    public adapter(ArrayList<Cost> arrayList, OnItemClickInListInAsset OnItemClick) {
-        this.arrayList = arrayList;
+    public adapter(ArrayList<Cost> dostDataArray, OnItemClickInListInAsset OnItemClick) {
+        this.arrayList = dostDataArray;
         this.mOnItemClick = OnItemClick;
     }
 
