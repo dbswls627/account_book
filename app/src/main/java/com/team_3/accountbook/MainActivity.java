@@ -8,8 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     Context context;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onRestart() {
         arrayList.clear();
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void readSMSMessage() {
         Uri allMessage = Uri.parse("content://sms");   // 문자 접근
         Uri rcs = Uri.parse("content://im/chat");     // RCS 접근
@@ -105,10 +110,11 @@ public class MainActivity extends AppCompatActivity {
         */
         while (c2.moveToNext()) {               // RCS
             String body = c2.getString(0);      // rcs 의 body
+            long timestamp = c2.getLong(1);      // rcs 의 date(ms)
+
             try{
                 JSONObject jObject = new JSONObject(body);      // body 전체를 담음
                 JSONArray jArray;
-
                 jObject = jObject.getJSONObject("layout");          // layout 키의 값을 담음
                 jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
                 jObject = (JSONObject) jArray.get(1);               // 배열의 두번째 값을 담음
@@ -116,8 +122,16 @@ public class MainActivity extends AppCompatActivity {
                 jObject = (JSONObject) jArray.get(0);               // 배열의 첫번째 값을 담음
 
                 body = String.valueOf(jObject.get("text"));         // text 키의 값(문자 내용)을 가져옴.
-                Log.d("test", body);
+                if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
+                    timeInDate = new Date(timestamp);
+                    String date = sdf.format(timeInDate);
+                    Cost cost = parsing(body, date, timestamp);
 
+                    if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
+                        arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
+
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -126,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         while (c.moveToNext()) {
             String body = c.getString(0);
             long timestamp = c.getLong(1);
-
             if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
                 timeInDate = new Date(timestamp);
                 String date = sdf.format(timeInDate);
@@ -138,7 +151,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-
+        Collections.sort(arrayList, new Comparator<Cost>() {        //arrayList 날짜순으로 정렬
+            @Override
+            public int compare(Cost c1, Cost c2) {
+                return c2.getUseDate().compareTo(c1.getUseDate());
+            }
+        });
 
     }
 
