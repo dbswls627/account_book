@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void readSMSMessage() {
-        Uri allMessage = Uri.parse("content://sms");   // 문자 접근
-        Uri rcs = Uri.parse("content://im/chat");     // RCS 접근
+        Uri smsUri = Uri.parse("content://sms");   // 문자 접근
+        Uri rcsUri = Uri.parse("content://im/chat");     // RCS 접근
 
         ZoneId zoneid = ZoneId.of("Asia/Seoul");                                                        //서울
         long beforeM = LocalDateTime.now().minusMonths(3).atZone(zoneid).toInstant().toEpochMilli();    //한달 전 ms
@@ -97,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
         //날짜 조건 추가
         ContentResolver cr = getContentResolver();
 
-        Cursor c = cr.query(allMessage,              // .query(from / select / ? / where / order by);
+        Cursor smsCur = cr.query(smsUri,              // .query(from / select / ? / where / order by);
                 new String[]{"body", "date"},
                 where, null,
                 "date DESC");
-        Cursor c2 = cr.query(rcs,              //RCS
+        Cursor rcsCur = cr.query(rcsUri,              //RCS
                 new String[]{"body", "date"},
                 where, null,
                 "date DESC");
@@ -113,9 +113,10 @@ public class MainActivity extends AppCompatActivity {
               ex) {"name":"abc", "age":20, "phone":"010-1234-5678"}
               또한, 대괄호'[ ]'로 표현되는 배열을 제공하며, 배열의 각 요소는 기본 자료형/객체/배열이 될 수 있다.
         */
-        while (c2.moveToNext()) {               // RCS
-            String body = c2.getString(0);      // rcs 의 body
-            long timestamp = c2.getLong(1);      // rcs 의 date(ms)
+
+        while (rcsCur.moveToNext()) {               // RCS
+            String body = rcsCur.getString(0);      // rcs 의 body
+            long timestamp = rcsCur.getLong(1);      // rcs 의 date(ms)
 
             try{
                 JSONObject jObject = new JSONObject(body);      // body 전체를 담음
@@ -142,9 +143,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        while (c.moveToNext()) {
-            String body = c.getString(0);
-            long timestamp = c.getLong(1);
+        while (smsCur.moveToNext()) {
+            String body = smsCur.getString(0);
+            long timestamp = smsCur.getLong(1);
             if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
                 timeInDate = new Date(timestamp);
                 String date = sdf.format(timeInDate);
