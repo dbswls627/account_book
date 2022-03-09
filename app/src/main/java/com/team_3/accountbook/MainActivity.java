@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +32,7 @@ import java.util.regex.Pattern;
 
 
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
@@ -63,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         db = AppDatabase.getInstance(this);
         callPermission();
         readSMSMessage();
@@ -88,8 +90,11 @@ public class MainActivity extends AppCompatActivity {
     public void readSMSMessage() {
         Uri allMessage = Uri.parse("content://sms");   // 문자 접근
         Uri rcs = Uri.parse("content://im/chat");     // RCS 접근
-        String where = "address = 15881688";
 
+        ZoneId zoneid = ZoneId.of("Asia/Seoul");                                                        //서울
+        long beforeM = LocalDateTime.now().minusMonths(3).atZone(zoneid).toInstant().toEpochMilli();    //한달 전 ms
+        String where = "address = 15881688 and date >"+beforeM;
+        //날짜 조건 추가
         ContentResolver cr = getContentResolver();
 
         Cursor c = cr.query(allMessage,              // .query(from / select / ? / where / order by);
