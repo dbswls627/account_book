@@ -120,7 +120,7 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setChart() {
-        if (db.dao().getMDate(monthYearFromDate(selectedDate)).isEmpty()){
+        if (db.dao().getMDate(monthYearFromDate(selectedDate),"expense").isEmpty()){
             listLayout.setVisibility(View.GONE);
             chartLayout.setVisibility(View.GONE);
             noData.setVisibility(View.VISIBLE);
@@ -133,9 +133,9 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
 
         sortName.setText("전체");
         monthYearText.setText(monthYearFromDate(selectedDate));
-        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate)));
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),"expense"));
         pieEntries = new ArrayList<>();
-        graphDateList = db.dao().getGraphDate(monthYearFromDate(selectedDate)); //해당월 데이터 가져옴
+        graphDateList = db.dao().getGraphDate(monthYearFromDate(selectedDate),"expense"); //해당월 데이터 가져옴
         graphDateList.forEach(i->{
             pieEntries.add(new PieEntry(i.getAmount(),i.getSortName()));
         });
@@ -166,14 +166,14 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     @Override
     public void onValueSelected(Entry e, Highlight h) { // 그래프 클릭
         sortName.setText(graphDateList.get((int)h.getX()).getSortName());
-        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),graphDateList.get((int)h.getX()).getSortName()));
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),graphDateList.get((int)h.getX()).getSortName(),"expense"));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onNothingSelected() {   //클릭해서 아무것도 선택 안되어 있는 상태
         sortName.setText("전체");
-        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate)));
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),"expense"));
 
     }
     @RequiresApi(api = Build.VERSION_CODES.O)

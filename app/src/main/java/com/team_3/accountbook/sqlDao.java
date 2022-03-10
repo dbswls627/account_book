@@ -214,14 +214,14 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c WHERE c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getCostInWayName(String wayName);
 
-    @Query("SELECT sum(amount) amount,sortName FROM Cost c WHERE substr(c.useDate,0,10) = :date group by sortName order by sum(amount)")
-    List<graphDate> getGraphDate(String date);
+    @Query("SELECT sum(amount) amount,sortName FROM Cost c WHERE substr(c.useDate,0,10) = :date  and division = :division group by sortName order by sum(amount)")
+    List<graphDate> getGraphDate(String date,String division);
 
-    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date ORDER BY useDate DESC, c.content ASC, c.costId ASC")
-    List<Cost> getMDate(String date);
+    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and division = :division ORDER BY useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getMDate(String date,String division);
 
-    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and sortName = :sortName ORDER BY useDate DESC, c.content ASC, c.costId ASC")
-    List<Cost> getMDate(String date,String sortName);
+    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and sortName = :sortName  and division = :division ORDER BY useDate DESC, c.content ASC, c.costId ASC")
+    List<Cost> getMDate(String date,String sortName,String division);
 
     @Query("SELECT sum(amount) FROM Cost c WHERE substr(c.useDate,0,10) = :date")
     String getAmount(String date);
