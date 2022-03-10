@@ -848,8 +848,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
 
     void bluetooth(){
-        if (db.dao().getAmount(monthYearFromDate(selectedDate))!=null){
-            new SendThread("/message_path", db.dao().getAmount(monthYearFromDate(selectedDate))+"원").start();
+        if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense")!=null){
+            new SendThread("/message_path", db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense")+"원").start();
         }
         else{
             new SendThread("/message_path", "0원").start();

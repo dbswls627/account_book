@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -17,9 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -82,8 +79,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         DecimalFormat decFormat = new DecimalFormat("###,###");
 
         if(daysOfMonth.get(position).contains("!")){        // 이전월 일 때~
-            String preExpense = db.dao().getAmount(preYearMonth + " " + day1 + "일", "expense");      // 전월 해당 일 총 지출값
-            String preIncome  = db.dao().getAmount(preYearMonth + " " + day1 + "일", "income");       // 전월 해당 일 총 수입값
+            String preExpense = db.dao().getAmountOfDay(preYearMonth + " " + day1 + "일", "expense");      // 전월 해당 일 총 지출값
+            String preIncome  = db.dao().getAmountOfDay(preYearMonth + " " + day1 + "일", "income");       // 전월 해당 일 총 수입값
 
             if(preExpense != null) { preExpense = decFormat.format(Integer.parseInt(preExpense)); }         //null 일때 변환하면 팅김
             if(preIncome != null)  { preIncome  = decFormat.format(Integer.parseInt(preIncome)); }          //null 일때 변환하면 팅김
@@ -94,6 +91,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             holder.expense.setText(preExpense);             // 날짜의 총 지출값 출력
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.income.setText(preIncome);               // 날짜의 총 수입값 출력
+            holder.income.setTextColor(ContextCompat.getColor(context, R.color.greenGray));
 
             holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
@@ -104,8 +102,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         }
 
         else if(daysOfMonth.get(position).contains("?")){   // 다음월 일 때~
-            String nextExpense = db.dao().getAmount(nextYearMonth + " " + day1 + "일", "expense");    // 다음월 해당 일 총 지출값
-            String nextIncome  = db.dao().getAmount(nextYearMonth + " " + day1 + "일", "income");     // 다음월 해당 일 총 수입값
+            String nextExpense = db.dao().getAmountOfDay(nextYearMonth + " " + day1 + "일", "expense");    // 다음월 해당 일 총 지출값
+            String nextIncome  = db.dao().getAmountOfDay(nextYearMonth + " " + day1 + "일", "income");     // 다음월 해당 일 총 수입값
 
             if(nextExpense != null) { nextExpense = decFormat.format(Integer.parseInt(nextExpense)); }      //null 일때 변환하면 팅김
             if(nextIncome != null)  { nextIncome  = decFormat.format(Integer.parseInt(nextIncome)); }       //null 일때 변환하면 팅김
@@ -116,6 +114,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.expense.setText(nextExpense);            // 날짜의 총 지출값 출력
             holder.income.setText(nextIncome);              // 날짜의 총 수입값 출력
+            holder.income.setTextColor(ContextCompat.getColor(context, R.color.greenGray));
 
             holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
@@ -127,8 +126,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
         }
 
         else{                                                // 현재월 일 때~
-            String expense = db.dao().getAmount(nowYM + " " + day1 + "일", "expense");                      // 현재 해당 일 총 지출값
-            String income  = db.dao().getAmount(nowYM + " " + day1 + "일", "income");                       // 현재 해당 일 총 수입값
+            String expense = db.dao().getAmountOfDay(nowYM + " " + day1 + "일", "expense");                      // 현재 해당 일 총 지출값
+            String income  = db.dao().getAmountOfDay(nowYM + " " + day1 + "일", "income");                       // 현재 해당 일 총 수입값
 
             if(expense != null) { expense = decFormat.format(Integer.parseInt(expense)); }                  //null 일때 변환하면 팅김
             if(income != null)  { income  = decFormat.format(Integer.parseInt(income)); }                   //null 일때 변환하면 팅김
