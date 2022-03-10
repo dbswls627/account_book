@@ -1,6 +1,7 @@
 package com.team_3.accountbook;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 new String[]{"body", "date"},
                 where, null,
                 "date DESC");
-        Cursor rcsCur = cr.query(rcsUri,              //RCS
+        Cursor rcsCur = cr.query(rcsUri,              // RCS
                 new String[]{"body", "date"},
                 where, null,
                 "date DESC");
@@ -114,20 +118,41 @@ public class MainActivity extends AppCompatActivity {
               또한, 대괄호'[ ]'로 표현되는 배열을 제공하며, 배열의 각 요소는 기본 자료형/객체/배열이 될 수 있다.
         */
 
-        while (rcsCur.moveToNext()) {               // RCS
-            String body = rcsCur.getString(0);      // rcs 의 body
-            long timestamp = rcsCur.getLong(1);      // rcs 의 date(ms)
+        if(rcsCur != null){     // RCS 가 하나도 없으면 팅김.(Null Point Exception)
+            while (rcsCur.moveToNext()) {               // RCS
+                String body = rcsCur.getString(0);      // rcs 의 body
+                long timestamp = rcsCur.getLong(1);     // rcs 의 date(ms)
 
-            try{
-                JSONObject jObject = new JSONObject(body);      // body 전체를 담음
-                JSONArray jArray;
-                jObject = jObject.getJSONObject("layout");          // layout 키의 값을 담음
-                jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
-                jObject = (JSONObject) jArray.get(1);               // 배열의 두번째 값을 담음
-                jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
-                jObject = (JSONObject) jArray.get(0);               // 배열의 첫번째 값을 담음
+                try{
+                    JSONObject jObject = new JSONObject(body);      // body 전체를 담음
+                    JSONArray jArray;
+                    jObject = jObject.getJSONObject("layout");          // layout 키의 값을 담음
+                    jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
+                    jObject = (JSONObject) jArray.get(1);               // 배열의 두번째 값을 담음
+                    jArray  = jObject.getJSONArray("children");         // children 키의 값을 감음(배열[] 형태이기 때문에 jSONArray 에 담음)
+                    jObject = (JSONObject) jArray.get(0);               // 배열의 첫번째 값을 담음
 
-                body = String.valueOf(jObject.get("text"));         // text 키의 값(문자 내용)을 가져옴.
+                    body = String.valueOf(jObject.get("text"));         // text 키의 값(문자 내용)을 가져옴.
+                    if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
+                        timeInDate = new Date(timestamp);
+                        String date = sdf.format(timeInDate);
+                        Cost cost = parsing(body, date, timestamp);
+
+                        if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
+                            arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if(smsCur != null){     // SMS 가 하나도 없으면 팅김.(Null Point Exception)
+            while (smsCur.moveToNext()) {
+                String body = smsCur.getString(0);
+                long timestamp = smsCur.getLong(1);
                 if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
                     timeInDate = new Date(timestamp);
                     String date = sdf.format(timeInDate);
@@ -135,28 +160,12 @@ public class MainActivity extends AppCompatActivity {
 
                     if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
-
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+
             }
         }
 
-        while (smsCur.moveToNext()) {
-            String body = smsCur.getString(0);
-            long timestamp = smsCur.getLong(1);
-            if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
-                timeInDate = new Date(timestamp);
-                String date = sdf.format(timeInDate);
-                Cost cost = parsing(body, date, timestamp);
-
-                if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
-                    arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
-                }
-            }
-
-        }
         Collections.sort(arrayList, new Comparator<Cost>() {        //arrayList 날짜순으로 정렬
             @Override
             public int compare(Cost c1, Cost c2) {
@@ -218,4 +227,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    @SuppressLint("NonConstantResourceId")
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.toBack_main:
+                finish();
+                overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+
+                break;
+
+        }
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+    }
 }

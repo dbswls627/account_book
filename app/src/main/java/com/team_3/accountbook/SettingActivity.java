@@ -28,14 +28,9 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         wear = findViewById(R.id.wear);
         add = findViewById(R.id.add);
-        sms = findViewById(R.id.sms);
         list = findViewById(R.id.list);
         sqlTest = findViewById(R.id.sqlTest);
-        
-        sms.setOnClickListener((view)->{
-            intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        });
+
 
         list.setOnClickListener((view)->{
             intent = new Intent(this, ListActivity.class);

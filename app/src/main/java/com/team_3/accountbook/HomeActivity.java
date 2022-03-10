@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -253,14 +254,23 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     public void mOnClick(View v){
+        Intent intent;
         switch (v.getId()){
             case R.id.clearList_home:
                 mDateLayout.setVisibility(View.GONE);
 
                 break;
 
+            case R.id.message_home:
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("months", 1);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+
+                break;
+
             case R.id.fab_add:
-                Intent intent = new Intent(this, AddActivity.class);
+                intent = new Intent(this, AddActivity.class);
                 intent.putExtra("flag", "nothing");
                 startActivity(intent);
                 overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
