@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -17,9 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -94,6 +91,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             holder.expense.setText(preExpense);             // 날짜의 총 지출값 출력
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.income.setText(preIncome);               // 날짜의 총 수입값 출력
+            holder.income.setTextColor(ContextCompat.getColor(context, R.color.greenGray));
 
             holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
@@ -116,6 +114,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.expense.setText(nextExpense);            // 날짜의 총 지출값 출력
             holder.income.setText(nextIncome);              // 날짜의 총 수입값 출력
+            holder.income.setTextColor(ContextCompat.getColor(context, R.color.greenGray));
 
             holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
                 arrayList.clear();
