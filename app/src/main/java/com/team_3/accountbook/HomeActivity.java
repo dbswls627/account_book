@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
+    private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    private TextView monthYearText, mYearMonth, date, mDayInfo;
+    private TextView monthYearText, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout, mNoDataLayout;
+
+
     private ImageView pre,next;
     AppDatabase db;
 
@@ -65,6 +69,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         mYearMonth = findViewById(R.id.yearMonth_home);
         date = findViewById(R.id.date);
         mDayInfo = findViewById(R.id.dayInfo);
+        mIncomeTotal = findViewById(R.id.income_total);
+        mExpenseTotal = findViewById(R.id.expense_total);
         mNoDataLayout = findViewById(R.id.homeLayout_noDataInfo);
         pre = findViewById(R.id.toPreMonth);
         next = findViewById(R.id.toNextMonth);
@@ -95,17 +101,20 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         setMonthView();
+        setTotalAmount();
         mDateLayout.setVisibility(View.GONE);
         mNoDataLayout.setVisibility(View.GONE);
 
         pre.setOnClickListener((i)->{
             selectedDate = selectedDate.minusMonths(1);
             setMonthView();
+            setTotalAmount();
         });
 
         next.setOnClickListener((i)->{
             selectedDate = selectedDate.plusMonths(1);
             setMonthView();
+            setTotalAmount();
         });
         if(db.dao().getSortNames("income").toString() == "[]") {     // 비어있으면 추가.  초기설정!
             buildTableData();
@@ -193,6 +202,23 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);   // 가로 7칸의 그리드뷰(퍼즐 형식)로 만드는 리사이클러뷰 레이아웃 매니저 layoutManager 생성
         calendarRecyclerView.setLayoutManager(layoutManager);                      // 레이아웃 매니저를 layoutManager 로 지정
         calendarRecyclerView.setAdapter(calendarAdapter);
+    }
+    private void setTotalAmount(){
+        String formatAmount = "";
+        String totalAmount;
+        try {
+            totalAmount = db.dao().getAmountOfMonth(monthYearText.getText().toString(), "income");
+            formatAmount = myFormatter.format(Integer.parseInt(totalAmount));
+            mIncomeTotal.setText(formatAmount);
+        }
+        catch (Exception e){ mIncomeTotal.setText("0"); }
+
+        try {
+            totalAmount = db.dao().getAmountOfMonth(monthYearText.getText().toString(),  "expense");
+            formatAmount = myFormatter.format(Integer.parseInt(totalAmount));
+            mExpenseTotal.setText(formatAmount);
+        }
+        catch (Exception e){ mExpenseTotal.setText("0"); }
     }
 
 
