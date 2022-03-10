@@ -1,12 +1,15 @@
 package com.team_3.accountbook;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private TextView monthYearText, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout, mNoDataLayout;
+    private Dialog dialog;
 
 
     private ImageView pre,next;
@@ -136,6 +140,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             finish();
         }
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -288,10 +293,11 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                 break;
 
             case R.id.message_home:
-                intent = new Intent(this, MainActivity.class);
-                intent.putExtra("months", 1);
-                startActivity(intent);
-                overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+                dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_movetomain);
+
+                showDialog();
 
                 break;
 
@@ -303,6 +309,43 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
                 break;
         }
+    }
+
+
+
+    private void showDialog(){
+        dialog.show();
+
+        TextView mNoWarp, mNoBring, mBring;
+        EditText mMonths;
+
+        mNoBring = dialog.findViewById(R.id.tv_noBring);
+        mBring = dialog.findViewById(R.id.tv_bring);
+        mMonths = dialog.findViewById(R.id.months);
+
+        mNoBring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mBring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("months", Integer.parseInt(mMonths.getText().toString()));
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+
+                    dialog.dismiss();
+                }
+                catch (Exception e){
+                    Toast.makeText(getApplicationContext(), "숫자만 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
 

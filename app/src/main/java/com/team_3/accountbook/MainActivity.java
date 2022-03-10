@@ -4,12 +4,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,30 +41,22 @@ import java.util.regex.Pattern;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
+    private TextView mTv_Months;
+    private LinearLayout mLayoutNoData;
+    private AppDatabase db;
+    private ArrayList<Cost> arrayList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private int months = -1;
+
+    public Context context;
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
 
-    AppDatabase db;
-    ArrayList<Cost> arrayList = new ArrayList<>();
-    RecyclerView mRecyclerView;
-    Context context;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onRestart() {
-        arrayList.clear();
         super.onRestart();
-        readSMSMessage();
-
-        ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
-        for (Cost cost : arrayList) {
-            if(!dateArray.contains(cost.getUseDate().substring(0, 14))) {
-                dateArray.add(cost.getUseDate().substring(0, 14));
-            }
-        }
-
-        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context, arrayList, dateArray));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setMessageList();
     }
 
 
@@ -70,33 +66,62 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTv_Months = findViewById(R.id.tv_months);
+        mLayoutNoData = findViewById(R.id.layout_noData_main);
+        mRecyclerView = findViewById(R.id.rv);
         db = AppDatabase.getInstance(this);
+
+        mLayoutNoData.setVisibility(View.GONE);
         callPermission();
-        readSMSMessage();
 
-        ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
-        for (Cost cost : arrayList) {
-            if(!dateArray.contains(cost.getUseDate().substring(0, 14))) {
-                dateArray.add(cost.getUseDate().substring(0, 14));
-            }
-        }
+        Intent intent = getIntent();
+        months = intent.getIntExtra("months", -1);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
-        mRecyclerView.setAdapter(new adapter2(context, arrayList, dateArray));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setMessageList();
 
 
     }
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void readSMSMessage() {
-        Uri smsUri = Uri.parse("content://sms");   // 문자 접근
-        Uri rcsUri = Uri.parse("content://im/chat");     // RCS 접근
+    private void setMessageList(){
+        mTv_Months.setText(String.valueOf(months));
 
-        ZoneId zoneid = ZoneId.of("Asia/Seoul");                                                        //서울
-        long beforeM = LocalDateTime.now().minusMonths(3).atZone(zoneid).toInstant().toEpochMilli();    //한달 전 ms
+        arrayList.clear();
+        readSMSMessage(months);
+
+        if(arrayList.isEmpty()){
+            mLayoutNoData.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
+        else{
+            mLayoutNoData.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+
+            ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
+            for (Cost cost : arrayList) {
+                if(!dateArray.contains(cost.getUseDate().substring(0, 14))) {
+                    dateArray.add(cost.getUseDate().substring(0, 14));
+                }
+            }
+
+            mRecyclerView = (RecyclerView)findViewById(R.id.rv);
+            mRecyclerView.setAdapter(new adapter2(context, arrayList, dateArray));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
+
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void readSMSMessage(int months) {
+        Uri smsUri = Uri.parse("content://sms");        // 문자 접근
+        Uri rcsUri = Uri.parse("content://im/chat");    // RCS 접근
+
+        ZoneId zoneid = ZoneId.of("Asia/Seoul");                                                            // 서울 시각
+        long beforeM = LocalDateTime.now().minusMonths(months).atZone(zoneid).toInstant().toEpochMilli();   // months 개월 전 ms
         String where = "address = 15881688 and date >"+beforeM;
         //날짜 조건 추가
         ContentResolver cr = getContentResolver();
@@ -235,6 +260,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.toBack_main:
                 finish();
                 overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+
+                break;
+
+            case R.id.periodCorrection:
+                Toast.makeText(this, "기간 정정기능 추가 예정", Toast.LENGTH_SHORT).show();
 
                 break;
 

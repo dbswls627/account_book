@@ -33,8 +33,9 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:text="n월"
-                android:textColor="@color/white" />
+                android:textSize="13dp"
+                android:textColor="@color/white"
+                android:text="yyyy년 MM월" />
             <ImageView
                 android:id="@+id/toNextMonth"
                 android:layout_width="wrap_content"
