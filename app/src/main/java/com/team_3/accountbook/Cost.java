@@ -1,20 +1,10 @@
 package com.team_3.accountbook;
 
-import static androidx.room.ForeignKey.CASCADE;
-
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 
-@Entity(
-        foreignKeys = {
-                @ForeignKey(entity = Way.class,
-                        parentColumns = "wayName",
-                        childColumns = "FK_wayName",
-                        onUpdate = CASCADE)
-        }
-)
+@Entity()
 public class Cost {
     @PrimaryKey(autoGenerate = true) private int costId;
     private int amount;             // 금액
