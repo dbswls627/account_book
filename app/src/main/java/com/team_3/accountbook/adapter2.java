@@ -3,7 +3,6 @@ package com.team_3.accountbook;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,13 +64,16 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
             String numDate = dateArray.get(position).replaceAll("[년월일 ]","");
             makeKoreanDay(holder, getDayOfWeek(numDate));   // 요일에 맞는 TextView 세팅
+            holder.rv.setAdapter(new adapter(costDataArray, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
+            holder.rv.setLayoutManager(new LinearLayoutManager(context));
         }
         else{
             holder.dt.setText(dateArray.get(position));
+            holder.rv.setAdapter(new adapter(costDataArray)); // 년도 부터 일까지 매개변수로 넘김
+            holder.rv.setLayoutManager(new LinearLayoutManager(context));
         }
 
-        holder.rv.setAdapter(new adapter(costDataArray, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
-        holder.rv.setLayoutManager(new LinearLayoutManager(context));
+
     }
 
 
