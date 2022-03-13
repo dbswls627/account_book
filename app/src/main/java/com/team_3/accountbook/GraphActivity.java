@@ -84,12 +84,14 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
 
         preButton.setOnClickListener(view -> {
             selectedDate = selectedDate.minusMonths(1);
-            pieChartFragment.setChart();
+            monthYearText.setText(monthYearFromDate(selectedDate));
+            pieChartFragment.setChart(monthYearFromDate(selectedDate));
         });
 
         nextButton.setOnClickListener(view -> {
             selectedDate = selectedDate.plusMonths(1);
-            pieChartFragment.setChart();
+            monthYearText.setText(monthYearFromDate(selectedDate));
+            pieChartFragment.setChart(monthYearFromDate(selectedDate));
         });
     }
 

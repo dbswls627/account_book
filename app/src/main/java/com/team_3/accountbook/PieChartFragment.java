@@ -67,16 +67,16 @@ public class PieChartFragment extends Fragment  {
         //pieChart.setHoleColor(Color.WHITE);//가운데 구멍 색
         //pieChart.setExtraOffsets(5, 0, 5, 5);//??
 
-        pieChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) requireContext());
+        pieChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) context);
 
 
-        setChart();
+        setChart(YYYYMM);
 
 
         return view;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setChart() {
+    public void setChart(String YYYYMM) {
 
         if (db.dao().getMDate(YYYYMM,"expense").isEmpty()){
             listLayout.setVisibility(View.GONE);
