@@ -29,6 +29,14 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     PieChartFragment pieChartFragment;
     AppDatabase db;
     LocalDate selectedDate;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        pieChartFragment.setChart(monthYearFromDate(selectedDate));
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
