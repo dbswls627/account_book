@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class GraphActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     BottomNavigationView bottom_menu;
-    Button preButton,nextButton;
+    ImageView preButton,nextButton;
     private TextView monthYearText,sortName;
     LinearLayout listLayout,chartLayout,noData;
     PieChart pieChart;
