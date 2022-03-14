@@ -1,5 +1,7 @@
 package com.team_3.accountbook;
 
+import static androidx.wear.tiles.ColorBuilders.argb;
+
 import androidx.annotation.NonNull;
 import androidx.wear.tiles.LayoutElementBuilders;
 import androidx.wear.tiles.RequestBuilders;
@@ -26,6 +28,7 @@ public class MyTileService extends TileService {
                         .addTimelineEntry(new TimelineBuilders.TimelineEntry.Builder()
                                 .setLayout(new LayoutElementBuilders.Layout.Builder()
                                         .setRoot(new Text.Builder()
+                                                .setColor(argb(0xFFFFFFFF))
                                                 .setText(db.dao().get("test")).build()
                                         ).build()
                                 ).build()
