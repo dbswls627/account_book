@@ -20,8 +20,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="50dp"
                 android:gravity="left"
-                android:text="내용"
-                android:textSize="15sp" />
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:text="내용" />
             <TextView
                 android:id="@+id/dt"
                 android:layout_width="match_parent"
@@ -46,8 +47,9 @@
                 android:layout_gravity="center"
                 android:gravity="right"
                 android:layout_marginRight="40dp"
-                android:text="금액"
-                android:textSize="16sp" />
+                android:textSize="12dp"
+                android:textColor="@color/black"
+                android:text="금액" />
         </LinearLayout>
     </LinearLayout>
 

@@ -50,7 +50,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         context = parent.getContext();
         View view = null;
 
-        if (context instanceof HomeActivity){
+        if (context instanceof HomeActivity || context instanceof GraphActivity){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forhome, parent, false);
         }
         else if (context instanceof ListInAssetActivity){
@@ -69,7 +69,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
     public void onBindViewHolder(@NonNull adapter.CumstomViewHolder holder, int position) {
-        if (context instanceof HomeActivity){       // HomeActivity 에서의 세팅
+        if (context instanceof HomeActivity || context instanceof GraphActivity){       // HomeActivity 에서의 세팅
             holder.mSortName_dh.setText(arrayList.get(position).getSortName());
             holder.mBody_dh.setText(arrayList.get(position).getContent());
             holder.mTime_dh.setText(arrayList.get(position).getUseDate().substring(14, 19));

@@ -21,20 +21,27 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/year_data2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
+                        android:layout_marginLeft="20dp"
+                        android:textSize="10dp"
+                        android:text="yyyy"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
                         <TextView
-                            android:id="@+id/date_data2"
+                            android:id="@+id/MMdd_data2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:layout_marginBottom="3dp"
                             android:layout_gravity="center"
-                            android:text="dd일"
-                            android:textSize="15dp"
+                            android:text="MM월 dd일"
+                            android:textSize="16dp"
                             android:textColor="@color/black"/>
                         <TextView
                             android:id="@+id/dayInfo_data2"
@@ -45,7 +52,7 @@
                             android:layout_marginBottom="1.5dp"
                             android:layout_gravity="center"
                             android:paddingTop="2dp"
-                            android:paddingBottom="3dp"
+                            android:paddingBottom="2.5dp"
                             android:paddingLeft="5dp"
                             android:paddingRight="5dp"
                             android:text="월"

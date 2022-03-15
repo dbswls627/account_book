@@ -60,15 +60,32 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
         }
 
         if(context instanceof ListInAssetActivity){
-            holder.dt.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"만 남기고 삭제
+            holder.mYYYY.setVisibility(View.GONE);
+            holder.mMMdd.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"
 
-            String numDate = dateArray.get(position).replaceAll("[년월일 ]","");
-            makeKoreanDay(holder, getDayOfWeek(numDate));   // 요일에 맞는 TextView 세팅
+            makeKoreanDay(holder, dateArray.get(position).replaceAll("[년월일 ]",""));         // 요일에 맞는 TextView 세팅
             holder.rv.setAdapter(new adapter(costDataArray, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
             holder.rv.setLayoutManager(new LinearLayoutManager(context));
         }
+            // 추후 ListInAssetActivity 와 GraphActivity 각각의 경우를 하나로 합칠 예정
+        else if(context instanceof GraphActivity){
+            holder.mYYYY.setVisibility(View.GONE);
+            holder.mMMdd.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"
+
+            makeKoreanDay(holder, dateArray.get(position).replaceAll("[년월일 ]",""));         // 요일에 맞는 TextView 세팅
+            holder.rv.setAdapter(new adapter(costDataArray)); // 년도 부터 일까지 매개변수로 넘김
+            holder.rv.setLayoutManager(new LinearLayoutManager(context));
+        }
+        else if(context instanceof MainActivity){
+            holder.mYYYY.setText(dateArray.get(position).replaceAll("[0-9]*월|[0-9]*일| ",""));       // "yyyy년"
+            holder.mMMdd.setText(dateArray.get(position).replaceAll("[0-9]*년 | $",""));             // "MM월 dd일"
+
+            makeKoreanDay(holder, dateArray.get(position).replaceAll("[년월일 ]",""));         // 요일에 맞는 TextView 세팅
+            holder.rv.setAdapter(new adapter(costDataArray)); // 년도 부터 일까지 매개변수로 넘김
+            holder.rv.setLayoutManager(new LinearLayoutManager(context));
+        }
         else{
-            holder.dt.setText(dateArray.get(position));
+            holder.mMMdd.setText(dateArray.get(position));
             holder.rv.setAdapter(new adapter(costDataArray)); // 년도 부터 일까지 매개변수로 넘김
             holder.rv.setLayoutManager(new LinearLayoutManager(context));
         }
@@ -79,12 +96,13 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
 
     public class CumstomViewHolder extends RecyclerView.ViewHolder {
-        TextView dt, dtInfo;        // 날짜(yyyy년 MM월 dd일)
+        TextView mYYYY, mMMdd, dtInfo;        // 날짜(yyyy년 MM월 dd일)
         RecyclerView rv;    // 하위 리스트
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
-            dt = itemView.findViewById(R.id.date_data2);
+            mYYYY = itemView.findViewById(R.id.year_data2);
+            mMMdd = itemView.findViewById(R.id.MMdd_data2);
             dtInfo = itemView.findViewById(R.id.dayInfo_data2);
             rv = itemView.findViewById(R.id.item_rv);
         }
@@ -108,7 +126,9 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void makeKoreanDay(adapter2.CumstomViewHolder holder, int dayType){
+    private void makeKoreanDay(adapter2.CumstomViewHolder holder, String numDate){
+        int dayType = getDayOfWeek(numDate);
+
         switch (dayType){
             case 1:
                 holder.dtInfo.setText("일");
