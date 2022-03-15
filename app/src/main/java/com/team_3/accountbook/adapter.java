@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,6 +57,9 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         else if (context instanceof ListInAssetActivity){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_forasset, parent, false);
         }
+        else if(context instanceof MainActivity){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_detail_formain, parent, false);
+        }
         else{
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data, parent, false);
         }
@@ -98,6 +102,14 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             }));
         }
 
+        else if(context instanceof MainActivity){
+            holder.mBody_dm.setText(arrayList.get(position).getContent());
+            holder.mTime_dm.setText(arrayList.get(position).getUseDate().substring(14, 19));
+            formatAmount = myFormatter.format(arrayList.get(position).getAmount());
+            holder.mAmount_dm.setText(formatAmount + "원");
+            holder.mSmsContent_dm.setText(arrayList.get(position).getDivision());
+        }
+
         else{       // 그 외 세팅
             holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
             holder.bd.setText(arrayList.get(position).getContent());
@@ -132,6 +144,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
         TextView mSortName_dh, mBody_dh, mTime_dh, mAmount_dh, mWayName_dh;
         TextView mSortName_da, mBody_da, mTime_da, mAmount_da, mBalance_da;
+        TextView mBody_dm, mTime_dm, mAmount_dm, mSmsContent_dm;
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,6 +163,12 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             mTime_da = itemView.findViewById(R.id.detailAsset_time);
             mAmount_da = itemView.findViewById(R.id.detailAsset_amount);
             mBalance_da = itemView.findViewById(R.id.detailAsset_balance);
+
+            mBody_dm = itemView.findViewById(R.id.detailMain_body);
+            mTime_dm = itemView.findViewById(R.id.detailMain_time);
+            mAmount_dm = itemView.findViewById(R.id.detailMain_amount);
+            mSmsContent_dm = itemView.findViewById(R.id.detailMain_smsContent);
+
         }
     }
 }

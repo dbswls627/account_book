@@ -37,7 +37,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private TextView monthYearText, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout, mNoDataLayout;
-    private Dialog dialog;
 
 
     private ImageView pre,next;
@@ -293,11 +292,11 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                 break;
 
             case R.id.message_home:
-                dialog = new Dialog(this);
+                Dialog dialog = new Dialog(this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_movetomain);
 
-                showDialog();
+                showDialog(dialog);
 
                 break;
 
@@ -313,10 +312,10 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
 
-    private void showDialog(){
+    public void showDialog(Dialog dialog){
         dialog.show();
 
-        TextView mNoWarp, mNoBring, mBring;
+        TextView mNoBring, mBring;
         EditText mMonths;
 
         mNoBring = dialog.findViewById(R.id.tv_noBring);

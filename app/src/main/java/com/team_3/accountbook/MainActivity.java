@@ -2,6 +2,7 @@ package com.team_3.accountbook;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         mTv_Months.setText(String.valueOf(months));
 
         arrayList.clear();
-        readSMSMessage(months);
+        readSMSMessage();
 
         if(arrayList.isEmpty()){
             mLayoutNoData.setVisibility(View.VISIBLE);
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            mRecyclerView = (RecyclerView)findViewById(R.id.rv);
+            mRecyclerView = findViewById(R.id.rv);
             mRecyclerView.setAdapter(new adapter2(this, arrayList, dateArray));
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
@@ -115,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void readSMSMessage(int months) {
+    public void readSMSMessage() {
         Uri smsUri = Uri.parse("content://sms");        // 문자 접근
         Uri rcsUri = Uri.parse("content://im/chat");    // RCS 접근
 
@@ -161,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                         timeInDate = new Date(timestamp);
                         String date = sdf.format(timeInDate);
                         Cost cost = parsing(body, date, timestamp);
+                        cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
                         if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
                             arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     timeInDate = new Date(timestamp);
                     String date = sdf.format(timeInDate);
                     Cost cost = parsing(body, date, timestamp);
+                    cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
                     if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
@@ -263,13 +269,49 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.periodCorrection:
-                Toast.makeText(this, "기간 정정기능 추가 예정", Toast.LENGTH_SHORT).show();
+                Dialog dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_movetomain);
+
+                showDialog(dialog);
 
                 break;
 
         }
 
     }
+
+
+
+    @SuppressLint("SetTextI18n")
+    public void showDialog(Dialog dialog){
+        dialog.show();
+
+        TextView mNoBring, mBring;
+        EditText mMonths;
+
+        mNoBring = dialog.findViewById(R.id.tv_noBring);
+        mBring = dialog.findViewById(R.id.tv_bring);
+        mMonths = dialog.findViewById(R.id.months);
+        mMonths.setText(months+"");
+
+        mNoBring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mBring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    months = Integer.parseInt(mMonths.getText().toString());
+                    setMessageList();
+
+                    dialog.dismiss();
+            }
+        });
+    }
+
 
 
     @Override
