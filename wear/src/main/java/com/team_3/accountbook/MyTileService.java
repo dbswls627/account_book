@@ -6,8 +6,11 @@ import static androidx.wear.tiles.DimensionBuilders.dp;
 import static androidx.wear.tiles.DimensionBuilders.expand;
 import static androidx.wear.tiles.LayoutElementBuilders.ARC_ANCHOR_START;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.wear.tiles.DeviceParametersBuilders;
 import androidx.wear.tiles.LayoutElementBuilders;
 import androidx.wear.tiles.RequestBuilders;
 import androidx.wear.tiles.ResourceBuilders;
@@ -29,12 +32,14 @@ public class MyTileService extends TileService {
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
         db = AppDatabase.getInstance(this);
         GoalProgress goalProgress = GoalsRepository.getGoalProgress();
+        DeviceParametersBuilders.DeviceParameters deviceParams = requestParams.getDeviceParameters();
+
         return Futures.immediateFuture(new TileBuilders.Tile.Builder()
                 .setResourcesVersion(RESOURCES_VERSION)
                 .setTimeline(new TimelineBuilders.Timeline.Builder()
                         .addTimelineEntry(new TimelineBuilders.TimelineEntry.Builder()
                                 .setLayout(new LayoutElementBuilders.Layout.Builder()
-                                        .setRoot(myLayout(goalProgress)).build()
+                                        .setRoot(myLayout(goalProgress,deviceParams)).build()
                                 ).build()
                         ).build()
                 ).build());
@@ -48,27 +53,38 @@ public class MyTileService extends TileService {
                 .build()
         );
     }
-    private LayoutElementBuilders.LayoutElement myLayout(GoalProgress goalProgress) {
+    @SuppressLint("WrongConstant")
+    private LayoutElementBuilders.LayoutElement myLayout(GoalProgress goalProgress, DeviceParametersBuilders.DeviceParameters deviceParameters) {
+        int amount = Integer.parseInt(db.dao().get("test"));
+                goalProgress.setCurrent(amount);
         return new LayoutElementBuilders.Box.Builder()
                 .setWidth(expand())
                 .setHeight(expand())
-                .addContent(progressArc(goalProgress.percentage()))
-                .addContent(new Text.Builder()
-                        .setColor(argb(0xFFFFFFFF))
-                        .setText(db.dao().get("test")).build()
-                ).build();
-    }
-    private  LayoutElementBuilders.LayoutElement progressArc(Float percentage) {
-        return new LayoutElementBuilders.Arc.Builder()
+                .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
+                        .addContent(
+                                new LayoutElementBuilders.ArcLine.Builder()    //테두리에 선
+                                        .setLength(degrees(goalProgress.percentage()*360f))  //게이지 = 360f가 만땅
+                                        .setColor(argb(ContextCompat.getColor(this, R.color.green)))
+                                        .setThickness(dp(6f)) //선 두께
+                                        .build()
+                        )
+                        .setAnchorAngle(degrees(0.0f))  //위에 공백
+                        .setAnchorType(ARC_ANCHOR_START)           //게이지 시작점(?)
+                        .build())
                 .addContent(
-                        new LayoutElementBuilders.ArcLine.Builder()
-                                .setLength(degrees(180f))  //360f가 만땅
-                                .setColor(argb(ContextCompat.getColor(this, R.color.green)))
-                                .setThickness(dp(6f)) //두께
-                                .build()
-                )
-                .setAnchorAngle(degrees(0.0f))
-                .setAnchorType(ARC_ANCHOR_START)
-                .build();
+                        new LayoutElementBuilders.Column.Builder()
+                                .addContent(new Text.Builder()              //텍스트
+                                        .setColor(argb(0xFFFFFFFF))
+                                        .setText(db.dao().get("test"))
+                                        .build()
+                                )
+                                .addContent(new Text.Builder()              //텍스트
+                                        .setColor(argb(0xFFFFFFFF))
+                                        .setText("/"+goalProgress.goal+"원")
+                                        .setTypography(10)                  //글씨 크기(?)
+                                        .build()
+                                ).build()
+                ).build();
+
     }
 }
