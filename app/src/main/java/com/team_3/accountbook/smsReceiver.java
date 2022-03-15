@@ -17,7 +17,9 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -33,6 +35,7 @@ public class smsReceiver extends BroadcastReceiver {
     private Pattern p;
     private Matcher m;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -62,6 +65,7 @@ public class smsReceiver extends BroadcastReceiver {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendToMainActivity(Context context, String sender, String content, Date date) {
         MainActivity ma = new MainActivity();
 
@@ -111,7 +115,13 @@ public class smsReceiver extends BroadcastReceiver {
                 mNotificationManager.createNotificationChannel(notificationChannel);
 
                 Intent notiIntent = new Intent(context, MainActivity.class);    // 알림 클릭시 MainActivity 로 이동하게 설정
-                PendingIntent notiPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, notiIntent, PendingIntent.FLAG_IMMUTABLE);   // Notification 에선 PendingIntent 라는걸 써야한다고 함
+                notiIntent.putExtra("months", 1);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                stackBuilder.addParentStack(MainActivity.class);
+                stackBuilder.addNextIntent(notiIntent);
+
+                PendingIntent notiPendingIntent = stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);     // Notification 에선 PendingIntent 라는걸 써야한다고 함
 
                 notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setContentTitle("새로운 결제 알림")                   // 알림 제목
