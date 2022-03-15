@@ -10,7 +10,6 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.wear.tiles.DeviceParametersBuilders;
 import androidx.wear.tiles.LayoutElementBuilders;
 import androidx.wear.tiles.RequestBuilders;
 import androidx.wear.tiles.ResourceBuilders;
@@ -32,14 +31,13 @@ public class MyTileService extends TileService {
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
         db = AppDatabase.getInstance(this);
         GoalProgress goalProgress = GoalsRepository.getGoalProgress();
-        DeviceParametersBuilders.DeviceParameters deviceParams = requestParams.getDeviceParameters();
-
+        
         return Futures.immediateFuture(new TileBuilders.Tile.Builder()
                 .setResourcesVersion(RESOURCES_VERSION)
                 .setTimeline(new TimelineBuilders.Timeline.Builder()
                         .addTimelineEntry(new TimelineBuilders.TimelineEntry.Builder()
                                 .setLayout(new LayoutElementBuilders.Layout.Builder()
-                                        .setRoot(myLayout(goalProgress,deviceParams)).build()
+                                        .setRoot(myLayout(goalProgress)).build()
                                 ).build()
                         ).build()
                 ).build());
@@ -54,7 +52,7 @@ public class MyTileService extends TileService {
         );
     }
     @SuppressLint("WrongConstant")
-    private LayoutElementBuilders.LayoutElement myLayout(GoalProgress goalProgress, DeviceParametersBuilders.DeviceParameters deviceParameters) {
+    private LayoutElementBuilders.LayoutElement myLayout(GoalProgress goalProgress) {
         int amount = Integer.parseInt(db.dao().get("test"));
                 goalProgress.setCurrent(amount);
         return new LayoutElementBuilders.Box.Builder()
@@ -69,7 +67,7 @@ public class MyTileService extends TileService {
                                         .build()
                         )
                         .setAnchorAngle(degrees(0.0f))  //위에 공백
-                        .setAnchorType(ARC_ANCHOR_START)           //게이지 시작점(?)
+                        .setAnchorType(ARC_ANCHOR_START)           //게이지 시작점(?)(왼쪽 오른쪽)
                         .build())
                 .addContent(
                         new LayoutElementBuilders.Column.Builder()
