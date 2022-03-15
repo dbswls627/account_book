@@ -25,13 +25,12 @@ public class MyTileService extends TileService {
     private static final String RESOURCES_VERSION = "1";
 
     AppDatabase db;
-
     @NonNull
     @Override
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
         db = AppDatabase.getInstance(this);
         GoalProgress goalProgress = GoalsRepository.getGoalProgress();
-        
+
         return Futures.immediateFuture(new TileBuilders.Tile.Builder()
                 .setResourcesVersion(RESOURCES_VERSION)
                 .setTimeline(new TimelineBuilders.Timeline.Builder()
@@ -48,6 +47,16 @@ public class MyTileService extends TileService {
     protected ListenableFuture<ResourceBuilders.Resources> onResourcesRequest(@NonNull RequestBuilders.ResourcesRequest requestParams) {
         return Futures.immediateFuture(new ResourceBuilders.Resources.Builder()
                 .setVersion(RESOURCES_VERSION)
+                .addIdToImageMapping(       //이미지 파일 가져오기 
+                        "image",
+                        new ResourceBuilders.ImageResource.Builder()
+                                .setAndroidResourceByResId(
+                                        new ResourceBuilders.AndroidImageResourceByResId.Builder()
+                                                .setResourceId(R.drawable.money)
+                                                .build()
+                                )
+                                .build()
+                )
                 .build()
         );
     }
@@ -81,8 +90,17 @@ public class MyTileService extends TileService {
                                         .setText("/"+goalProgress.goal+"원")
                                         .setTypography(10)                  //글씨 크기(?)
                                         .build()
-                                ).build()
-                ).build();
+                                )
+                                //공간 띄우기 padding 같은 역할
+                                .addContent(new LayoutElementBuilders.Spacer.Builder().setHeight(dp(20f)).build())
+                                .addContent(new LayoutElementBuilders.Image.Builder()
+                                        .setWidth(dp(48f))
+                                        .setHeight(dp(48f))
+                                        .setResourceId("image")
+                                        .build()
+                )
+                                .build())
+                .build();
 
     }
 }
