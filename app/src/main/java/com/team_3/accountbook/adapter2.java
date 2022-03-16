@@ -64,7 +64,7 @@ public class adapter2 extends RecyclerView.Adapter<adapter2.CumstomViewHolder>{
             holder.mMMdd.setText(dateArray.get(position).replaceAll("[0-9]*년|[0-9]*월| ",""));      // "dd일"
 
             makeKoreanDay(holder, dateArray.get(position).replaceAll("[년월일 ]",""));         // 요일에 맞는 TextView 세팅
-            holder.rv.setAdapter(new adapter(costDataArray, (adapter.OnItemClickInListInAsset) context)); // 년도 부터 일까지 매개변수로 넘김
+            holder.rv.setAdapter(new adapter(costDataArray)); // 년도 부터 일까지 매개변수로 넘김
             holder.rv.setLayoutManager(new LinearLayoutManager(context));
         }
             // 추후 ListInAssetActivity 와 GraphActivity 각각의 경우를 하나로 합칠 예정

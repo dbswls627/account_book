@@ -1,22 +1,21 @@
 package com.team_3.accountbook;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public class ListInAssetActivity extends AppCompatActivity implements adapter.OnItemClickInListInAsset{
+public class ListInAssetActivity extends AppCompatActivity{
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private FloatingActionButton mFabAdd, mFabReWrite, mFabMain;
     private boolean isFabOpen = false;
@@ -218,19 +217,6 @@ public class ListInAssetActivity extends AppCompatActivity implements adapter.On
         }
 
     }
-
-
-
-    @Override
-    public void onClick(Cost cost) {
-        Intent intent = new Intent(this, AddActivity.class);
-        intent.putExtra("costId", cost.getCostId());
-        intent.putExtra("flag", "ListInAsset_modify");
-        startActivityForResult(intent, 0);
-        overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
-    }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override

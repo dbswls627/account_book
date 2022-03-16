@@ -2,12 +2,12 @@ package com.team_3.accountbook;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +22,6 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     private ArrayList<Cost> arrayList;
     private Context context;
     private String formatAmount = "";
-    private OnItemClickInListInAsset mOnItemClick;
     public interface OnItemClickInListInAsset {
         void onClick (Cost cost);
     }
@@ -31,10 +30,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         this.arrayList = arrayList;
     }
 
-    public adapter(ArrayList<Cost> dostDataArray, OnItemClickInListInAsset OnItemClick) {
-        this.arrayList = dostDataArray;
-        this.mOnItemClick = OnItemClick;
-    }
+
 
 
 
@@ -96,10 +92,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
             if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
             else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.red)); }
-            holder.itemView.setOnClickListener((View -> {
-                Cost cost = arrayList.get(position);
-                mOnItemClick.onClick(cost);
-            }));
+
         }
 
         else if(context instanceof MainActivity){
@@ -110,7 +103,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mSmsContent_dm.setText(arrayList.get(position).getDivision());
         }
 
-        else{       // 그 외 세팅
+        else{       // 그 외 세팅(설정 액티비티에 있는 저장된 리스트)
             holder.dt.setText(arrayList.get(position).getUseDate().substring(14, 19));
             holder.bd.setText(arrayList.get(position).getContent());
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
@@ -131,6 +124,16 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
                 intent.putExtra("flag", "Main");
 
                 context.startActivity(intent);      // ~AddActivity 로 넘어감
+            }));
+        }
+        if (context instanceof HomeActivity || context instanceof ListInAssetActivity|| context instanceof GraphActivity  ) {      // 호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
+            holder.itemView.setOnClickListener((View -> {
+                Cost cost = arrayList.get(position);
+                Intent intent = new Intent(context, AddActivity.class);
+                intent.putExtra("costId", cost.getCostId());
+                intent.putExtra("flag", "ListInAsset_modify");
+                ((Activity)context).startActivityForResult(intent, 0);
+                ((Activity)context).overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
             }));
         }
     }
