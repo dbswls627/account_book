@@ -56,8 +56,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     protected void onRestart() {
         super.onRestart();
         setMonthView();
-        setTotalAmount();   //상단 수입 지출 갱신
-        if (dd!=null) {     //리스트 갱신
+        setTotalAmount();       // 상단 수입 지출 갱신
+        if (dd != null) {       // 리스트 갱신
             setList((ArrayList<Cost>) db.dao().getItemList(yyyyMM.replace(".", "년 ")+ "월" + " " + dd), yyyyMM, dd, dayType);
         }
     }
@@ -231,6 +231,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         this.yyyyMM = yyyyMM;
         this.dd = dd;
         this.dayType = dayType;
+
         if(!arrayList.isEmpty()){
             mNoDataLayout.setVisibility(View.GONE);
             listRv.setVisibility(View.VISIBLE);
@@ -298,6 +299,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         switch (v.getId()){
             case R.id.clearList_home:
                 mDateLayout.setVisibility(View.GONE);
+                dd = null;
 
                 break;
 

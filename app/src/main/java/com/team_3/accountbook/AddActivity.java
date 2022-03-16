@@ -684,6 +684,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 bluetooth();
                 setResult(RESULT_OK);
                 finish();
+                overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
             }
         });
     }
