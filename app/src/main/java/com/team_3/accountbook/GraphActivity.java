@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,10 +27,14 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     BottomNavigationView bottom_menu;
     ImageView preButton,nextButton;
     private TextView monthYearText;
+    LinearLayout graph;
     PieChartFragment pieChartFragment;
+    BarChartFragment barChartFragment;
+    ImageView graphImage;
     AppDatabase db;
     LocalDate selectedDate;
-
+    FragmentTransaction transaction;
+    boolean graphCheck;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onRestart() {
@@ -51,18 +56,20 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
         setContentView(R.layout.activity_graph);
         db=AppDatabase.getInstance(this);
         preButton = findViewById(R.id.preButton);
+        graph = findViewById(R.id.graph_button);
         monthYearText = findViewById(R.id.monthYearTV);
         nextButton = findViewById(R.id.nextButton);
-
+        graphImage = findViewById(R.id.graph_image);
 
 
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
 
+        graphCheck = true;
 
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction = getSupportFragmentManager().beginTransaction();
 
         pieChartFragment = new PieChartFragment(monthYearFromDate(selectedDate));
+        barChartFragment = new BarChartFragment();
         transaction.replace(R.id.container,pieChartFragment).commit();
         monthYearText.setText(monthYearFromDate(selectedDate));
 
@@ -100,6 +107,20 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
             selectedDate = selectedDate.plusMonths(1);
             monthYearText.setText(monthYearFromDate(selectedDate));
             pieChartFragment.setChart(monthYearFromDate(selectedDate));
+        });
+
+        graph.setOnClickListener(view -> {
+            transaction = getSupportFragmentManager().beginTransaction();
+            if (graphCheck) {
+                transaction.replace(R.id.container, barChartFragment).commit();
+                graphImage.setImageResource(R.drawable.ic_baseline_pie_chart_24);
+                graphCheck = false;
+            }
+            else {
+                transaction.replace(R.id.container, pieChartFragment).commit();
+                graphImage.setImageResource(R.drawable.ic_baseline_bar_chart_24);
+                graphCheck = true;
+            }
         });
     }
 
