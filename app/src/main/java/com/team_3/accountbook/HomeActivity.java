@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -37,8 +36,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private TextView monthYearText, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout, mNoDataLayout;
-
-
+    String yyyyMM, dd;
+    int dayType;
     private ImageView pre,next;
     AppDatabase db;
 
@@ -57,6 +56,10 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     protected void onRestart() {
         super.onRestart();
         setMonthView();
+        setTotalAmount();   //상단 수입 지출 갱신
+        if (dd!=null) {     //리스트 갱신
+            setList((ArrayList<Cost>) db.dao().getItemList(yyyyMM.replace(".", "년 ")+ "월" + " " + dd), yyyyMM, dd, dayType);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -224,11 +227,10 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         }
         catch (Exception e){ mExpenseTotal.setText("0"); }
     }
-
-
-
-    @Override
-    public void onClick(ArrayList<Cost> arrayList, String yyyyMM, String dd, int dayType) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
+    private void setList(ArrayList<Cost> arrayList, String yyyyMM, String dd, int dayType){
+        this.yyyyMM = yyyyMM;
+        this.dd = dd;
+        this.dayType = dayType;
         if(!arrayList.isEmpty()){
             mNoDataLayout.setVisibility(View.GONE);
             listRv.setVisibility(View.VISIBLE);
@@ -244,6 +246,14 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         mYearMonth.setText(yyyyMM);
         date.setText(dd);
         parseForKoreanDay(dayType);
+    }
+
+
+
+    @Override
+    public void onClick(ArrayList<Cost> arrayList, String yyyyMM, String dd, int dayType) {    // CalendarAdapter 에서 요일을 클릭하면 호출돼어 실행되는 함수. 날짜에 맞는 활동정보 리스트를 받아서 출력함.
+        setList(arrayList, yyyyMM, dd, dayType);
+
     }
 
 
