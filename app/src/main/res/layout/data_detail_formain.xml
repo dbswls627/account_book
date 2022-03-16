@@ -60,7 +60,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginBottom="20dp"
-        android:textSize="11dp"
+        android:textSize="10dp"
         android:textColor="@color/black"
         android:text="문자 내용"/>
 

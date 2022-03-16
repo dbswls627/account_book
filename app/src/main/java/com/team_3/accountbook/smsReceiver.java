@@ -31,7 +31,7 @@ public class smsReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 0;           // Notification 에 대한 ID
     private NotificationCompat.Builder notifyBuilder;               // Notification Builder: Notification 을 생성
 
-    private String useDate, useHour, useAmount;
+    private String useDate, useAmount;
     private Pattern p;
     private Matcher m;
 
@@ -87,22 +87,17 @@ public class smsReceiver extends BroadcastReceiver {
 
 
     private void smsNotification(Context context, String content) {
-        p = Pattern.compile("[0-9]{2}[/][0-9]{2}");           // ex) 02/09
+        p = Pattern.compile("[0-9]{2}[/][0-9]{2} [0-9]{2}[:][0-9]{2}");           // ex) 02/09 15:32
         m = p.matcher(content);
         if (m.find()) { useDate = m.group(); }                // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
         else { useDate = null; }                              // 매칭되는 문자가 없으면 null
-
-        p = Pattern.compile("[0-9]{2}[:][0-9]{2}");           // ex) 15:32
-        m = p.matcher(content);
-        if (m.find()) { useHour = m.group(); }
-        else { useHour = null; }
 
         p = Pattern.compile("([0-9])\\S*(원)");               // ex) 13,500원
         m = p.matcher(content);
         if (m.find()) { useAmount = m.group(); }
         else { useAmount = null; }
 
-        if (useDate != null && useHour != null && useAmount != null) {      // 결제문자의 형식이 갖춰졌을 때~
+        if (useDate != null && useAmount != null) {      // 결제문자의 형식이 갖춰졌을 때~
             mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 //Channel 정의 생성자( construct 이용 )

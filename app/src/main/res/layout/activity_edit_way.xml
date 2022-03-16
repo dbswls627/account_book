@@ -206,7 +206,8 @@
                         android:id="@+id/editWay_phoneNumber"
                         android:theme="@style/editText_income"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:inputType="date"/>
                     <EditText
                         android:id="@+id/editWay_delimiter"
                         android:theme="@style/editText_income"

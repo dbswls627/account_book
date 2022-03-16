@@ -125,16 +125,16 @@ public class MainActivity extends AppCompatActivity {
 
         ZoneId zoneid = ZoneId.of("Asia/Seoul");                                                            // 서울 시각
         long beforeM = LocalDateTime.now().minusMonths(months).atZone(zoneid).toInstant().toEpochMilli();   // months 개월 전 ms
-        String where = "address = 15881688 and date >"+beforeM;
+        String where = "date >"+beforeM;
         //날짜 조건 추가
         ContentResolver cr = getContentResolver();
 
         Cursor smsCur = cr.query(smsUri,              // .query(from / select / ? / where / order by);
-                new String[]{"body", "date"},
+                new String[]{"body", "date", "address"},
                 where, null,
                 "date DESC");
         Cursor rcsCur = cr.query(rcsUri,              // RCS
-                new String[]{"body", "date"},
+                new String[]{"body", "date", "address"},
                 where, null,
                 "date DESC");
 
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             while (rcsCur.moveToNext()) {               // RCS
                 String body = rcsCur.getString(0);      // rcs 의 body
                 long timestamp = rcsCur.getLong(1);     // rcs 의 date(ms)
+                String add = rcsCur.getString(2);
 
                 try{
                     JSONObject jObject = new JSONObject(body);      // body 전체를 담음
@@ -161,13 +162,16 @@ public class MainActivity extends AppCompatActivity {
                     jObject = (JSONObject) jArray.get(0);               // 배열의 첫번째 값을 담음
 
                     body = String.valueOf(jObject.get("text"));         // text 키의 값(문자 내용)을 가져옴.
+                    body = body.replaceAll("\n", " ");
                     if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
+
                         timeInDate = new Date(timestamp);
                         String date = sdf.format(timeInDate);
                         Cost cost = parsing(body, date, timestamp);
-                        cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
+                        cost.setDivision(body);   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
-                        if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
+                        if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) { // 정규화되지 않았으면 리스트에 추가하지 않음
+                            Log.d("addressPrint_rcs", add);
                             arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
 
                         }
@@ -182,13 +186,18 @@ public class MainActivity extends AppCompatActivity {
             while (smsCur.moveToNext()) {
                 String body = smsCur.getString(0);
                 long timestamp = smsCur.getLong(1);
+                String add = smsCur.getString(2);
+                body = body.replaceAll("\n", " ");
+
                 if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
+
                     timeInDate = new Date(timestamp);
                     String date = sdf.format(timeInDate);
                     Cost cost = parsing(body, date, timestamp);
                     cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
-                    if (cost.getAmount()!=-1 && cost.getContent()!="") { // 정규화되지 않았으면 리스트에 추가하지 않음
+                    if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 정규화되지 않았으면 리스트에 추가하지 않음
+                        Log.d("addressPrint_sms", add);
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                     }
                 }
@@ -211,31 +220,59 @@ public class MainActivity extends AppCompatActivity {
         String amount;              // 추출한 가격(~원)
         String place;               // 추출한 사용처
         int int_amount;             // int 형으로 변환한 가격(only 숫자)
+        String flagDate;
 
-        Pattern p = Pattern.compile("([0-9])\\S*(원)");  // 원 앞에 있는 숫자들과 원을 파싱 적어도 앞에 숫자하나가 있어야함
+        Pattern p = Pattern.compile("[0-9|,]+(원)");  // 원 앞에 있는 숫자들과 원을 파싱 적어도 앞에 숫자하나가 있어야함
         Matcher m;                  // 패턴 p와 matching 되는 문자들을 저장할 Matcher 클래스 객체 m 생성
         m = p.matcher(body);        // 정규식으로 가격(~원)을 파싱 후 매칭되는 문자들을 Matcher 객체에 저장
-
         if(m.find()){ amount = m.group(); }               // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
         else{ amount = null; }                            // 매칭되는 문자가 없으면 null
-
-        p = Pattern.compile("(.*사용)");                  // p객체 재활용 *** 사용 까지 parsing
-        m = p.matcher(body);                             // m객체 재활용
-
-        if(m.find()){ place = m.group(); }               // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
-        else{ place = ""; }                              // 매칭되는 문자가 없으면 null
-        try {                                            // null 값을 받으면 에러가 나서 예외처리 사용
-            place=place.replaceAll("사용$", "");          // 정규식으로 끝에 있는 사용만 제거
-        }
-        catch (Exception e){place = "";}
-
-        try {           // null 값을 받는 상황을 위해 예외처리 사용
-            int_amount = Integer.parseInt(amount.replaceAll("[,]|[원]", ""));   // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
+        try {                                             // null 값을 받는 상황을 위해 예외처리 사용
+            int_amount = Integer.parseInt(amount.replaceAll(",|원", ""));   // '~원' 형식으로 추출된 가격을 정수형으로 2차 가공 및 반환
         }
         catch (Exception e){int_amount = -1;}
 
-        return new Cost(0, int_amount, place, date, 0, "", "", "", timestamp);
-        //return new Cost(date, place, int_amount, timestamp, 0);        // item 형태의 객체 return
+
+        p = Pattern.compile("([,|0-9]+원 )+[\\S| ]+( 사용)");
+        m = p.matcher(body);                             // m객체 재활용
+        if(m.find()){ place = m.group(); }
+        else{ place = ""; }
+        try {
+            place = place.replaceAll("[,|0-9]+원 | 사용", "");       // 정규식으로 "-,---원 "&" 사용"제거
+        }
+        catch (Exception e){place = "";}
+
+        if(place.equals("")){       // 사용처가 "--- 사용" 형식이 아닌 경우
+            p = Pattern.compile("([0-9]{2}:[0-9]{2} )+[^0-9 ]+");
+            m = p.matcher(body);
+            if(m.find()){ place = m.group(); }
+            else{ place = ""; }
+            try {                                                          // null 값을 받으면 에러가 나서 예외처리 사용
+                place = place.replaceAll("[0-9]{2}:[0-9]{2} ", "");        // "hh:mm "제거
+            }
+            catch (Exception e){place = "";}
+
+            if(place.equals("주식회사")){   // 사용처가 "주식회사 협성대"인 경우가 있음. 그 때를 위함
+                p = Pattern.compile("(주식회사 )+\\S+");
+                m = p.matcher(body);
+                if(m.find()){ place = m.group(); }
+                else{ place = ""; }
+                try {                                                 // null 값을 받으면 에러가 나서 예외처리 사용
+                    place = place.replaceAll("(주식회사 )", "");        // "주식회사 " 제거
+                }
+                catch (Exception e){place = "";}
+            }
+        }
+
+
+        p = Pattern.compile("[0-9]{2}[/][0-9]{2} [0-9]{2}:[0-9]{2}");                  // 결제 문자 형식을 구분하기 위한 정규식   ex) MM/dd hh:mm
+        m = p.matcher(body);
+        if(m.find()){ flagDate = m.group(); }
+        else{ flagDate = ""; }      // 매칭되는 문자가 없으면 ""
+
+
+        // 결제 문자 형식 구분을 위한 flagDate 를 Cost 테이블의 sortName 에 넣어서 리턴함.
+        return new Cost(0, int_amount, place, date, 0, flagDate, "", "", timestamp);
     }
 
 
