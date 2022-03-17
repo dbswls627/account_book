@@ -291,11 +291,9 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < delimiter.size(); i++) {
                 if(!delimiter.get(i).equals("")){
-                    s = changeSpecialLettersToNormal(delimiter.get(i));     // 특수문자들을 일반 문자로 인식하도록 다듬은 String s
+                    s = delimiter.get(i);
 
-                    p = Pattern.compile(s);
-                    m = p.matcher(body);
-                    if(m.find()){       // 구분어와 일치하는 문자는 구분어를 저장한 wayName 을 저장
+                    if(body.contains(s)){       // 구분어와 일치하는 문자는 구분어를 저장한 wayName 을 저장
                         wayName = db.dao().getWayNameDetail(add, delimiter.get(i));
                     }
                 }
@@ -304,25 +302,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return wayName;
-    }
-
-
-
-    private String changeSpecialLettersToNormal(String s){
-        s = s.replaceAll("\\*", "\\\\*");
-        s = s.replaceAll("\\^", "\\\\^");
-        s = s.replaceAll("\\$", "\\\\$");
-        s = s.replaceAll("\\?", "\\\\?");
-        s = s.replaceAll("\\.", "\\\\.");
-        s = s.replaceAll("\\+", "\\\\+");
-        s = s.replaceAll("\\(", "\\\\(");
-        s = s.replaceAll("\\)", "\\\\)");
-        s = s.replaceAll("\\[", "\\\\[");
-        s = s.replaceAll("\\]", "\\\\[");
-        s = s.replaceAll("\\{", "\\\\{");
-        s = s.replaceAll("\\}", "\\\\}");
-
-        return s;
     }
 
 
