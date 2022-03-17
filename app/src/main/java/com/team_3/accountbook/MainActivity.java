@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     private String matchPhoneNumber(String add, String body){
         Pattern p;
         Matcher m;
-        String s, wayName = "";
+        String wayName = "";
         List<String> wayNameList = db.dao().getWayName(add);
 
         if(wayNameList.size() == 1){            // 번호가 1개(동일한 등록 번호 없음.)
@@ -291,11 +291,11 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < delimiter.size(); i++) {
                 if(!delimiter.get(i).equals("")){
-                    s = delimiter.get(i);
 
-                    if(body.contains(s)){       // 구분어와 일치하는 문자는 구분어를 저장한 wayName 을 저장
+                    if(body.contains(delimiter.get(i))){       // 구분어와 일치하는 문자는 구분어를 저장한 wayName 을 저장
                         wayName = db.dao().getWayNameDetail(add, delimiter.get(i));
                     }
+
                 }
             }
 
