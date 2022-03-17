@@ -126,6 +126,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             int amount = getIntent().getIntExtra("amount", 0);
             ms = getIntent().getLongExtra("ms", 0);
             mDate.setText(date);
+            mWay.setText(getIntent().getStringExtra("way"));
             mBody.setText(body);
             mSum.setText(String.valueOf(amount));
             setColorOfDivision(action);

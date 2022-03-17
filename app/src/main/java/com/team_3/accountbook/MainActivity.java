@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,7 +16,6 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -163,17 +162,19 @@ public class MainActivity extends AppCompatActivity {
 
                     body = String.valueOf(jObject.get("text"));         // text 키의 값(문자 내용)을 가져옴.
                     body = body.replaceAll("\n", " ");
-                    if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
 
+                    if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
                         timeInDate = new Date(timestamp);
                         String date = sdf.format(timeInDate);
                         Cost cost = parsing(body, date, timestamp);
                         cost.setDivision(body);   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
                         if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) { // 정규화되지 않았으면 리스트에 추가하지 않음
-                            Log.d("addressPrint_rcs", add);
-                            arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
+                            List<String> wayName = db.dao().getWayName(add);
+                            try { cost.setSortName(wayName.get(1)); }
+                            catch (Exception e){ cost.setSortName(""); }
 
+                            arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                         }
                     }
                 } catch (JSONException e) {
@@ -197,7 +198,20 @@ public class MainActivity extends AppCompatActivity {
                     cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
                     if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 정규화되지 않았으면 리스트에 추가하지 않음
-                        Log.d("addressPrint_sms", add);
+                        cost.setSortName(matchPhoneNumber(add, body));
+//                        List<String> wayName = db.dao().getWayName(add);
+//
+//                        if(wayName.size() == 1){            // 번호가 1개(동일 번호 없음.)
+//                            cost.setSortName(wayName.get(0));
+//                        }
+//                        else if(wayName.size() > 1){        // 동일 번호가 2개 이상.
+//                            List<String> delimiter = db.dao().getWayDelimiter(add);
+//                            cost.setSortName(matchDelimiter(delimiter, body, add));
+//                        }
+//                        else{                               // 등록 번호 없음.
+//                            cost.setSortName("");
+//                        }
+
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                     }
                 }
@@ -205,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Collections.sort(arrayList, new Comparator<Cost>() {        //arrayList 날짜순으로 정렬
+        Collections.sort(arrayList, new Comparator<Cost>() {        // arrayList 날짜순으로 정렬
             @Override
             public int compare(Cost c1, Cost c2) {
                 return c2.getUseDate().compareTo(c1.getUseDate());
@@ -232,7 +246,8 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){int_amount = -1;}
 
-
+        p = Pattern.compile("$");
+        Log.d("pppppp", String.valueOf(p));
         p = Pattern.compile("([,|0-9]+원 )+[\\S| ]+( 사용)");
         m = p.matcher(body);                             // m객체 재활용
         if(m.find()){ place = m.group(); }
@@ -273,6 +288,57 @@ public class MainActivity extends AppCompatActivity {
 
         // 결제 문자 형식 구분을 위한 flagDate 를 Cost 테이블의 sortName 에 넣어서 리턴함.
         return new Cost(0, int_amount, place, date, 0, flagDate, "", "", timestamp);
+    }
+
+
+
+    private String matchPhoneNumber(String add, String body){
+        Pattern p;
+        Matcher m;
+        String s, wayName = "";
+        List<String> wayNameList = db.dao().getWayName(add);
+
+        if(wayNameList.size() == 1){            // 번호가 1개(동일한 등록 번호 없음.)
+            wayName = wayNameList.get(0);
+        }
+
+        else if(wayNameList.size() > 1){        // 동일 번호가 2개 이상.
+            List<String> delimiter = db.dao().getWayDelimiter(add);
+
+            for (int i = 0; i < delimiter.size(); i++) {
+                if(!delimiter.get(i).equals("")){
+                    s = changeSpecialLettersToNormal(delimiter.get(i));
+                    p = Pattern.compile(s);
+                    m = p.matcher(body);
+
+                    if(m.find()){       // 구분어와 일치하는 문자는 구분어를 저장한 wayName 을 저장
+                        wayName = db.dao().getWayNameDetail(add, delimiter.get(i));
+                    }
+                }
+            }
+
+        }
+
+        return wayName;
+    }
+
+
+
+    private String changeSpecialLettersToNormal(String s){
+        s = s.replaceAll("\\*", "\\\\*");
+        s = s.replaceAll("\\^", "\\\\^");
+        s = s.replaceAll("\\$", "\\\\$");
+        s = s.replaceAll("\\?", "\\\\?");
+        s = s.replaceAll("\\.", "\\\\.");
+        s = s.replaceAll("\\+", "\\\\+");
+        s = s.replaceAll("\\(", "\\\\(");
+        s = s.replaceAll("\\)", "\\\\)");
+        s = s.replaceAll("\\[", "\\\\[");
+        s = s.replaceAll("\\]", "\\\\[");
+        s = s.replaceAll("\\{", "\\\\{");
+        s = s.replaceAll("\\}", "\\\\}");
+
+        return s;
     }
 
 

@@ -245,6 +245,16 @@ public interface sqlDao {
     @Query("SELECT a.assetId FROM Asset a WHERE a.assetName = :name")
     Integer getAssetId(String name);
 
+    @Query("SELECT w.wayName FROM Way w WHERE w.phoneNumber = :phoneNumber")
+    List<String> getWayName(String phoneNumber);
+
+    @Query("SELECT w.wayName FROM Way w WHERE w.phoneNumber = :phoneNumber AND w.delimiter = :delimiter")
+    String getWayNameDetail(String phoneNumber, String delimiter);
+
+    @Query("SELECT w.delimiter FROM Way w WHERE w.phoneNumber = :phoneNumber")
+    List<String> getWayDelimiter(String phoneNumber);
+
+
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
     List<AssetWithWay> getAssetWithWays();
