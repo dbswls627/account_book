@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                     cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
                     if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 정규화되지 않았으면 리스트에 추가하지 않음
-                        cost.setSortName(matchPhoneNumber(add, body));
+                        cost.setSortName(matchPhoneNumber(add, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
 
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                     }
@@ -294,9 +294,9 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < delimiter.size(); i++) {
                 if(!delimiter.get(i).equals("")){
                     s = changeSpecialLettersToNormal(delimiter.get(i));     // 특수문자들을 일반 문자로 인식하도록 다듬은 String s
+
                     p = Pattern.compile(s);
                     m = p.matcher(body);
-
                     if(m.find()){       // 구분어와 일치하는 문자는 구분어를 저장한 wayName 을 저장
                         wayName = db.dao().getWayNameDetail(add, delimiter.get(i));
                     }
