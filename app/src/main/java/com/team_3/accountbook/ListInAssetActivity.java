@@ -234,7 +234,9 @@ public class ListInAssetActivity extends AppCompatActivity{
                     setResult(RESULT_OK);
                     finish();
                 }
-                else{ setMonthList(); }
+                else{
+                    setMonthList();
+                }
             }
         }
     }

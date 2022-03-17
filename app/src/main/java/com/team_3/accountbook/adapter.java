@@ -103,6 +103,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mSmsContent_dm.setText(arrayList.get(position).getDivision());
             if(arrayList.get(position).getSortName().contains("!#@!")){
                 holder.mWay_dm.setText(arrayList.get(position).getSortName().replaceAll("!#@!", ""));
+                arrayList.get(position).setSortName("");
             }
             else{
                 holder.mWay_dm.setText(arrayList.get(position).getSortName());
@@ -132,6 +133,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
                 intent.putExtra("flag", "Main");
 
                 context.startActivity(intent);      // ~AddActivity 로 넘어감
+                ((Activity)context).overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
             }));
         }
         if (context instanceof HomeActivity || context instanceof ListInAssetActivity|| context instanceof GraphActivity  ) {      // 호출한 액티비티가 MainActivity(메세지 액티비티)일 경우

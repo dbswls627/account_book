@@ -206,7 +206,9 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                 dialog.dismiss();
                 db.dao().deleteWayData(wayName);
 
+                flag = "modify_LIA_delete";
                 finishForResult();
+                fadeOutActivity();
             }
         });
     }
@@ -217,11 +219,12 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
     private void finishForResult(){
         Intent resultIntent = new Intent();
         resultIntent.putExtra("wayName", mWayName.getText().toString());
-        if(flag.equals("modify_LIA")){
+        if(flag.equals("modify_LIA_delete")){
             resultIntent.putExtra("backFlag", "double");
             setResult(RESULT_OK, resultIntent);
         }
         else{
+            resultIntent.putExtra("backFlag", "one");
             setResult(RESULT_OK, resultIntent);
         }
         finish();

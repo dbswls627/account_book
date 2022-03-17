@@ -54,7 +54,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     long ms;
     boolean checkIncome = false, checkExpense = true;
     String action = "expense", actionKorean = "지출";
-    String focus = "";
+    private String focus = "";
+    private Boolean afterModify = false;
     int cursorPosition = -1;
     private String callValue = "nothing";
     private int myCostId = -1;
@@ -248,7 +249,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             cursorPosition = 1;
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
             mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
-            setWayAndSortRV(focus);
+            setWayAndSortRV();
             saveOrDeleteSetting();
             return false;
         });
@@ -257,7 +258,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             cursorPosition = 2;
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
             mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
-            setWayAndSortRV(focus);
+            setWayAndSortRV();
             saveOrDeleteSetting();
             return false;
         });
@@ -280,12 +281,20 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
 
-    private void setWayAndSortRV(String focus) {
+    private void setWayAndSortRV() {
         if (!focus.equals("")) {
             if (focus.equals("way")) {
+                if(afterModify){
+                    mWay.setText("");
+                    afterModify = false;
+                }
                 WayAndSortList = db.dao().getWayNames();
                 mFlag.setText(" [ 자산 - 수단 ] ");
             } else if (focus.equals("sort")) {
+                if(afterModify){
+                    mSort.setText("");
+                    afterModify = false;
+                }
                 WayAndSortList = db.dao().getSortNames(action);
                 mFlag.setText(" [ 분류 ] ");
             }
@@ -350,7 +359,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSave.setTextColor(getResources().getColor(R.color.red));               // 빨간색
             mSort.setText("");
         }
-        setWayAndSortRV(focus);
+        setWayAndSortRV();
     }
 
 
@@ -708,7 +717,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
         if(requestCode == 0){
             if(resultCode == RESULT_OK){
-                setWayAndSortRV(focus);
+                afterModify = true;
+                setWayAndSortRV();
             }
         }
     }
