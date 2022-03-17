@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -361,6 +360,14 @@ public class MainActivity extends AppCompatActivity {
         mBring = dialog.findViewById(R.id.tv_bring);
         mMonths = dialog.findViewById(R.id.months);
         mMonths.setText(months+"");
+
+        mMonths.setOnEditorActionListener((textView,i, keyEvent)->{
+            months = Integer.parseInt(mMonths.getText().toString());
+            setMessageList();
+
+            dialog.dismiss();
+            return false;
+        });
 
         mNoBring.setOnClickListener(new View.OnClickListener() {
             @Override

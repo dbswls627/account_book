@@ -334,6 +334,21 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         mBring = dialog.findViewById(R.id.tv_bring);
         mMonths = dialog.findViewById(R.id.months);
 
+        mMonths.setOnEditorActionListener((textView,i, keyEvent)->{
+            try {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("months", Integer.parseInt(mMonths.getText().toString()));
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+
+                dialog.dismiss();
+            }
+            catch (Exception e){
+                Toast.makeText(getApplicationContext(), "숫자만 입력하세요.", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        });
+
         mNoBring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

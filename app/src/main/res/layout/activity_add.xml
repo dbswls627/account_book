@@ -168,6 +168,7 @@
 <!--                        android:inputType="date" />-->
                     <EditText
                         android:id="@+id/body"
+                        android:inputType="text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:selectAllOnFocus="true" />
