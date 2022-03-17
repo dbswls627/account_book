@@ -199,18 +199,6 @@ public class MainActivity extends AppCompatActivity {
 
                     if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 정규화되지 않았으면 리스트에 추가하지 않음
                         cost.setSortName(matchPhoneNumber(add, body));
-//                        List<String> wayName = db.dao().getWayName(add);
-//
-//                        if(wayName.size() == 1){            // 번호가 1개(동일 번호 없음.)
-//                            cost.setSortName(wayName.get(0));
-//                        }
-//                        else if(wayName.size() > 1){        // 동일 번호가 2개 이상.
-//                            List<String> delimiter = db.dao().getWayDelimiter(add);
-//                            cost.setSortName(matchDelimiter(delimiter, body, add));
-//                        }
-//                        else{                               // 등록 번호 없음.
-//                            cost.setSortName("");
-//                        }
 
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                     }
@@ -246,8 +234,6 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){int_amount = -1;}
 
-        p = Pattern.compile("$");
-        Log.d("pppppp", String.valueOf(p));
         p = Pattern.compile("([,|0-9]+원 )+[\\S| ]+( 사용)");
         m = p.matcher(body);                             // m객체 재활용
         if(m.find()){ place = m.group(); }
@@ -307,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < delimiter.size(); i++) {
                 if(!delimiter.get(i).equals("")){
-                    s = changeSpecialLettersToNormal(delimiter.get(i));
+                    s = changeSpecialLettersToNormal(delimiter.get(i));     // 특수문자들을 일반 문자로 인식하도록 다듬은 String s
                     p = Pattern.compile(s);
                     m = p.matcher(body);
 
