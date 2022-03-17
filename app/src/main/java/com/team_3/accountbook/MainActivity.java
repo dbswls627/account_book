@@ -170,9 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         cost.setDivision(body);   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
                         if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) { // 정규화되지 않았으면 리스트에 추가하지 않음
-                            List<String> wayName = db.dao().getWayName(add);
-                            try { cost.setSortName(wayName.get(1)); }
-                            catch (Exception e){ cost.setSortName(""); }
+                            cost.setSortName(matchPhoneNumber(add, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
 
                             arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                         }
