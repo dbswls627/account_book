@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="11dp"
                 android:gravity="left"
                 android:text="시간"
                 android:textSize="11dp" />
@@ -39,17 +39,26 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/detailMain_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:gravity="right"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
                 android:textSize="13dp"
                 android:textColor="@color/black"
                 android:text="금액" />
+            <TextView
+                android:id="@+id/detailMain_wayName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="40dp"
+                android:gravity="right"
+                android:text="(미분류)"
+                android:textSize="10dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -59,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="25dp"
         android:textSize="10dp"
         android:textColor="@color/black"
         android:text="문자 내용"/>

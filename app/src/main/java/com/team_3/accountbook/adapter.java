@@ -101,6 +101,13 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.mAmount_dm.setText(formatAmount + "원");
             holder.mSmsContent_dm.setText(arrayList.get(position).getDivision());
+            if(arrayList.get(position).getSortName().contains("!#@!")){
+                holder.mWay_dm.setText(arrayList.get(position).getSortName().replaceAll("!#@!", ""));
+            }
+            else{
+                holder.mWay_dm.setText(arrayList.get(position).getSortName());
+            }
+
         }
 
         else{       // 그 외 세팅(설정 액티비티에 있는 저장된 리스트)
@@ -148,7 +155,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
 
         TextView mSortName_dh, mBody_dh, mTime_dh, mAmount_dh, mWayName_dh;
         TextView mSortName_da, mBody_da, mTime_da, mAmount_da, mBalance_da;
-        TextView mBody_dm, mTime_dm, mAmount_dm, mSmsContent_dm;
+        TextView mBody_dm, mTime_dm, mAmount_dm, mSmsContent_dm, mWay_dm;
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -172,6 +179,7 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             mTime_dm = itemView.findViewById(R.id.detailMain_time);
             mAmount_dm = itemView.findViewById(R.id.detailMain_amount);
             mSmsContent_dm = itemView.findViewById(R.id.detailMain_smsContent);
+            mWay_dm = itemView.findViewById(R.id.detailMain_wayName);
 
         }
     }

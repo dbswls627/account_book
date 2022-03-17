@@ -197,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
                     if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 정규화되지 않았으면 리스트에 추가하지 않음
                         cost.setSortName(matchPhoneNumber(add, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
+                        if(cost.getSortName().equals("")){
+                            cost.setSortName(add+"!#@!");
+                        }
 
                         arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
                     }
@@ -277,8 +280,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private String matchPhoneNumber(String add, String body){
-        Pattern p;
-        Matcher m;
         String wayName = "";
         List<String> wayNameList = db.dao().getWayName(add);
 
