@@ -40,6 +40,9 @@ public class PieChartFragment extends Fragment  {
     public PieChartFragment(String date) {
         YYYYMM = date;
     }
+    public void setDate(String date){
+        YYYYMM = date;
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -66,11 +69,7 @@ public class PieChartFragment extends Fragment  {
         l.setEnabled(false);       //그래프 목록 표시 비활성화
         //pieChart.setCenterText("TEST");   //가운데 글씨
         //pieChart.setHoleColor(Color.WHITE);//가운데 구멍 색
-
-
         pieChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) context);
-
-
         setChart(YYYYMM);
 
 

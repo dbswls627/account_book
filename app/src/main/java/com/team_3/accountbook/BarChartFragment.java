@@ -22,11 +22,15 @@ public class BarChartFragment extends Fragment {
     AppDatabase db;
     BarChart barChart;
     List<BarEntry> barEntries;
-
+    String YYYY;
     ArrayList<Integer> amountList = new ArrayList<>(); // ArrayList 선언
 
-    public BarChartFragment() {
+    public BarChartFragment(String YYYY) {
         // Required empty public constructor
+        this.YYYY = YYYY;
+    }
+    public void setDate(String date){
+        YYYY = date;
     }
 
 
@@ -45,7 +49,7 @@ public class BarChartFragment extends Fragment {
         Legend l = barChart.getLegend();
         l.setEnabled(false);       //그래프 목록 표시 비활성화
 
-        setChart();
+        setChart(YYYY);
 
         return view;
 
@@ -53,7 +57,7 @@ public class BarChartFragment extends Fragment {
 
     }
 
-    public void setChart() {
+    public void setChart(String YYYY) {
         barEntries = new ArrayList<>();
         //db.dao().getAmountOfMonth();
         barEntries.add(new BarEntry(1f,10f));
