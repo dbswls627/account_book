@@ -69,15 +69,31 @@ public class MyTileService extends TileService {
                 .setHeight(expand())
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
-                                new LayoutElementBuilders.ArcLine.Builder()    //테두리에 선
+                                new LayoutElementBuilders.ArcLine.Builder()    //테두리에 첫번째 선(금액)
                                         .setLength(degrees(goalProgress.percentage()*360f))  //게이지 = 360f가 만땅
                                         .setColor(argb(ContextCompat.getColor(this, R.color.green)))
                                         .setThickness(dp(6f)) //선 두께
                                         .build()
                         )
-                        .setAnchorAngle(degrees(0.0f))  //위에 공백
+                        .setAnchorAngle(degrees(5f))  //위에 공백
+                                .setAnchorType(ARC_ANCHOR_START)           //게이지 시작점(?)(왼쪽 오른쪽)
+                                .build())
+                .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
+                        .addContent(
+                                new LayoutElementBuilders.ArcLine.Builder()    //테두리에 두번째 선(날짜)
+                                        .setLength(degrees(goalProgress.percentage()*360f))  //게이지 = 360f가 만땅
+                                        .setColor(argb(ContextCompat.getColor(this, R.color.red_a200)))
+                                        .setThickness(dp(6f)) //선 두께
+                                        .build()
+                        )
+                        .addContent(new LayoutElementBuilders.ArcSpacer.Builder()//2번째 선은 공간이 띄워져서 나오게 공벡추가
+                                .setThickness(dp(20f))
+                                .build())
+                        .setAnchorAngle(degrees(5f))  //위에 공백
                         .setAnchorType(ARC_ANCHOR_START)           //게이지 시작점(?)(왼쪽 오른쪽)
-                        .build())
+                        .build()
+                )
+
                 .addContent(
                         new LayoutElementBuilders.Column.Builder()
                                 .addContent(new Text.Builder()              //텍스트
