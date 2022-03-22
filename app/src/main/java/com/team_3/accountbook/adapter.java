@@ -103,7 +103,6 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mSmsContent_dm.setText(arrayList.get(position).getDivision());
             if(arrayList.get(position).getSortName().contains("!#@!")){
                 holder.mWay_dm.setText(arrayList.get(position).getSortName().replaceAll("!#@!", ""));
-                arrayList.get(position).setSortName("");
             }
             else{
                 holder.mWay_dm.setText(arrayList.get(position).getSortName());

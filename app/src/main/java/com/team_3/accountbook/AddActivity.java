@@ -116,20 +116,20 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         }
         else if(callValue.equals("ListInAsset_add")){
             // ListInAssetActivity 에서 추가버튼 클릭시 실행되는 부분
-            String myWayName = getIntent().getStringExtra("wayName");
-            mWay.setText(myWayName);
+            mWay.setText(getIntent().getStringExtra("wayName"));
+
             setColorOfDivision(action);
         }
         else if(callValue.equals("Main")){
             // MainActivity 에서 리스트 클릭시 실행되는 부분
-            String date = getIntent().getStringExtra("date");
-            String body = getIntent().getStringExtra("body");
-            int amount = getIntent().getIntExtra("amount", 0);
             ms = getIntent().getLongExtra("ms", 0);
-            mDate.setText(date);
-            mWay.setText(getIntent().getStringExtra("way"));
-            mBody.setText(body);
-            mSum.setText(String.valueOf(amount));
+
+            mDate.setText(getIntent().getStringExtra("date"));
+            if(getIntent().getStringExtra("way").contains("!#@!")){ mWay.setText(""); }     // 저장된 번호가 아닌 문자면 수단을 비워놓음.
+            else{ mWay.setText(getIntent().getStringExtra("way")); }                        // 저장된 번호의 문자이면 저장된 번호의 수단 이름을 setText
+            mBody.setText(getIntent().getStringExtra("body"));
+            mSum.setText(String.valueOf(getIntent().getIntExtra("amount", 0)));
+
             setColorOfDivision(action);
         }
         else if(callValue.equals("nothing")){
@@ -138,15 +138,15 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSave.setSelected(true);
         }
         if (!mDate.getText().toString().equals("")) {   // date 가 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
-            Log.d("Test","notEmpty");
+//            Log.d("Test","notEmpty");
             year = Integer.parseInt(mDate.getText().toString().substring(0, 4));
             month = Integer.parseInt(mDate.getText().toString().substring(6, 8)) - 1;
             day = Integer.parseInt(mDate.getText().toString().substring(10, 12));
             hour = Integer.parseInt(mDate.getText().toString().substring(14, 16));
             minute = Integer.parseInt(mDate.getText().toString().substring(17, 19));
-            Log.d("test",mDate.getText().toString().substring(0, 4));
-            Log.d("test",mDate.getText().toString().substring(6, 8));
-            Log.d("test",mDate.getText().toString().substring(10, 12));
+//            Log.d("test",mDate.getText().toString().substring(0, 4));
+//            Log.d("test",mDate.getText().toString().substring(6, 8));
+//            Log.d("test",mDate.getText().toString().substring(10, 12));
         }
 
         timePickerDialog = new TimePickerDialog(this, (view, h, m) -> {
