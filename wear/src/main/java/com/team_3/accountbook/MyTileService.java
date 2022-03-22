@@ -22,10 +22,13 @@ import androidx.wear.tiles.material.Text;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.text.DecimalFormat;
+
 public class MyTileService extends TileService {
     private static final String RESOURCES_VERSION = "1";
     DimensionBuilders.DpProp Tdp = dp(12f);      //두께
     AppDatabase db;
+    private DecimalFormat myFormatter = new DecimalFormat("###,###");
     @NonNull
     @Override
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
@@ -157,12 +160,12 @@ public class MyTileService extends TileService {
                         new LayoutElementBuilders.Column.Builder()
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
-                                        .setText(db.dao().get("test"))
+                                        .setText(myFormatter.format(Integer.parseInt(db.dao().get("test"))))
                                         .build()
                                 )
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
-                                        .setText("/"+goalProgress.goal+"원")
+                                        .setText("/"+myFormatter.format(goalProgress.goal)+"원")
                                         .setTypography(10)                  //글씨 크기(?)
                                         .build()
                                 )
