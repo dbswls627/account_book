@@ -4,12 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -43,12 +45,13 @@ import java.util.regex.Pattern;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
+    public Context context = this;
     private TextView mTv_Months;
     private LinearLayout mLayoutNoData;
     private AppDatabase db;
     private ArrayList<Cost> arrayList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private int months = -1;
+    private int months = 1;
 
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
 
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         mTv_Months.setText(String.valueOf(months));
 
         arrayList.clear();
-        readSMSMessage();
+        readSMSMessage(this, db);
 
         if(arrayList.isEmpty()){
             mLayoutNoData.setVisibility(View.VISIBLE);
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void readSMSMessage() {
+    public void readSMSMessage(Context context, AppDatabase db) {
         Uri smsUri = Uri.parse("content://sms");        // 문자 접근
         Uri rcsUri = Uri.parse("content://im/chat");    // RCS 접근
 
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         long beforeM = LocalDateTime.now().minusMonths(months).atZone(zoneid).toInstant().toEpochMilli();   // months 개월 전 ms
         String where = "date >"+beforeM;
         //날짜 조건 추가
-        ContentResolver cr = getContentResolver();
+        ContentResolver cr = context.getContentResolver();
 
         Cursor smsCur = cr.query(smsUri,              // .query(from / select / ? / where / order by);
                 new String[]{"body", "date", "address"},
@@ -148,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             while (rcsCur.moveToNext()) {               // RCS
                 String body = rcsCur.getString(0);      // rcs 의 body
                 long timestamp = rcsCur.getLong(1);     // rcs 의 date(ms)
-                String add = rcsCur.getString(2);
+                String address = rcsCur.getString(2);
 
                 try{
                     JSONObject jObject = new JSONObject(body);      // body 전체를 담음
@@ -168,14 +171,7 @@ public class MainActivity extends AppCompatActivity {
                         Cost cost = parsing(body, date, timestamp);
                         cost.setDivision(body);   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
-                        if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) { // 정규화되지 않았으면 리스트에 추가하지 않음
-                            cost.setSortName(matchPhoneNumber(add, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
-                            if(cost.getSortName().equals("")){
-                                cost.setSortName(add+"!#@!");
-                            }
-
-                            arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
-                        }
+                        addToList(cost, address, body);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -187,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             while (smsCur.moveToNext()) {
                 String body = smsCur.getString(0);
                 long timestamp = smsCur.getLong(1);
-                String add = smsCur.getString(2);
+                String address = smsCur.getString(2);
                 body = body.replaceAll("\n", " ");
 
                 if (!db.dao().getMs().contains(timestamp)){     // ms 값이 겹치지 않는 값들만 실행
@@ -197,14 +193,7 @@ public class MainActivity extends AppCompatActivity {
                     Cost cost = parsing(body, date, timestamp);
                     cost.setDivision(body.replaceAll("\n", " "));   // MainActivity 에서 문자 내용을 표시하기 위해 사용하지 않는 division 에 문자 내용을 set 해서 전달함.
 
-                    if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 정규화되지 않았으면 리스트에 추가하지 않음
-                        cost.setSortName(matchPhoneNumber(add, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
-                        if(cost.getSortName().equals("")){
-                            cost.setSortName(add+"!#@!");
-                        }
-
-                        arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
-                    }
+                    addToList(cost, address, body);
                 }
 
             }
@@ -217,11 +206,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    public Long getMs(){
+        return arrayList.get(0).getMs();
     }
 
 
 
-    private Cost parsing(String body, String date, long timestamp){
+    public Cost parsing(String body, String date, long timestamp){
         String amount;              // 추출한 가격(~원)
         String place;               // 추출한 사용처
         int int_amount;             // int 형으로 변환한 가격(only 숫자)
@@ -281,9 +276,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private String matchPhoneNumber(String add, String body){
-        String wayName = "";
+    public String matchPhoneNumber(String add, String body){
+        /*  ↓↓어째서인지 smsReceiver.java 에서 실행하면 db.dao()에서 NullPointerException 이 발생함. 메소드 내부에서 생성해 사용하는 방법으로 해결  */
+        AppDatabase db = AppDatabase.getInstance(this);
         List<String> wayNameList = db.dao().getWayName(add);
+        String wayName = "";
 
         if(wayNameList.size() == 1){            // 번호가 1개(동일한 등록 번호 없음.)
             wayName = wayNameList.get(0);
@@ -305,6 +302,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return wayName;
+    }
+
+
+
+    private void addToList(Cost cost, String address, String body){
+        if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 결제문자면서 정규화되지 않았으면 리스트에 추가하지 않음
+            cost.setSortName(matchPhoneNumber(address, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
+            if(cost.getSortName().equals("")){
+                cost.setSortName(address+"!#@!");                   // 결제 문자가 아니면, 결제 문자가 아님을 구분하기 위에 (번호+"!#@!")로 set
+            }
+
+            arrayList.add(cost);    // 리턴 받은 값 바로 리스트에 저장
+        }
     }
 
 

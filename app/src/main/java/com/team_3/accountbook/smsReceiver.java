@@ -12,7 +12,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.SmsMessage;
+import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -21,15 +24,23 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class smsReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "1";           // Channel 에 대한 id 생성: Channel 을 구부하기 위한 ID.
     private NotificationManager mNotificationManager;       // Channel 을 생성 및 전달해 줄 수 있는 Manager
     private static final int NOTIFICATION_ID = 0;           // Notification 에 대한 ID
     private NotificationCompat.Builder notifyBuilder;               // Notification Builder: Notification 을 생성
+    private final MainActivity ma = new MainActivity();
 
     private String useDate, useAmount;
     private Pattern p;
@@ -43,10 +54,16 @@ public class smsReceiver extends BroadcastReceiver {
 
         if (messages.length > 0) {
             String sender = messages[0].getOriginatingAddress();
-            String content = messages[0].getMessageBody().toString();
-            Date date = new Date(messages[0].getTimestampMillis());
+            String body = messages[0].getMessageBody();
+            Long millisDate = messages[0].getTimestampMillis();
 
-            sendToMainActivity(context, sender, content, date);
+            if (sender.equals("1111")) {          // ★우선 송신 번호가 '1234' 일때만 토스트가 띄워지도록 함.
+                Toast.makeText(context, body, Toast.LENGTH_SHORT).show();
+            }
+
+            smsNotification(context, sender, body, millisDate);
+
+//            sendToMainActivity(context, sender, body, millisDate);
         }
 
     }
@@ -66,38 +83,63 @@ public class smsReceiver extends BroadcastReceiver {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void sendToMainActivity(Context context, String sender, String content, Date date) {
-        MainActivity ma = new MainActivity();
-
+    private void sendToMainActivity(Context context, String sender, String content, Long millisDate) {
         Intent intent = new Intent(context, MainActivity.class);   // MainActivity 를 호출할 intent 생성. 우선 형식상으로 정해놨다.
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK   // 실행한 액티비티와 관련된 태스크가 존재하면 동일한 태스크 내에서 실행하고, 그렇지 않으면 새로운 태스크에서 액티비티를 실행하는 플래그
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP       // 실행할 액티비티가 태스크 스택 최상단에 이미 있다면 액티비티를 다시 실행하지 않는 플래그
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP);      // 실행할 액티비티가 태스크에 이미 있다면 태스크에 있는 동일한 액티비티부터 최상단의 액티비티까지 모두 제거하고 새로운 액티비티를 실행하는 플래그
         intent.putExtra("sender", sender);
         intent.putExtra("content", content);
-        intent.putExtra("date", ma.sdf.format(date));
+        intent.putExtra("date", ma.sdf.format(millisDate));
 
-        if (sender.equals("1234")) {          // ★우선 송신 번호가 '1234' 일때만 토스트가 띄워지도록 함.
-            Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
-        }
         //context.startActivity(intent);      // sms 정보를 가진 intent 로 액티비티 호출
 
-        smsNotification(context, content);    // ←-- ★그만할 때 이부분을 주석처리해서 알림이 안뜨게 할 것(선택)
+//        smsNotification(context, content);    // ←-- ★그만할 때 이부분을 주석처리해서 알림이 안뜨게 할 것(선택)
     }
 
 
-    private void smsNotification(Context context, String content) {
+    @SuppressWarnings("AccessStaticViaInstance")
+    private void smsNotification(Context context, String sender, String body, Long millisDate) {
         p = Pattern.compile("[0-9]{2}[/][0-9]{2} [0-9]{2}[:][0-9]{2}");           // ex) 02/09 15:32
-        m = p.matcher(content);
+        m = p.matcher(body);
         if (m.find()) { useDate = m.group(); }                // 매칭 될 문자가 1개 뿐이라 while()말고 if()를 사용함.
         else { useDate = null; }                              // 매칭되는 문자가 없으면 null
 
         p = Pattern.compile("([0-9])\\S*(원)");               // ex) 13,500원
-        m = p.matcher(content);
+        m = p.matcher(body);
         if (m.find()) { useAmount = m.group(); }
         else { useAmount = null; }
 
-        if (useDate != null && useAmount != null) {      // 결제문자의 형식이 갖춰졌을 때~
+        if (!body.contains("승인거절") && !body.contains("잔액부족") && useDate != null && useAmount != null) {      // 결제 문자의 형식이 갖춰졌을 때~
+            AppDatabase db = AppDatabase.getInstance(context);
+
+            Cost cost = ma.parsing(body.replaceAll("\n", " "), ma.sdf.format(millisDate), millisDate);
+
+            if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 결제문자면서 정규화되지 않았으면 리스트에 추가하지 않음
+                cost.setSortName(ma.matchPhoneNumber(sender, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ma.readSMSMessage(context, db);
+                        db.dao().insertCost(
+                                cost.getUseDate(),              // 날짜
+                                wayName(cost.getSortName()),    // 수단
+                                "미분류",                        // 분류
+                                cost.getAmount(),               // 금액
+                                "Auto-Save",                    // 내용
+                                0,                                  // 잔액 (*구현 예정)
+                                "expense",                      // 구분
+                                ma.getMs()                      // 수신시간(마이크로초)
+                        );
+                    }
+                }, 1000);   // 1초 후 자동저장이 실행됨.(SMS 를 다 읽기 전에(?) ms 값을 가져와서, 올바른 ms 값을 못가져옴. 딜레이를 줌으로 해결함)
+
+
+            }
+
+
             mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 //Channel 정의 생성자( construct 이용 )
@@ -141,6 +183,17 @@ public class smsReceiver extends BroadcastReceiver {
         }
 
     }
+
+
+
+    private String wayName(String name){
+        if(name.equals("")){
+            name = "--";
+        }
+
+        return name;
+    }
+
 
 
 }
