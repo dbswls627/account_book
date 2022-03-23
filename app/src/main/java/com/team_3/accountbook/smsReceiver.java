@@ -12,9 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.widget.Toast;
-
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -135,7 +133,7 @@ public class smsReceiver extends BroadcastReceiver {
 
                             AddActivity addAc = new AddActivity();
                             addAc.updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
-                                    cost.getUseDate(), wayName, "(미분류)", cost.getAmount(), "Auto-Save", "expense", ma.getMs(), "new");
+                                    cost.getUseDate(), wayName, "(미분류)", cost.getAmount(), cost.getContent(), "expense", ma.getMs(), "new");
 
                         }
                     }, 1000);   // 1초 후 자동저장이 실행됨.(SMS 를 다 읽기 전에(?) ms 값을 가져와서, 올바른 ms 값을 못가져옴. 딜레이를 줌으로 해결함)
