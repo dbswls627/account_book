@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_movetomain);
 
-                showDialog(dialog);
+                showRefreshDialog(dialog);
 
                 break;
 
@@ -363,10 +363,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("SetTextI18n")
-    private void showDialog(Dialog dialog){
+    private void showRefreshDialog(Dialog dialog){
         dialog.show();
 
         TextView mNoBring, mBring;
+
         EditText mMonths;
 
         mNoBring = dialog.findViewById(R.id.tv_noBring);
@@ -398,6 +399,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+
 
 
 

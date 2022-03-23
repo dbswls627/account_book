@@ -314,23 +314,20 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                 break;
 
             case R.id.auto_home:
-                if(mAutoState.getText().equals("Auto-OFF")){
-                    db.dao().updateAutoState(true);
-                    mAutoState.setText("Auto-ON");
-                }
-                else if(mAutoState.getText().equals("Auto-ON")){
-                    db.dao().updateAutoState(false);
-                    mAutoState.setText("Auto-OFF");
-                }
+                Dialog dialog1 = new Dialog(this);
+                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog1.setContentView(R.layout.dialog_autosave);
+
+                showDialogOfAutoSave(dialog1);
 
                 break;
 
             case R.id.message_home:
-                Dialog dialog = new Dialog(this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.dialog_movetomain);
+                Dialog dialog2 = new Dialog(this);
+                dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog2.setContentView(R.layout.dialog_movetomain);
 
-                showDialog(dialog);
+                showDialogToMain(dialog2);
 
                 break;
 
@@ -346,7 +343,54 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
 
-    public void showDialog(Dialog dialog){
+    @SuppressLint("SetTextI18n")
+    private void showDialogOfAutoSave(Dialog dialog){
+        dialog.show();
+
+        TextView mOnOff, mQuestion, mCancel, mAccept;
+
+        mOnOff = dialog.findViewById(R.id.onOff);
+        mQuestion = dialog.findViewById(R.id.questionForAutoSave);
+        mCancel = dialog.findViewById(R.id.cancel_autoSave);
+        mAccept = dialog.findViewById(R.id.accept_autoSave);
+
+        if(mAutoState.getText().equals("Auto-OFF")){
+            mOnOff.setText("자동 저장 ON");
+            mQuestion.setText("자동 저장 기능을 활성화 하시겠습니까?");
+        }
+        else if(mAutoState.getText().equals("Auto-ON")){
+            mOnOff.setText("자동 저장 OFF");
+            mQuestion.setText("자동 저장 기능을 종료하시겠습니까?");
+        }
+
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                if(mAutoState.getText().equals("Auto-OFF")){
+                    db.dao().updateAutoState(true);
+                    mAutoState.setText("Auto-ON");
+                    Toast.makeText(getApplicationContext(), "'자동 저장'기능이 활성화 되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if(mAutoState.getText().equals("Auto-ON")){
+                    db.dao().updateAutoState(false);
+                    mAutoState.setText("Auto-OFF");
+                    Toast.makeText(getApplicationContext(), "'자동 저장'기능이 종료되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+
+    private void showDialogToMain(Dialog dialog){
         dialog.show();
 
         TextView mNoBring, mBring;

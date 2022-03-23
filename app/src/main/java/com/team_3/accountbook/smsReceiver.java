@@ -115,8 +115,8 @@ public class smsReceiver extends BroadcastReceiver {
                         public void run() {
                             ma.readSMSMessage(context, db);
 
-                            List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
-                            List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
+                            List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), cost.getContent(), wayName(cost.getSortName()));
+                            List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), cost.getContent(), wayName(cost.getSortName()));
                             List<Cost> preData = db.dao().getCostDataPre(cost.getUseDate(), wayName(cost.getSortName()));
                             List<Cost> afterData = db.dao().getCostDataAfter(cost.getUseDate(), wayName(cost.getSortName()));
 
@@ -163,13 +163,25 @@ public class smsReceiver extends BroadcastReceiver {
 
                 PendingIntent notiPendingIntent = stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);     // Notification 에선 PendingIntent 라는걸 써야한다고 함
 
-                notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                        .setContentTitle("새로운 결제 알림")                   // 알림 제목
-                        .setContentText("결제 정보를 등록하세요.")              // 알림 내용
-                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)    // 알림 아이콘
-                        .setContentIntent(notiPendingIntent)                // 알림 클릭시 실행할 액티비티 인텐트
-                        .setAutoCancel(true);                               // notification 을 탭 했을경우 notification 을 없앤다.
+                if(db.dao().getAutoState()){
+                    notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                            .setContentTitle("자동 저장 알림")                    // 알림 제목
+                            .setContentText("자동 저장된 결제 정보를 확인하세요.")    // 알림 내용
+                            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                            .setSmallIcon(R.drawable.ic_launcher_foreground)    // 알림 아이콘
+                            .setContentIntent(notiPendingIntent)                // 알림 클릭시 실행할 액티비티 인텐트
+                            .setAutoCancel(true);                               // notification 을 탭 했을경우 notification 을 없앤다.
+                }
+                else{
+                    notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                            .setContentTitle("새로운 결제 알림")                   // 알림 제목
+                            .setContentText("결제 정보를 등록하세요.")              // 알림 내용
+                            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                            .setSmallIcon(R.drawable.ic_launcher_foreground)    // 알림 아이콘
+                            .setContentIntent(notiPendingIntent)                // 알림 클릭시 실행할 액티비티 인텐트
+                            .setAutoCancel(true);                               // notification 을 탭 했을경우 notification 을 없앤다.
+                }
+
 //                RemoteViews notificationLayout = new RemoteViews("com.team_3.accountbook", R.layout.notification_small);
 //                @SuppressLint("RemoteViewLayout") RemoteViews notificationLayoutExpanded = new RemoteViews("com.team_3.accountbook", R.layout.notification_large);
 //                Notification notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
