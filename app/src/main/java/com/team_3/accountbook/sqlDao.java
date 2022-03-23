@@ -28,6 +28,9 @@ public interface sqlDao {
             "VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms)")
     void insertCost(String date, String FK_wayName, String sortName, int amount, String content, int balance, String division, long ms);
 
+    @Query("INSERT INTO AutoSave(state) VALUES(:state)")
+    void insertAutoState(Boolean state);
+
 
 
     @Update
@@ -57,6 +60,10 @@ public interface sqlDao {
 
     @Query("UPDATE Cost SET FK_wayName = :afterName WHERE FK_wayName = :beforeName")
     void updateCostWayName(String beforeName, String afterName);
+
+
+    @Query("UPDATE AutoSave SET state = :stateFlag")
+    void updateAutoState(Boolean stateFlag);
 
 
 
@@ -253,6 +260,9 @@ public interface sqlDao {
 
     @Query("SELECT w.delimiter FROM Way w WHERE w.phoneNumber = :phoneNumber")
     List<String> getWayDelimiter(String phoneNumber);
+
+    @Query("SELECT a.state FROM AutoSave a")
+    Boolean getAutoState();
 
 
     @Transaction

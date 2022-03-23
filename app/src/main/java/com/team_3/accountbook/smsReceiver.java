@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class smsReceiver extends BroadcastReceiver {
+    public static boolean autoState;
+
     private static final String CHANNEL_ID = "1";           // Channel 에 대한 id 생성: Channel 을 구부하기 위한 ID.
     private NotificationManager mNotificationManager;       // Channel 을 생성 및 전달해 줄 수 있는 Manager
     private static final int NOTIFICATION_ID = 0;           // Notification 에 대한 ID
@@ -103,42 +105,44 @@ public class smsReceiver extends BroadcastReceiver {
         if (!body.contains("승인거절") && !body.contains("잔액부족") && useDate != null && useAmount != null) {      // 결제 문자의 형식이 갖춰졌을 때~
             AppDatabase db = AppDatabase.getInstance(context);
 
-            Cost cost = ma.parsing(body.replaceAll("\n", " "), ma.sdf.format(millisDate), millisDate);
+            if(db.dao().getAutoState()){        // ★자동저장 기능이 "ON"일 때 실행★
+                Cost cost = ma.parsing(body.replaceAll("\n", " "), ma.sdf.format(millisDate), millisDate);
 
-            if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 결제문자면서 정규화되지 않았으면 리스트에 추가하지 않음
-                cost.setSortName(ma.matchPhoneNumber(sender, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
+                if (!cost.getSortName().equals("") && cost.getAmount()!=-1 && !cost.getContent().equals("")) {  // 결제문자면서 정규화되지 않았으면 리스트에 추가하지 않음
+                    cost.setSortName(ma.matchPhoneNumber(sender, body));      // 결제 문자 구분을 위해 들어있던 sortName 대신 번호에 따른 wayName 을 set
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ma.readSMSMessage(context, db);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ma.readSMSMessage(context, db);
 
-                        List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
-                        List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
-                        List<Cost> preData = db.dao().getCostDataPre(cost.getUseDate(), wayName(cost.getSortName()));
-                        List<Cost> afterData = db.dao().getCostDataAfter(cost.getUseDate(), wayName(cost.getSortName()));
+                            List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
+                            List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
+                            List<Cost> preData = db.dao().getCostDataPre(cost.getUseDate(), wayName(cost.getSortName()));
+                            List<Cost> afterData = db.dao().getCostDataAfter(cost.getUseDate(), wayName(cost.getSortName()));
 
-                        preData_today.addAll(preData);
-                        afterData_today.addAll(afterData);
+                            preData_today.addAll(preData);
+                            afterData_today.addAll(afterData);
 
-                        String wayName = wayName(cost.getSortName());
-                        int preCostId = -100, afterCostId = -100;
+                            String wayName = wayName(cost.getSortName());
+                            int preCostId = -100, afterCostId = -100;
 
-                        try { preCostId = preData_today.get(0).getCostId(); }
-                        catch (Exception ignored) { }
-                        try { afterCostId = afterData_today.get(0).getCostId(); }
-                        catch (Exception ignored) { }
+                            try { preCostId = preData_today.get(0).getCostId(); }
+                            catch (Exception ignored) { }
+                            try { afterCostId = afterData_today.get(0).getCostId(); }
+                            catch (Exception ignored) { }
 
-                        AddActivity addAc = new AddActivity();
-                        addAc.updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
-                                cost.getUseDate(), wayName, "-미분류-", cost.getAmount(), "Auto-Save", "expense", ma.getMs(), "new");
+                            AddActivity addAc = new AddActivity();
+                            addAc.updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
+                                    cost.getUseDate(), wayName, "(미분류)", cost.getAmount(), "Auto-Save", "expense", ma.getMs(), "new");
 
-                    }
-                }, 1000);   // 1초 후 자동저장이 실행됨.(SMS 를 다 읽기 전에(?) ms 값을 가져와서, 올바른 ms 값을 못가져옴. 딜레이를 줌으로 해결함)
+                        }
+                    }, 1000);   // 1초 후 자동저장이 실행됨.(SMS 를 다 읽기 전에(?) ms 값을 가져와서, 올바른 ms 값을 못가져옴. 딜레이를 줌으로 해결함)
 
-
+                }
             }
+
 
 
             mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -189,7 +193,7 @@ public class smsReceiver extends BroadcastReceiver {
 
     private String wayName(String name){
         if(name.equals("")){
-            name = "-Auto-";
+            name = "(Auto)";
         }
 
         return name;

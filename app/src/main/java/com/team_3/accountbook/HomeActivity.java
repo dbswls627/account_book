@@ -33,7 +33,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    private TextView monthYearText, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
+    private TextView monthYearText, mAutoState, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout, mNoDataLayout;
     String yyyyMM, dd;
@@ -71,6 +71,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         listRv = findViewById(R.id.listRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
+        mAutoState = findViewById(R.id.autoState_home);
         mDateLayout = findViewById(R.id.homeLayout_data);
         mYearMonth = findViewById(R.id.yearMonth_home);
         date = findViewById(R.id.date);
@@ -81,6 +82,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         pre = findViewById(R.id.toPreMonth);
         next = findViewById(R.id.toNextMonth);
         db = AppDatabase.getInstance(this);
+
+        initialSetting();
 
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
             Intent intent;
@@ -122,9 +125,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             setMonthView();
             setTotalAmount();
         });
-        if(db.dao().getSortNames("income").toString() == "[]") {     // 비어있으면 추가.  초기설정!
-            buildTableData();
-        }
+
+
     }
 
 
@@ -172,9 +174,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             }
         }
 
-        boolean front = true;
-        boolean back = true;
-
 
         return  daysInMonthArray;                                      // 완성한 달력 배열 반환.
     }
@@ -210,7 +209,14 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         calendarRecyclerView.setLayoutManager(layoutManager);                      // 레이아웃 매니저를 layoutManager 로 지정
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
+
+
+
+    @SuppressLint("SetTextI18n")
     private void setTotalAmount(){
+        if(db.dao().getAutoState()){ mAutoState.setText("Auto-ON"); }
+        else { mAutoState.setText("Auto-OFF"); }
+
         String formatAmount = "";
         String totalAmount;
         try {
@@ -227,6 +233,9 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         }
         catch (Exception e){ mExpenseTotal.setText("0"); }
     }
+
+
+
     private void setList(ArrayList<Cost> arrayList, String yyyyMM, String dd, int dayType){
         this.yyyyMM = yyyyMM;
         this.dd = dd;
@@ -294,12 +303,25 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
 
+    @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     public void mOnClick(View v){
         Intent intent;
         switch (v.getId()){
             case R.id.clearList_home:
                 mDateLayout.setVisibility(View.GONE);
                 dd = null;
+
+                break;
+
+            case R.id.auto_home:
+                if(mAutoState.getText().equals("Auto-OFF")){
+                    db.dao().updateAutoState(true);
+                    mAutoState.setText("Auto-ON");
+                }
+                else if(mAutoState.getText().equals("Auto-ON")){
+                    db.dao().updateAutoState(false);
+                    mAutoState.setText("Auto-OFF");
+                }
 
                 break;
 
@@ -381,9 +403,9 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
         String[] assetName = {"현금", "은행", "선불식카드", "자동저장"};
 
-        String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)"};
-        int[] wayBalance = {43000, 99600, 3100, 1997500};
-        int[] FK_assetId = {1 ,2 ,3, 2};
+        String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)", "(Auto)"};
+        int[] wayBalance = {43000, 99600, 3100, 1997500, 0};
+        int[] FK_assetId = {1 ,2 ,3, 2, 4};
 
         String[] sortName = {"식비", "교통/차량", "문화생활", "패션/미용", "생활용품", "경조사/회비", "건강", "교육", "월급", "용돈", "부수입", "금융소득", "기타"};
 
@@ -411,4 +433,17 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             db.dao().insertCost(amount[i], content[i], date[i], balance[i], sortName[i], division[i], FK_wayId[i]);
         }*/
     }
+
+
+
+    private void initialSetting(){
+        if(db.dao().getSortNames("income").toString() == "[]") {    // 비어있으면 추가.  초기설정!
+            buildTableData();
+        }
+        if(db.dao().getAutoState() == null){                        // 비어있으면 추가.  초기설정!
+            db.dao().insertAutoState(true);
+        }
+    }
+
+
 }
