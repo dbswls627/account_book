@@ -377,12 +377,12 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                 if(mAutoState.getText().equals("Auto-OFF")){
                     db.dao().updateAutoState(true);
                     mAutoState.setText("Auto-ON");
-                    Toast.makeText(getApplicationContext(), "'자동 저장'기능이 활성화 되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "자동 저장 기능이 활성화 되었습니다.", Toast.LENGTH_SHORT).show();
                 }
                 else if(mAutoState.getText().equals("Auto-ON")){
                     db.dao().updateAutoState(false);
                     mAutoState.setText("Auto-OFF");
-                    Toast.makeText(getApplicationContext(), "'자동 저장'기능이 종료되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "자동 저장 기능이 종료되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
