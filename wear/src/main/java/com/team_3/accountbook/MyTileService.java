@@ -76,83 +76,75 @@ public class MyTileService extends TileService {
 
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 첫번째 선 투명한 게이지
-                                        .setLength(degrees(360f))  //게이지 = 360f가 만땅
+                                        .setLength(degrees(100f))  //게이지 = 360f가 만땅
                                         .setColor(argb(0x1F00C853))  //1F -투명도
                                         .setThickness(Tdp)                    //선 두께
                                         .build()
                         )
-                        .setAnchorAngle(degrees(5f))              //위에 공백
+                        .setAnchorAngle(degrees(40f))              //위에 공백
                                 .setAnchorType(ARC_ANCHOR_START)             //게이지 시작점(?)(왼쪽 오른쪽)
                                 .build())
                 /**첫번째 호의 게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 첫번째 선(금액)
-                                        .setLength(degrees(goalProgress.percentage()*360f))  //게이지 = 360f가 만땅
+                                        .setLength(degrees(goalProgress.percentage()*100f))  //게이지 = 360f가 만땅
                                         .setColor(argb(ContextCompat.getColor(this, R.color.green)))
                                         .setThickness(Tdp) //선 두께
                                         .build()
                         )
-                        .setAnchorAngle(degrees(5f))                //위에 공백
-                        .setAnchorType(ARC_ANCHOR_START)                        //게이지 시작점(?)(왼쪽 오른쪽)
+                        .setAnchorAngle(degrees(140f))                //위에 공백
+                        .setAnchorType(LayoutElementBuilders.ARC_ANCHOR_END)                        //게이지 시작점(?)(왼쪽 오른쪽)
                         .build())
                 /**첫번째 호의 글씨*/
-                /*.addContent(new LayoutElementBuilders.Arc.Builder()
+                .addContent(new LayoutElementBuilders.Arc.Builder()
                         .addContent(
                                 new LayoutElementBuilders.ArcText.Builder()
-                                        .setText("amount")
+                                        .setText("\uD83D\uDCB5")
                                         .build()
                         )
-                        .setAnchorAngle(degrees(0f))  //위에 공백
+                        .setAnchorAngle(degrees(145f))  //위에 공백
                         .setAnchorType(ARC_ANCHOR_START)
-                        .build())*/
+                        .build())
                 /**두번째 호 투명게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 두번째 선 투명한 게이지
-                                        .setLength(degrees(360f))  //게이지 = 360f가 만땅
+                                        .setLength(degrees(100f))  //게이지 = 360f가 만땅
                                         .setColor(argb(0x1FFF0000))  //1F -투명도
                                         .setThickness(Tdp) //선 두께
                                         .build()
                         )
                         /**두번째 호 투명게이지 패딩*/
-                        .addContent(new LayoutElementBuilders.ArcSpacer.Builder()//두번째 선은 공간이 띄워져서 나오게 공벡추가
-                                .setThickness(dp(40f))
-                                .build())
-                        .setAnchorAngle(degrees(5f))                //위에 공백
-                        .setAnchorType(ARC_ANCHOR_START)                        //게이지 시작점(?)(왼쪽 오른쪽)
+                        .setAnchorAngle(degrees(-40f))                //위에 공백
+                        .setAnchorType(LayoutElementBuilders.ARC_ANCHOR_END)                        //게이지 시작점(?)(왼쪽 오른쪽)
                         .build()
                 )
                 /**두번째 호의 게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 두번째 선(날짜)
-                                        .setLength(degrees(goalProgress.percentage()*360f))  //게이지 = 360f가 만땅
+                                        .setLength(degrees(goalProgress.percentage()*100f))  //게이지 = 360f가 만땅
                                         .setColor(argb(0xFFFF0000))  //1F -투명도
                                         .setThickness(Tdp)                      //선 두께
                                         .build()
                         )
                         /**두번째 호 게이지 패딩*/
-                        .addContent(new LayoutElementBuilders.ArcSpacer.Builder()//두번째 선은 공간이 띄워져서 나오게 공벡추가
-                                .setThickness(dp(40f))
-                                .build())
-                        .setAnchorAngle(degrees(5f))                //위에 공백
+
+                        .setAnchorAngle(degrees(-140f))                //위에 공백
                         .setAnchorType(ARC_ANCHOR_START)                        //게이지 시작점(?)(왼쪽 오른쪽)
                         .build()
                 )
                 /**두번째 호의 글씨()*/
-               /* .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
+                .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcText.Builder()    //테두리에 첫번째 선 투명한 게이지
-                                        .setText("day")
+                                        .setText("\uD83D\uDD66")
                                         .build()
                         )
-                        .addContent(new LayoutElementBuilders.ArcSpacer.Builder()//2번째 선은 공간이 띄워져서 나오게 공벡추가
-                                .setThickness(dp(40f))
-                                .build())
-                        .setAnchorAngle(degrees(5f))  //위에 공백
-                        .setAnchorType(ARC_ANCHOR_START)           //게이지 시작점(?)(왼쪽 오른쪽)
-                        .build())*/
+                        .setAnchorAngle(degrees(-150f))  //위에 공백
+                        .setVerticalAlign(LayoutElementBuilders.VERTICAL_ALIGN_BOTTOM)
+                        .build())
 
 
                 /**중앙의 글씨와 그림*/
@@ -170,9 +162,9 @@ public class MyTileService extends TileService {
                                         .build()
                                 )
                                 //공간 띄우기 padding 같은 역할
-                                .addContent(new LayoutElementBuilders.Spacer.Builder().setHeight(dp(20f)).build())
+                                .addContent(new LayoutElementBuilders.Spacer.Builder().setHeight(dp(20f)).setWidth(dp(100f)).build())
                                 .addContent(new LayoutElementBuilders.Image.Builder()
-                                        .setWidth(dp(48f))
+                                        .setWidth(dp(208f))
                                         .setHeight(dp(48f))
                                         .setResourceId("image")
                                         .build()
