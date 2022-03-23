@@ -2,8 +2,6 @@ package com.team_3.accountbook;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,8 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import android.view.View;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 
@@ -24,13 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,16 +113,27 @@ public class smsReceiver extends BroadcastReceiver {
                     @Override
                     public void run() {
                         ma.readSMSMessage(context, db);
-                        db.dao().insertCost(
-                                cost.getUseDate(),              // 날짜
-                                wayName(cost.getSortName()),    // 수단
-                                "미분류",                        // 분류
-                                cost.getAmount(),               // 금액
-                                "Auto-Save",                    // 내용
-                                0,                                  // 잔액 (*구현 예정)
-                                "expense",                      // 구분
-                                ma.getMs()                      // 수신시간(마이크로초)
-                        );
+
+                        List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
+                        List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), "Auto-Save", wayName(cost.getSortName()));
+                        List<Cost> preData = db.dao().getCostDataPre(cost.getUseDate(), wayName(cost.getSortName()));
+                        List<Cost> afterData = db.dao().getCostDataAfter(cost.getUseDate(), wayName(cost.getSortName()));
+
+                        preData_today.addAll(preData);
+                        afterData_today.addAll(afterData);
+
+                        String wayName = wayName(cost.getSortName());
+                        int preCostId = -100, afterCostId = -100;
+
+                        try { preCostId = preData_today.get(0).getCostId(); }
+                        catch (Exception ignored) { }
+                        try { afterCostId = afterData_today.get(0).getCostId(); }
+                        catch (Exception ignored) { }
+
+                        AddActivity addAc = new AddActivity();
+                        addAc.updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
+                                cost.getUseDate(), wayName, "-미분류-", cost.getAmount(), "Auto-Save", "expense", ma.getMs(), "new");
+
                     }
                 }, 1000);   // 1초 후 자동저장이 실행됨.(SMS 를 다 읽기 전에(?) ms 값을 가져와서, 올바른 ms 값을 못가져옴. 딜레이를 줌으로 해결함)
 
@@ -188,7 +189,7 @@ public class smsReceiver extends BroadcastReceiver {
 
     private String wayName(String name){
         if(name.equals("")){
-            name = "--";
+            name = "-Auto-";
         }
 
         return name;

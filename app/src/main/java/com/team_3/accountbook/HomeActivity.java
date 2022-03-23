@@ -379,7 +379,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     private void buildTableData(){
         Asset asset = new Asset();
 
-        String[] assetName = {"현금", "은행", "선불식카드"};
+        String[] assetName = {"현금", "은행", "선불식카드", "자동저장"};
 
         String[] wayName = {"지갑", "나라사랑", "경기지역화폐", "노리(nori)"};
         int[] wayBalance = {43000, 99600, 3100, 1997500};

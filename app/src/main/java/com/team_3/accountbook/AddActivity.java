@@ -51,7 +51,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     EditText mDate, mWay, mSort, mSum, mBody;
     TextView mTopDivision, mIncome, mExpense, mSave, mFlag, mDelete;
     AppDatabase db;
-    long ms;
+    long ms = 0;
     boolean checkIncome = false, checkExpense = true;
     String action = "expense", actionKorean = "지출";
     private String focus = "";
@@ -460,7 +460,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                                 try { afterCostId = afterData_detail.get(0).getCostId(); }
                                 catch (Exception ignored) { }
 
-                                updateBalanceOnByNewData(afterData_detail, preCostId, afterCostId, changeAmount, changeWay, "change");
+                                updateBalanceOnByNewData(afterData_detail, preCostId, afterCostId,
+                                        changeDate, changeWay, changeSort, changeAmount, changeContent, action, ms, "change");
                             }
                         }
 
@@ -497,7 +498,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         try { afterCostId = afterData_today.get(0).getCostId(); }
                         catch (Exception ignored) { }
 
-                        updateBalanceOnByNewData(afterData_today, preCostId, afterCostId, int_amount, wayName, "new");
+                        updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
+                                mDate.getText().toString(), wayName, mSort.getText().toString(), int_amount, mBody.getText().toString(), action, ms, "new");
 
                         if(callValue.equals("ListInAsset_add")){ setResult(RESULT_OK); }
                         finish();
@@ -567,7 +569,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     
 
-    private void updateBalanceOnByNewData(List<Cost> afterData, int preCostId, int afterCostId, int int_amount, String wayName, String flag) {
+    public void updateBalanceOnByNewData(List<Cost> afterData, int preCostId, int afterCostId,
+                                         String date, String wayName, String sortName, int int_amount, String body, String action, Long ms, String flag) {
+        AppDatabase db = AppDatabase.getInstance(this);
         int myBalance = -1;
 
         if (preCostId != -100 && afterCostId == -100) {   // 최신 데이터(이전 데이터 o, 다음 데이터 x)
@@ -575,7 +579,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
             else if (action.equals("expense")) { myBalance = db.dao().getCostBalance(preCostId) - int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             db.dao().updateWayBal(myBalance, wayName);
@@ -586,7 +590,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
             else if (action.equals("expense")) { myBalance = db.dao().getCostBalance(preCostId) - int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             if(action.equals("expense")) { int_amount = -int_amount; }      // 지출이면 이후 잔액들에 금액만큼 (-)를 해야함.
@@ -614,7 +618,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance += int_amount; }       // 현재 나의 잔액 구하는 부분
             else if (action.equals("expense")) { myBalance -= int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             if(action.equals("expense")) { int_amount = -int_amount; }      // 지출이면 이후 잔액들에 금액만큼 (-)를 해야함.
@@ -635,7 +639,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance = db.dao().getWayBalance(wayName) + int_amount; }
             else if (action.equals("expense")) { myBalance = db.dao().getWayBalance(wayName) - int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(mDate.getText().toString(), wayName, int_amount, myBalance); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             db.dao().updateWayBal(myBalance, wayName);
@@ -643,16 +647,17 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
 
-    private void insertDataToCostTable(String date, String wayName, int amount, int balance) {
+    private void insertDataToCostTable(String date, String wayName, String sortName, int amount, String body, int balance, String action, Long ms) {
+        AppDatabase db = AppDatabase.getInstance(this);
         db.dao().insertCost(
-                date,                                   // 날짜
-                wayName,                                // 수단
-                mSort.getText().toString(),             // 분류
-                amount,                                 // 금액
-                mBody.getText().toString(),             // 내용
-                balance,                                // 잔액
-                action,                                 // 구분
-                ms                                      // 수신시간(마이크로초)
+                date,                   // 날짜
+                wayName,                // 수단
+                sortName,               // 분류
+                amount,                 // 금액
+                body,                   // 내용
+                balance,                // 잔액
+                action,                 // 구분
+                ms                      // 수신시간(마이크로초)
         );
     }
 

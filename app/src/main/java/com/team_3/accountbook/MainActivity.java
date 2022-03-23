@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("SetTextI18n")
-    public void showDialog(Dialog dialog){
+    private void showDialog(Dialog dialog){
         dialog.show();
 
         TextView mNoBring, mBring;
