@@ -154,25 +154,34 @@ public class smsReceiver extends BroadcastReceiver {
                 // Manager 을 이용하여 Channel 생성
                 mNotificationManager.createNotificationChannel(notificationChannel);
 
-                Intent notiIntent = new Intent(context, MainActivity.class);    // 알림 클릭시 MainActivity 로 이동하게 설정
-                notiIntent.putExtra("months", 1);
+                Intent notiIntent;
+                if(db.dao().getAutoState()){    // Auto-Save ON
+                    notiIntent = new Intent(context, HomeActivity.class);       // 알림 클릭시 HomeActivity 로 이동하게 설정
 
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                stackBuilder.addParentStack(MainActivity.class);
-                stackBuilder.addNextIntent(notiIntent);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                    stackBuilder.addParentStack(MainActivity.class);
+                    stackBuilder.addNextIntent(notiIntent);
 
-                PendingIntent notiPendingIntent = stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);     // Notification 에선 PendingIntent 라는걸 써야한다고 함
+                    PendingIntent notiPendingIntent = stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);     // Notification 에선 PendingIntent 라는걸 써야한다고 함
 
-                if(db.dao().getAutoState()){
                     notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                            .setContentTitle("자동 저장 알림")                    // 알림 제목
+                            .setContentTitle("자동 저장 알림")                     // 알림 제목
                             .setContentText("자동 저장된 결제 정보를 확인하세요.")    // 알림 내용
                             .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                             .setSmallIcon(R.drawable.ic_launcher_foreground)    // 알림 아이콘
                             .setContentIntent(notiPendingIntent)                // 알림 클릭시 실행할 액티비티 인텐트
                             .setAutoCancel(true);                               // notification 을 탭 했을경우 notification 을 없앤다.
                 }
-                else{
+                else{           // Auto-Save OFF
+                    notiIntent = new Intent(context, MainActivity.class);       // 알림 클릭시 MainActivity 로 이동하게 설정
+                    notiIntent.putExtra("months", 1);
+
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                    stackBuilder.addParentStack(MainActivity.class);
+                    stackBuilder.addNextIntent(notiIntent);
+
+                    PendingIntent notiPendingIntent = stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);     // Notification 에선 PendingIntent 라는걸 써야한다고 함
+
                     notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setContentTitle("새로운 결제 알림")                   // 알림 제목
                             .setContentText("결제 정보를 등록하세요.")              // 알림 내용
