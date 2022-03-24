@@ -37,9 +37,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="7dp"
+            android:textSize="11dp"
+            android:text="※자동 저장된 결제 문자의 정보는"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="5dp"
             android:textSize="11dp"
-            android:text="※번호 및 구분어를 저장하지 않은 결제 문자의 저장 정보는\n  후에 반드시 알맞은 정보로 수정해야 합니다."/>
+            android:text="  후에 반드시 알맞은 내용으로 수정해야 합니다."/>
     </LinearLayout>
 
     <LinearLayout
