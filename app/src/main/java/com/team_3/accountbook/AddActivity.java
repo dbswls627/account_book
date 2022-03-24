@@ -289,6 +289,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     afterModify = false;
                 }
                 WayAndSortList = db.dao().getWayNames();
+                WayAndSortList.remove(getResources().getString(R.string.auto_wayName));     // 수단명 '(Auto)' 제거
                 mFlag.setText(" [ 자산 - 수단 ] ");
             } else if (focus.equals("sort")) {
                 if(afterModify){

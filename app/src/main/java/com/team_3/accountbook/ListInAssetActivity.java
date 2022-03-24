@@ -37,7 +37,7 @@ public class ListInAssetActivity extends AppCompatActivity{
     RecyclerView mRV_listInAsset;
     adapter2 adapter2;
 
-    LinearLayout mLayoutNoData;
+    LinearLayout mTotalIncome, mLayoutForAuto, mLayoutNoData;
     TextView mTopWayName, mDuration, mNowMonth, mIncomeTotal, mExpenseTotal;
     LocalDate localDate;
     String formatAmount = "";
@@ -56,6 +56,8 @@ public class ListInAssetActivity extends AppCompatActivity{
         mDuration = findViewById(R.id.duration);
         mIncomeTotal = findViewById(R.id.income_total);
         mExpenseTotal = findViewById(R.id.expense_total);
+        mTotalIncome = findViewById(R.id.totalIncome_ListInAsset);
+        mLayoutForAuto = findViewById(R.id.layout_notiForAuto);
         mLayoutNoData = findViewById(R.id.layout_noData);
         mRV_listInAsset = findViewById(R.id.rv_listInAsset);
         mNowMonth = findViewById(R.id.nowMonth);
@@ -70,6 +72,16 @@ public class ListInAssetActivity extends AppCompatActivity{
         now = System.currentTimeMillis();
 
         wayName = getIntent().getStringExtra("wayName");
+        if(wayName.equals(getResources().getString(R.string.auto_wayName))){
+            mTotalIncome.setVisibility(View.GONE);
+            mFabMain.setVisibility(View.GONE);
+            mFabReWrite.setVisibility(View.GONE);
+            mFabAdd.setVisibility(View.GONE);
+        }
+        else{
+            mLayoutForAuto.setVisibility(View.GONE);
+        }
+
         setMonthList();
     }
 

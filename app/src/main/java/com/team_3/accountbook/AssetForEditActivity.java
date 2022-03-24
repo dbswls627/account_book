@@ -91,8 +91,10 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
         assetNameList.clear();
         for (int i = 0; i < ANWNList.size(); i++) {
-            if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
-                assetNameList.add(ANWNList.get(i).getAssetName());
+            if(!ANWNList.get(i).getAssetName().equals(getResources().getString(R.string.auto_assetName))){  // 자산명 '자동저장' 제거
+                if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
+                    assetNameList.add(ANWNList.get(i).getAssetName());
+                }
             }
         }
 

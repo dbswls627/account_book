@@ -123,10 +123,10 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                 int int_balance = Integer.parseInt(s);
 
                 try {
-                    if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){      // Way 수정
-                        if(balance != int_balance){
+                    if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){      // Way 수정시
+                        if(balance != int_balance){     // 수단 잔액이 변경됐을 때~
                             gap = balance - int_balance;
-                            if(gap < 0){            // 기존 수단 잔액보다 큰 금액으로 수정함
+                            if(gap < 0){            // 기존 수단 잔액보다 큰 금액으로 수정한 경우
                                 gap = -gap;
                                 division = "income";
                             }
@@ -146,6 +146,10 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                             );
                         }
 
+                        if(mWayName.getText().toString().equals("(Auto)")){
+                            Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                         db.dao().updateWayData(
                                 FK_assetId,
                                 mWayName.getText().toString(),
@@ -155,11 +159,15 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                                 mDelimiter.getText().toString(),
                                 wayName
                         );
-                        if(!wayName.equals(mWayName.getText().toString())){
+                        if(!wayName.equals(mWayName.getText().toString())){     // 수단명 변경시 수단명 update
                             db.dao().updateCostWayName(wayName, mWayName.getText().toString());
                         }
                     }
-                    else if(flag.equals("new")){    // Way 추가
+                    else if(flag.equals("new")){    // Way 추가시
+                        if(mWayName.getText().toString().equals("(Auto)")){
+                            Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                         db.dao().insertWayAll(
                                 mWayName.getText().toString(),
                                 int_balance,
@@ -236,11 +244,14 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
     private void touchEvent(){
         mAssetName.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);   //키보드 내리기 할 때 필요한 객체
+
+
         mAssetName.setOnTouchListener((view, motionEvent) -> {
             imm.hideSoftInputFromWindow(mAssetName.getWindowToken(), 0);      // 키보드 내리기
             mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
 
             List<String> assetName = db.dao().getAssetNameAll();
+            assetName.remove(getResources().getString(R.string.auto_assetName));    // 자산명 '자동저장' 제거
             mRV.setAdapter(new WayAndSortAdapter(assetName, this));
             mRV.setLayoutManager(new LinearLayoutManager(this));
             mRV.setVisibility(View.VISIBLE);
