@@ -1,11 +1,9 @@
 package com.team_3.accountbook;
 
-import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -40,10 +38,10 @@ public class ListenerService extends WearableListenerService {
 
             // Broadcast message to MainActivity for display
             // 받은데이터 MainActivity 로 넘겨 주기
-            Intent messageIntent = new Intent();
+           /* Intent messageIntent = new Intent();
             messageIntent.setAction(Intent.ACTION_SEND);
             messageIntent.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);   // WearAc 의 onReceive()함수가 실행됨
+            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);   // WearAc 의 onReceive()함수가 실행됨*/
 
             selectedDate = LocalDate.now();
             if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense") != null){
