@@ -23,6 +23,7 @@ public class Way {
     private String wayMemo;         // 메모
     private String phoneNumber;     // 문자 번호
     private String delimiter;       // 구분어(같은 번호의 다른 수단을 구분하기 위함)
+    private Boolean notiAutoData;    // 자동 저장 데이터 알림용
 
 
 
@@ -72,5 +73,13 @@ public class Way {
 
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
+    }
+
+    public Boolean getNotiAutoData() {
+        return notiAutoData;
+    }
+
+    public void setNotiAutoData(Boolean notiAutoData) {
+        this.notiAutoData = notiAutoData;
     }
 }

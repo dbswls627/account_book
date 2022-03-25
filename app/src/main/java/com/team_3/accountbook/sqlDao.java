@@ -15,10 +15,10 @@ public interface sqlDao {
     @Insert
     void insertAsset(Asset asset);
 
-    @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId) VALUES(:name, :balance, :id)")
+    @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId, notiAutoData) VALUES(:name, :balance, :id, 0)")
     void insertWay(String name, int balance, int id);
 
-    @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId, wayMemo, phoneNumber, delimiter) VALUES(:name, :balance, :id, :memo, :pn, :delimiter)")
+    @Query("INSERT INTO Way(wayName, wayBalance, FK_assetId, wayMemo, phoneNumber, delimiter, notiAutoData) VALUES(:name, :balance, :id, :memo, :pn, :delimiter, 0)")
     void insertWayAll(String name, int balance, int id, String memo, String pn, String delimiter);
 
     @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
@@ -64,6 +64,9 @@ public interface sqlDao {
 
     @Query("UPDATE AutoSave SET state = :stateFlag")
     void updateAutoState(Boolean stateFlag);
+
+    @Query("UPDATE Way SET notiAutoData = :state WHERE wayName = :wayName")
+    void updateWayNotiState(String wayName, Boolean state);
 
 
 
@@ -266,6 +269,9 @@ public interface sqlDao {
 
     @Query("SELECT w.wayBalance FROM Way w WHERE w.wayName = '(Auto)'")
     Integer getAutoBalance();
+
+    @Query("SELECT w.notiAutoData FROM Way w WHERE w.wayName = :wayName")
+    Boolean getWayNotiState(String wayName);
 
 
     @Transaction

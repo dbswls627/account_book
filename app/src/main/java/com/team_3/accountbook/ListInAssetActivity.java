@@ -120,7 +120,7 @@ public class ListInAssetActivity extends AppCompatActivity{
         }
         catch (Exception e){ mExpenseTotal.setText(totalAmount+""); }
 
-
+        // RecyclerView
         List<Cost> costList = db.dao().getCostOfMonthAndWayName(mNowMonth.getText().toString(), wayName);
         if(costList.size() == 0){
             mLayoutNoData.setVisibility(View.VISIBLE);

@@ -113,17 +113,20 @@ public class smsReceiver extends BroadcastReceiver {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            String wayName = checkWayName(cost.getSortName());
+                            if(!wayName.equals("(Auto)")){
+                                db.dao().updateWayNotiState(wayName, true);
+                            }
                             ma.readSMSMessage(context, db);
 
-                            List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), cost.getContent(), wayName(cost.getSortName()));
-                            List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), cost.getContent(), wayName(cost.getSortName()));
-                            List<Cost> preData = db.dao().getCostDataPre(cost.getUseDate(), wayName(cost.getSortName()));
-                            List<Cost> afterData = db.dao().getCostDataAfter(cost.getUseDate(), wayName(cost.getSortName()));
+                            List<Cost> preData_today = db.dao().getNowPre(cost.getUseDate(), cost.getContent(), wayName);
+                            List<Cost> afterData_today = db.dao().getNowAfter(cost.getUseDate(), cost.getContent(), wayName);
+                            List<Cost> preData = db.dao().getCostDataPre(cost.getUseDate(), wayName);
+                            List<Cost> afterData = db.dao().getCostDataAfter(cost.getUseDate(), wayName);
 
                             preData_today.addAll(preData);
                             afterData_today.addAll(afterData);
 
-                            String wayName = wayName(cost.getSortName());
                             int preCostId = -100, afterCostId = -100;
 
                             try { preCostId = preData_today.get(0).getCostId(); }
@@ -210,7 +213,7 @@ public class smsReceiver extends BroadcastReceiver {
 
 
 
-    private String wayName(String name){
+    private String checkWayName(String name){
         if(name.equals("")){
             name = "(Auto)";
         }

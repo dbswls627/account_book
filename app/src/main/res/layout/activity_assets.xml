@@ -95,7 +95,7 @@
                         android:gravity="right"
                         android:text="0원" />
                     <ImageView
-                        android:id="@+id/existAutoData"
+                        android:id="@+id/existAutoData_auto"
                         android:layout_width="17dp"
                         android:layout_height="17dp"
                         android:layout_gravity="center"

@@ -16,15 +16,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-            <TextView
-                android:id="@+id/tv_wayNameInAsset"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="13dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginBottom="13dp"
-                android:textColor="@color/hardDarkGray"
-                android:text="수단명" />
+                android:layout_marginBottom="13dp">
+                <TextView
+                    android:id="@+id/tv_wayNameInAsset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="수단명" />
+                <ImageView
+                    android:id="@+id/existAutoData_way"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="1dp"
+                    android:src="@drawable/ic_baseline_new_releases_24"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"

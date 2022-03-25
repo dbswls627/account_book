@@ -76,7 +76,7 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
         mAutoBalance = findViewById(R.id.autoBalance);
         mAssetAndWay = findViewById(R.id.rv_AssetAndWay);
         mAutoSaveZone = findViewById(R.id.zoneOfAutoSave);
-        mExistAutoData = findViewById(R.id.existAutoData);
+        mExistAutoData = findViewById(R.id.existAutoData_auto);
         db = AppDatabase.getInstance(this);
 
 
@@ -114,9 +114,10 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
         }
 
 
+        // RecyclerView
         ANWNList = db.dao().getAnWnWb();
         for (int i = 0; i < ANWNList.size(); i++) {
-            if(!ANWNList.get(i).getAssetName().equals(getResources().getString(R.string.auto_assetName))){  // 자산명 '자동저장' 제거
+            if(!ANWNList.get(i).getAssetName().equals(getResources().getString(R.string.auto_assetName))){      // 자산명 '자동저장' 제거
                 if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
                     assetNameList.add(ANWNList.get(i).getAssetName());
                 }
