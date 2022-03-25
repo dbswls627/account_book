@@ -57,8 +57,8 @@ public class MainActivity extends WearableActivity {
         //send a message from the wear.  This one will not have response.
         new SendThread(datapath, "amount").start();
 
-        if (db.dao().get("test")!=null) {
-            mTextView.setText(db.dao().get("test"));
+        if (db.dao().get("amount")!=null) {
+            mTextView.setText(db.dao().get("amount"));
         }
         else {
             mTextView.setText("0원");

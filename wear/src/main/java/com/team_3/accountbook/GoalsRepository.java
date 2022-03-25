@@ -11,7 +11,9 @@ class GoalProgress {
         this.goal = goal;
     }
     public float percentage() {
-        return (float)this.current / (float)this.goal;
+        float per = (float)this.current / (float)this.goal;
+        if (per > 1) per = 1;
+        return per;
     }
 
     public int getCurrent() {
@@ -33,11 +35,15 @@ class GoalProgress {
 
 public  class GoalsRepository {
     @NotNull
-    private static final GoalProgress goalProgress = new GoalProgress(0, 300000);
+    private static final GoalProgress amountProgress = new GoalProgress(0, 300000);
+    private static final GoalProgress dateProgress = new GoalProgress(0, 30);
 
     @NotNull
-    public static final GoalProgress getGoalProgress() {
-        return goalProgress;
+    public static final GoalProgress getAmountProgress() {
+        return amountProgress;
+    }
+    public static final GoalProgress getDateProgress() {
+        return dateProgress;
     }
 }
 
