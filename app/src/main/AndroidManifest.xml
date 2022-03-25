@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-
+    <uses-permission android:name="com.samsung.rcs.im.READ_PERMISSION"/>
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
@@ -91,6 +91,19 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".RCSReceiver"
+            android:permission="com.samsung.rcs.permission.RCS_APP_PERMISSION"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="com.samsung.rcs.framework.instantmessaging.category.ACTION"/>
+                <category android:name="com.samsung.rcs.framework.instantmessaging"/>
+                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_CHAT_INVITATION"/>
+                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_PARTICIPANT_INSERTED"/>
+                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_PARTICIPANT_UPDATED"/>
             </intent-filter>
         </receiver>
     </application>
