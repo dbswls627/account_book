@@ -23,34 +23,24 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.YearMonth;
 
 public class MyTileService extends TileService {
     private static final String RESOURCES_VERSION = "1";
     DimensionBuilders.DpProp Tdp = dp(12f);      //두께
     AppDatabase db;
     private DecimalFormat myFormatter = new DecimalFormat("###,###");
-    private GoalProgress amountProgress, dateProgress;
-
     @NonNull
     @Override
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
         db = AppDatabase.getInstance(this);
-        LocalDate date = LocalDate.now();
-        YearMonth yearMonth = YearMonth.from(date);
-
-        int amount = Integer.parseInt(db.dao().get("test"));
-
-        amountProgress = new GoalProgress(amount,300000);                               //금액 게이지 현재값,목표값 초기화
-        dateProgress = new GoalProgress(date.getDayOfMonth(),yearMonth.lengthOfMonth());     //날짜 게이지 현재값,목표값 초기화
+        GoalProgress goalProgress = GoalsRepository.getGoalProgress();
 
         return Futures.immediateFuture(new TileBuilders.Tile.Builder()
                 .setResourcesVersion(RESOURCES_VERSION)
                 .setTimeline(new TimelineBuilders.Timeline.Builder()
                         .addTimelineEntry(new TimelineBuilders.TimelineEntry.Builder()
                                 .setLayout(new LayoutElementBuilders.Layout.Builder()
-                                        .setRoot(myLayout(amountProgress, dateProgress)).build()
+                                        .setRoot(myLayout(goalProgress)).build()
                                 ).build()
                         ).build()
                 ).build());
@@ -75,13 +65,13 @@ public class MyTileService extends TileService {
         );
     }
     @SuppressLint("WrongConstant")
-    private LayoutElementBuilders.LayoutElement myLayout(GoalProgress amountProgress, GoalProgress dateProgress) {
-
-
+    private LayoutElementBuilders.LayoutElement myLayout(GoalProgress goalProgress) {
+        int amount = Integer.parseInt(db.dao().get("test"));
+                goalProgress.setCurrent(amount);
         return new LayoutElementBuilders.Box.Builder()
                 .setWidth(expand())
                 .setHeight(expand())
-                /**첫번째(오른쪽-금액) 호의 투명게이지*/
+                /**첫번째 호의 투명게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
 
                         .addContent(
@@ -94,11 +84,11 @@ public class MyTileService extends TileService {
                         .setAnchorAngle(degrees(40f))              //위에 공백
                                 .setAnchorType(ARC_ANCHOR_START)             //게이지 시작점(?)(왼쪽 오른쪽)
                                 .build())
-                /**첫번째(오른쪽-금액) 호의 게이지*/
+                /**첫번째 호의 게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 첫번째 선(금액)
-                                        .setLength(degrees(amountProgress.percentage()*100f))  //게이지 = 360f가 만땅
+                                        .setLength(degrees(goalProgress.percentage()*100f))  //게이지 = 360f가 만땅
                                         .setColor(argb(ContextCompat.getColor(this, R.color.green)))
                                         .setThickness(Tdp) //선 두께
                                         .build()
@@ -106,7 +96,7 @@ public class MyTileService extends TileService {
                         .setAnchorAngle(degrees(140f))                //위에 공백
                         .setAnchorType(LayoutElementBuilders.ARC_ANCHOR_END)                        //게이지 시작점(?)(왼쪽 오른쪽)
                         .build())
-                /**첫번째(오른쪽-금액) 호의 글씨*/
+                /**첫번째 호의 글씨*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()
                         .addContent(
                                 new LayoutElementBuilders.ArcText.Builder()
@@ -116,7 +106,7 @@ public class MyTileService extends TileService {
                         .setAnchorAngle(degrees(145f))  //위에 공백
                         .setAnchorType(ARC_ANCHOR_START)
                         .build())
-                /**두번째(왼쪽-날짜) 호 투명게이지*/
+                /**두번째 호 투명게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 두번째 선 투명한 게이지
@@ -125,24 +115,27 @@ public class MyTileService extends TileService {
                                         .setThickness(Tdp) //선 두께
                                         .build()
                         )
+                        /**두번째 호 투명게이지 패딩*/
                         .setAnchorAngle(degrees(-40f))                //위에 공백
                         .setAnchorType(LayoutElementBuilders.ARC_ANCHOR_END)                        //게이지 시작점(?)(왼쪽 오른쪽)
                         .build()
                 )
-                /**두번째(왼쪽-날짜) 호의 게이지*/
+                /**두번째 호의 게이지*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 두번째 선(날짜)
-                                        .setLength(degrees(dateProgress.percentage()*100f))  //게이지 = 360f가 만땅
+                                        .setLength(degrees(goalProgress.percentage()*100f))  //게이지 = 360f가 만땅
                                         .setColor(argb(0xFFFF0000))  //1F -투명도
                                         .setThickness(Tdp)                      //선 두께
                                         .build()
                         )
+                        /**두번째 호 게이지 패딩*/
+
                         .setAnchorAngle(degrees(-140f))                //위에 공백
                         .setAnchorType(ARC_ANCHOR_START)                        //게이지 시작점(?)(왼쪽 오른쪽)
                         .build()
                 )
-                /**두번째(왼쪽-날짜) 호의 글씨()*/
+                /**두번째 호의 글씨()*/
                 .addContent(new LayoutElementBuilders.Arc.Builder()             //테두리
                         .addContent(
                                 new LayoutElementBuilders.ArcText.Builder()    //테두리에 첫번째 선 투명한 게이지
@@ -164,7 +157,7 @@ public class MyTileService extends TileService {
                                 )
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
-                                        .setText("/"+myFormatter.format(amountProgress.goal)+"원")
+                                        .setText("/"+myFormatter.format(goalProgress.goal)+"원")
                                         .setTypography(10)                  //글씨 크기(?)
                                         .build()
                                 )
