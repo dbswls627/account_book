@@ -197,7 +197,7 @@ public interface sqlDao {
     @Query("SELECT (w.wayBalance + :amount) FROM Way w WHERE w.wayName = :wayName")
     Integer getAfterBalanceOfIn(int amount, String wayName);
 
-    @Query("SELECT sum(w.wayBalance) FROM Way w")
+    @Query("SELECT sum(w.wayBalance) FROM Way w WHERE w.wayName != '(Auto)'")
     Integer getTotalBalance();
 
     @Query("SELECT * FROM Cost c ORDER BY useDate desc, c.content ASC")
@@ -263,6 +263,9 @@ public interface sqlDao {
 
     @Query("SELECT a.state FROM AutoSave a")
     Boolean getAutoState();
+
+    @Query("SELECT w.wayBalance FROM Way w WHERE w.wayName = '(Auto)'")
+    Integer getAutoBalance();
 
 
     @Transaction

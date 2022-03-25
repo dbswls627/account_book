@@ -3,7 +3,11 @@ package com.team_3.accountbook;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +28,13 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
     private List<AssetNameWayNameAndBalance> ANWNList;
     private ArrayList<String> assetNameList = new ArrayList<>();
     private DecimalFormat myFormatter = new DecimalFormat("###,###");
-    TextView mTotalMoney;
-    RecyclerView mAssetAndWay;
-    AppDatabase db;
+    private LinearLayout mAutoSaveZone;
+    private ImageView mExistAutoData;
+    private TextView mTotalMoney, mAutoBalance;
+    private RecyclerView mAssetAndWay;
+    private AppDatabase db;
 
-    BottomNavigationView bottom_menu;
+    private BottomNavigationView bottom_menu;
 
     protected void onStart() {
         super.onStart();
@@ -67,34 +73,70 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
         });
 
         mTotalMoney = findViewById(R.id.totalMoney);
+        mAutoBalance = findViewById(R.id.autoBalance);
         mAssetAndWay = findViewById(R.id.rv_AssetAndWay);
+        mAutoSaveZone = findViewById(R.id.zoneOfAutoSave);
+        mExistAutoData = findViewById(R.id.existAutoData);
         db = AppDatabase.getInstance(this);
+
 
         buildActivityScreen();
     }
 
 
 
+    @SuppressLint("SetTextI18n")
     private void buildActivityScreen(){
-        String formatPrice ="0";
-        try {
-            formatPrice = myFormatter.format(db.dao().getTotalBalance());
-        }catch (Exception e){
-        }finally {
-            mTotalMoney.setText(formatPrice+"원");
+        if(db.dao().getAutoState() || (!db.dao().getAutoState() && db.dao().getAutoBalance() != 0)){
+            mAutoSaveZone.setVisibility(View.VISIBLE);
+        }
+        else if(!db.dao().getAutoState()){
+            mAutoSaveZone.setVisibility(View.GONE);
         }
 
+        int totalPrice, autoPrice;
+        String total = "0";
+
+        totalPrice = db.dao().getTotalBalance();
+        autoPrice = db.dao().getAutoBalance();
+
+        try { total = myFormatter.format(totalPrice+autoPrice); }
+        catch (Exception ignore){  }
+        mTotalMoney.setText(total+"원");
+
+        if(db.dao().getAutoBalance() == 0){
+            mAutoBalance.setText("0원");
+            mExistAutoData.setVisibility(View.INVISIBLE);
+        }
+        else{
+            mAutoBalance.setText(myFormatter.format(db.dao().getAutoBalance())+"원");
+            mExistAutoData.setVisibility(View.VISIBLE);
+        }
 
 
         ANWNList = db.dao().getAnWnWb();
         for (int i = 0; i < ANWNList.size(); i++) {
-            if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
-                assetNameList.add(ANWNList.get(i).getAssetName());
+            if(!ANWNList.get(i).getAssetName().equals(getResources().getString(R.string.auto_assetName))){  // 자산명 '자동저장' 제거
+                if (!assetNameList.contains(ANWNList.get(i).getAssetName())) {
+                    assetNameList.add(ANWNList.get(i).getAssetName());
+                }
             }
         }
 
         mAssetAndWay.setAdapter(new AssetOutAdapter(ANWNList, assetNameList, this));
         mAssetAndWay.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+
+
+    @SuppressLint("NonConstantResourceId")
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.zoneOfAutoSave:
+                listItemClick("(Auto)");
+
+                break;
+        }
     }
 
 

@@ -46,13 +46,64 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
+                android:textColor="@color/black"
                 android:textSize="15dp"
                 android:text="액수"/>
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="@color/darkGray"/>
+
+        <LinearLayout
+            android:id="@+id/zoneOfAutoSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/hardLightGreen"
+            android:onClick="mOnClick"
+            tools:ignore="DisableBaselineAlignment">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginBottom="12dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="@string/auto_wayName" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="22dp">
+                    <TextView
+                        android:id="@+id/autoBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="2dp"
+                        android:gravity="right"
+                        android:text="0원" />
+                    <ImageView
+                        android:id="@+id/existAutoData"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="1dp"
+                        android:src="@drawable/ic_baseline_new_releases_24"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_AssetAndWay"
