@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class RCSReceiver extends BroadcastReceiver {
+public class rcsReceiver extends BroadcastReceiver {
     Cost cost;
     long timestamp;     // rcs 의 date(ms)
     String address;

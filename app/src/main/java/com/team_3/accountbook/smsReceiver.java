@@ -72,20 +72,20 @@ public class smsReceiver extends BroadcastReceiver {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void sendToMainActivity(Context context, String sender, String content, Long millisDate) {
-        Intent intent = new Intent(context, MainActivity.class);   // MainActivity 를 호출할 intent 생성. 우선 형식상으로 정해놨다.
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK   // 실행한 액티비티와 관련된 태스크가 존재하면 동일한 태스크 내에서 실행하고, 그렇지 않으면 새로운 태스크에서 액티비티를 실행하는 플래그
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP       // 실행할 액티비티가 태스크 스택 최상단에 이미 있다면 액티비티를 다시 실행하지 않는 플래그
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);      // 실행할 액티비티가 태스크에 이미 있다면 태스크에 있는 동일한 액티비티부터 최상단의 액티비티까지 모두 제거하고 새로운 액티비티를 실행하는 플래그
-        intent.putExtra("sender", sender);
-        intent.putExtra("content", content);
-        intent.putExtra("date", ma.sdf.format(millisDate));
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    private void sendToMainActivity(Context context, String sender, String content, Long millisDate) {
+//        Intent intent = new Intent(context, MainActivity.class);   // MainActivity 를 호출할 intent 생성. 우선 형식상으로 정해놨다.
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK   // 실행한 액티비티와 관련된 태스크가 존재하면 동일한 태스크 내에서 실행하고, 그렇지 않으면 새로운 태스크에서 액티비티를 실행하는 플래그
+//                | Intent.FLAG_ACTIVITY_SINGLE_TOP       // 실행할 액티비티가 태스크 스택 최상단에 이미 있다면 액티비티를 다시 실행하지 않는 플래그
+//                | Intent.FLAG_ACTIVITY_CLEAR_TOP);      // 실행할 액티비티가 태스크에 이미 있다면 태스크에 있는 동일한 액티비티부터 최상단의 액티비티까지 모두 제거하고 새로운 액티비티를 실행하는 플래그
+//        intent.putExtra("sender", sender);
+//        intent.putExtra("content", content);
+//        intent.putExtra("date", ma.sdf.format(millisDate));
 
         //context.startActivity(intent);      // sms 정보를 가진 intent 로 액티비티 호출
 
 //        smsNotification(context, content);    // ←-- ★그만할 때 이부분을 주석처리해서 알림이 안뜨게 할 것(선택)
-    }
+//    }
 
 
     @SuppressWarnings("AccessStaticViaInstance")
@@ -159,7 +159,7 @@ public class smsReceiver extends BroadcastReceiver {
 
                 Intent notiIntent;
                 if(db.dao().getAutoState()){    // Auto-Save ON
-                    notiIntent = new Intent(context, HomeActivity.class);       // 알림 클릭시 HomeActivity 로 이동하게 설정
+                    notiIntent = new Intent(context, AssetsActivity.class);       // 알림 클릭시 AssetActivity 로 이동하게 설정
 
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
                     stackBuilder.addParentStack(MainActivity.class);

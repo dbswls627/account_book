@@ -1,6 +1,9 @@
 package com.team_3.accountbook;
 
 
+import static androidx.core.content.ContextCompat.getColor;
+import static androidx.core.content.ContextCompat.getDrawable;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +11,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
@@ -77,8 +82,9 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             holder.mAmount_dh.setText(formatAmount + "원");
             holder.mWayName_dh.setText(arrayList.get(position).getFK_wayName());
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
-            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(ContextCompat.getColor(context, R.color.red)); }
+            setLayoutColor(position, holder);
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_dh.setTextColor(getColor(context, R.color.hardGreen)); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_dh.setTextColor(getColor(context, R.color.red)); }
         }
 
         else if (context instanceof ListInAssetActivity){   // ListInAssetActivity 에서의 세팅
@@ -90,8 +96,9 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getBalance());
             holder.mBalance_da.setText("("+formatAmount+")");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
-            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(ContextCompat.getColor(context, R.color.red)); }
+            setLayoutColor(position, holder);
+            if(arrayList.get(position).getDivision().equals("income")){ holder.mAmount_da.setTextColor(getColor(context, R.color.hardGreen)); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.mAmount_da.setTextColor(getColor(context, R.color.red)); }
 
         }
 
@@ -116,9 +123,10 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             formatAmount = myFormatter.format(arrayList.get(position).getAmount());
             holder.amt.setText(formatAmount + "원");
 
-            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(ContextCompat.getColor(context, R.color.hardGreen)); }
-            else if(arrayList.get(position).getDivision().equals("expense")){ holder.amt.setTextColor(ContextCompat.getColor(context, R.color.red)); }
+            if(arrayList.get(position).getDivision().equals("income")){ holder.amt.setTextColor(getColor(context, R.color.hardGreen)); }
+            else if(arrayList.get(position).getDivision().equals("expense")){ holder.amt.setTextColor(getColor(context, R.color.red)); }
         }
+
 
         // 리스트 항목 클릭시~
         if (context instanceof MainActivity) {      // 호출한 액티비티가 MainActivity(메세지 액티비티)일 경우
@@ -154,7 +162,9 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
         TextView bd;        // 내용
         TextView amt;       // 금액
 
+        LinearLayout mLayout_dh;
         TextView mSortName_dh, mBody_dh, mTime_dh, mAmount_dh, mWayName_dh;
+        LinearLayout mLayout_da;
         TextView mSortName_da, mBody_da, mTime_da, mAmount_da, mBalance_da;
         TextView mBody_dm, mTime_dm, mAmount_dm, mSmsContent_dm, mWay_dm;
 
@@ -164,12 +174,14 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             bd = itemView.findViewById(R.id.bd);
             amt = itemView.findViewById(R.id.amt);
 
+            mLayout_dh = itemView.findViewById(R.id.layout_detailForHome);
             mSortName_dh = itemView.findViewById(R.id.detailHome_sortName);
             mBody_dh = itemView.findViewById(R.id.detailHome_body);
             mTime_dh = itemView.findViewById(R.id.detailHome_time);
             mAmount_dh = itemView.findViewById(R.id.detailHome_amount);
             mWayName_dh = itemView.findViewById(R.id.detailHome_wayName);
 
+            mLayout_da = itemView.findViewById(R.id.layout_detailForAsset);
             mSortName_da = itemView.findViewById(R.id.detailAsset_sortName);
             mBody_da = itemView.findViewById(R.id.detailAsset_body);
             mTime_da = itemView.findViewById(R.id.detailAsset_time);
@@ -182,6 +194,21 @@ public class adapter extends RecyclerView.Adapter<adapter.CumstomViewHolder>{
             mSmsContent_dm = itemView.findViewById(R.id.detailMain_smsContent);
             mWay_dm = itemView.findViewById(R.id.detailMain_wayName);
 
+        }
+    }
+
+
+
+    private void setLayoutColor(int position, adapter.CumstomViewHolder holder){
+        if(arrayList.get(position).getSortName().equals("(미분류)")){     // 분류가 (미분류)이면~
+            if(context instanceof HomeActivity || context instanceof GraphActivity){
+                holder.mLayout_dh.setBackground(getDrawable(context, R.color.hardLightGreen));
+            }
+            else if(context instanceof ListInAssetActivity){
+                if(!arrayList.get(position).getFK_wayName().equals("(Auto)")){
+                    holder.mLayout_da.setBackground(getDrawable(context, R.color.hardLightGreen));
+                }
+            }
         }
     }
 }

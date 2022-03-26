@@ -48,71 +48,221 @@
                 android:src="@drawable/ic_baseline_arrow_forward"
                 app:tint="@color/white" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_gravity="right">
                     <LinearLayout
+                        android:id="@+id/auto_home"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_gravity="right">
+                        android:paddingRight="9dp"
+                        android:paddingLeft="12dp"
+                        android:layout_marginRight="5dp"
+                        android:onClick="mOnClick">
                         <LinearLayout
-                            android:id="@+id/auto_home"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:paddingRight="9dp"
-                            android:paddingLeft="12dp"
-                            android:layout_marginRight="5dp"
-                            android:onClick="mOnClick">
-                            <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center">
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_gravity="center">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_baseline_save_alt_24"
-                                    android:layout_gravity="center"/>
-                                <TextView
-                                    android:id="@+id/autoState_home"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="8dp"
-                                    android:textColor="@color/white"
-                                    android:text="Auto-ON"/>
-                            </LinearLayout>
+                                android:src="@drawable/ic_baseline_save_alt_24"
+                                android:layout_gravity="center"/>
+                            <TextView
+                                android:id="@+id/autoState_home"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="8dp"
+                                android:textColor="@color/white"
+                                android:text="Auto-ON"/>
                         </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/message_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingRight="9dp"
+                        android:paddingLeft="12dp"
+                        android:layout_marginRight="15dp"
+                        android:onClick="mOnClick">
                         <LinearLayout
-                            android:id="@+id/message_home"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:paddingRight="9dp"
-                            android:paddingLeft="12dp"
-                            android:layout_marginRight="15dp"
-                            android:onClick="mOnClick">
-                            <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center">
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_gravity="center">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_baseline_email_24"
-                                    android:layout_gravity="center"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="7dp"
-                                    android:textColor="@color/white"
-                                    android:text="가져오기"/>
-                            </LinearLayout>
+                                android:src="@drawable/ic_baseline_email_24"
+                                android:layout_gravity="center"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="7dp"
+                                android:textColor="@color/white"
+                                android:text="가져오기"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-
+            </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/white">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/hardDarkGray"
+                        android:text="수입" />
+                    <TextView
+                        android:id="@+id/income_total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/green"
+                        android:text="n" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/hardDarkGray"
+                        android:text="지출" />
+                    <TextView
+                        android:id="@+id/expense_total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/red"
+                        android:text="n" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/hardDarkGray"
+                        android:text="총액"/>
+                    <TextView
+                        android:id="@+id/total_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="n"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/hardLightGray"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="일"
+                android:textAlignment="center"
+                android:textColor="@color/sundayRed"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="월"
+                android:textAlignment="center"
+                android:textColor="@color/hardDarkGray"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="화"
+                android:textAlignment="center"
+                android:textColor="@color/hardDarkGray"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="수"
+                android:textAlignment="center"
+                android:textColor="@color/hardDarkGray"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="목"
+                android:textAlignment="center"
+                android:textColor="@color/hardDarkGray"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="금"
+                android:textAlignment="center"
+                android:textColor="@color/hardDarkGray"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="토"
+                android:textAlignment="center"
+                android:textColor="@color/saturdayBlue"
+                android:textSize="14sp"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/hardLightGray"/>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -120,147 +270,11 @@
             android:layout_weight="1"
             android:fillViewport="true"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="7dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="23dp"
-                                android:layout_marginRight="5dp"
-                                android:textColor="@color/black"
-                                android:text="수입 " />
-                            <TextView
-                                android:id="@+id/income_total"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/green"
-                                android:text="n" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="2dp"
-                                android:textColor="@color/black"
-                                android:text="원" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginBottom="7dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                    android:layout_marginLeft="23dp"
-                                android:layout_marginRight="5dp"
-                                android:textColor="@color/black"
-                                android:text="지출 " />
-                            <TextView
-                                android:id="@+id/expense_total"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/red"
-                                android:text="n" />
-                           <TextView
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               android:layout_marginLeft="2dp"
-                               android:textColor="@color/black"
-                               android:text="원" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="일"
-                    android:textAlignment="center"
-                    android:textColor="@color/sundayRed"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="월"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="화"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="수"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="목"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="금"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="토"
-                    android:textAlignment="center"
-                    android:textColor="@color/saturdayBlue"
-                    android:textSize="14sp"/>
-                </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="400dp"

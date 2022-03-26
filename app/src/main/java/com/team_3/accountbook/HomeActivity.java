@@ -33,7 +33,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
-    private TextView monthYearText, mAutoState, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal;
+    private TextView monthYearText, mAutoState, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal, mTotal;
     private RecyclerView calendarRecyclerView, listRv;
     private LinearLayout mDateLayout, mNoDataLayout;
     String yyyyMM, dd;
@@ -78,6 +78,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         mDayInfo = findViewById(R.id.dayInfo);
         mIncomeTotal = findViewById(R.id.income_total);
         mExpenseTotal = findViewById(R.id.expense_total);
+        mTotal = findViewById(R.id.total_home);
         mNoDataLayout = findViewById(R.id.homeLayout_noDataInfo);
         pre = findViewById(R.id.toPreMonth);
         next = findViewById(R.id.toNextMonth);
@@ -217,21 +218,23 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         if(db.dao().getAutoState()){ mAutoState.setText("Auto-ON"); }
         else { mAutoState.setText("Auto-OFF"); }
 
-        String formatAmount = "";
-        String totalAmount;
+
+        int total_in = 0;
+        int total_ex = 0;
+
         try {
-            totalAmount = db.dao().getAmountOfMonth(monthYearText.getText().toString(), "income");
-            formatAmount = myFormatter.format(Integer.parseInt(totalAmount));
-            mIncomeTotal.setText(formatAmount);
+            total_in = db.dao().getAmountOfMonth(monthYearText.getText().toString(), "income");
+            mIncomeTotal.setText(myFormatter.format(total_in));
         }
         catch (Exception e){ mIncomeTotal.setText("0"); }
 
         try {
-            totalAmount = db.dao().getAmountOfMonth(monthYearText.getText().toString(),  "expense");
-            formatAmount = myFormatter.format(Integer.parseInt(totalAmount));
-            mExpenseTotal.setText(formatAmount);
+            total_ex = db.dao().getAmountOfMonth(monthYearText.getText().toString(), "expense");
+            mExpenseTotal.setText(myFormatter.format(total_ex));
         }
         catch (Exception e){ mExpenseTotal.setText("0"); }
+
+        mTotal.setText(myFormatter.format(total_in+total_ex));
     }
 
 

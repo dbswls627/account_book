@@ -94,7 +94,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".RCSReceiver"
+            android:name=".rcsReceiver"
             android:permission="com.samsung.rcs.permission.RCS_APP_PERMISSION"
             android:enabled="true"
             android:exported="true">

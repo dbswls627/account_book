@@ -222,7 +222,7 @@ public interface sqlDao {
     String getAmountOfDay(String date, String division);
 
     @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 10) = :date AND division = :division")    // 날짜에 맞는  amount 값의 합
-    String getAmountOfMonth(String date, String division);
+    Integer getAmountOfMonth(String date, String division);
 
 
     @Query("SELECT a.assetName, w.wayName, w.wayBalance FROM asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
