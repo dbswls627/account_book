@@ -3,7 +3,6 @@ package com.team_3.accountbook;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
@@ -24,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 public class SettingActivity extends AppCompatActivity {
     TextView add,list,sqlTest,wear,amountGoal_text;
     Intent intent;
-
+    AppDatabase db;
     BottomNavigationView bottom_menu;
     @Override
     protected void onStart() {
@@ -37,6 +36,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        db = AppDatabase.getInstance(this);
         wear = findViewById(R.id.wear);
         add = findViewById(R.id.add);
         list = findViewById(R.id.list);
@@ -98,14 +98,15 @@ public class SettingActivity extends AppCompatActivity {
         cancel = dialog.findViewById(R.id.cancel);
         save = dialog.findViewById(R.id.save);
 
+        amountGoal.setText(db.dao().getAmountGoal());
+
        cancel.setOnClickListener((view)->{
            dialog.dismiss();
        });
         save.setOnClickListener((view)->{
-
             dialog.dismiss();
-            Log.d("test",amountGoal.getText()+"!");
             new SendThread("/message_path", amountGoal.getText()+"!").start();
+            db.dao().updateAmountGoal(amountGoal.getText().toString());
         });
     }
     class SendThread extends Thread {

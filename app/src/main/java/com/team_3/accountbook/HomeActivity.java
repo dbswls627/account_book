@@ -487,6 +487,9 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         if(db.dao().getAutoState() == null){                        // 비어있으면 추가.  초기설정!
             db.dao().insertAutoState(true);
         }
+        if(db.dao().getAmountGoal() == null){                        // 비어있으면 추가.  초기설정!
+            db.dao().insertAmountGoal("300000");
+        }
     }
 
 

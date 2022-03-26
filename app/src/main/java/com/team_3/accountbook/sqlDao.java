@@ -31,6 +31,9 @@ public interface sqlDao {
     @Query("INSERT INTO AutoSave(state) VALUES(:state)")
     void insertAutoState(Boolean state);
 
+    @Query("INSERT INTO AmountGoal(amountGoal) VALUES(:amountGoal)")
+    void insertAmountGoal(String amountGoal);
+
 
 
     @Update
@@ -64,6 +67,9 @@ public interface sqlDao {
 
     @Query("UPDATE AutoSave SET state = :stateFlag")
     void updateAutoState(Boolean stateFlag);
+
+    @Query("UPDATE AmountGoal SET amountGoal = :amountGoal")
+    void updateAmountGoal(String amountGoal);
 
     @Query("UPDATE Way SET notiAutoData = :state WHERE wayName = :wayName")
     void updateWayNotiState(String wayName, Boolean state);
@@ -266,6 +272,9 @@ public interface sqlDao {
 
     @Query("SELECT a.state FROM AutoSave a")
     Boolean getAutoState();
+
+    @Query("SELECT a.amountGoal FROM AmountGoal a")
+    String getAmountGoal();
 
     @Query("SELECT w.wayBalance FROM Way w WHERE w.wayName = '(Auto)'")
     Integer getAutoBalance();
