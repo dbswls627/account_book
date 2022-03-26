@@ -74,7 +74,7 @@ public class MyTileService extends TileService {
         YearMonth yearMonth = YearMonth.from(date);
 
         amountProgress.setCurrent(amount);                   //이번달 쓴돈
-        amountProgress.setGoal(500000);                     // 가격 목표값 설정(데베에서 받아오게 할거임)
+        amountProgress.setGoal(Integer.parseInt(db.dao().get("goal")));   // 가격 목표값 설정
         dateProgress.setCurrent(date.getDayOfMonth());      //현재 날짜 값
         dateProgress.setGoal(yearMonth.lengthOfMonth());    //현재 월의 길이
         return new LayoutElementBuilders.Box.Builder()

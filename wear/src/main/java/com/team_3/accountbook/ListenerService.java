@@ -31,8 +31,13 @@ public class ListenerService extends WearableListenerService {
             messageIntent.setAction(Intent.ACTION_SEND);
             messageIntent.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);   // MainAc 의 onReceive()함수가 실행됨
-
-            db.dao().insert(new Data("amount",message));      // 데이터를 받으면 db에 추가. name은 고정이라 amount 값만 바뀜
+            //타일 업데이트
+            if (message.contains("!")){             //메세지에 !표가 있으면 워치타일의 amountProgress 목표 값 변경
+                db.dao().insert(new Data("goal",message.replace("!","")));
+            }
+            else {
+                db.dao().insert(new Data("amount", message));      //(이번달 사용 금액) 데이터를 받으면 db에 추가. name은 고정이라 amount 값만 바뀜
+            }
             TileService.getUpdater(this).requestUpdate(MyTileService.class);    //타일 업데이트
         }
         else {
