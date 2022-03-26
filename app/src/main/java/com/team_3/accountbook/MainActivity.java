@@ -83,7 +83,12 @@ public class MainActivity extends AppCompatActivity {
         months = intent.getIntExtra("months", -1);
 
         setMessageList();
-
+        Collections.sort(arrayList, new Comparator<Cost>() {        // arrayList 날짜순으로 정렬
+            @Override
+            public int compare(Cost c1, Cost c2) {
+                return c2.getUseDate().compareTo(c1.getUseDate());
+            }
+        });
 
     }
 
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         arrayList.clear();
         readSMSMessage(this, db);
+        readRCSMessage(this, db);
 
         if(arrayList.isEmpty()){
             mLayoutNoData.setVisibility(View.VISIBLE);
@@ -118,22 +124,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void readSMSMessage(Context context, AppDatabase db) {
-        Uri smsUri = Uri.parse("content://sms");        // 문자 접근
+    public void readRCSMessage(Context context, AppDatabase db) {
         Uri rcsUri = Uri.parse("content://im/chat");    // RCS 접근
+        ZoneId zoneid = ZoneId.of("Asia/Seoul");
+        long beforeM = LocalDateTime.now().minusMonths(months).atZone(zoneid).toInstant().toEpochMilli();      // months 개월 전 ms
 
-        ZoneId zoneid = ZoneId.of("Asia/Seoul");                                                            // 서울 시각
-        long beforeM = LocalDateTime.now().minusMonths(months).atZone(zoneid).toInstant().toEpochMilli();   // months 개월 전 ms
         String where = "date >"+beforeM;
-        //날짜 조건 추가
         ContentResolver cr = context.getContentResolver();
-
-        Cursor smsCur = cr.query(smsUri,              // .query(from / select / ? / where / order by);
-                new String[]{"body", "date", "address"},
-                where, null,
-                "date DESC");
         Cursor rcsCur = cr.query(rcsUri,              // RCS
                 new String[]{"body", "date", "address"},
                 where, null,
@@ -141,19 +138,19 @@ public class MainActivity extends AppCompatActivity {
 
         Date timeInDate;
 
-        /*
-        JSON: Key-Value 의 집합으로 중괄호'{ }'를 사용. 각 쌍들은 쉼표(,)로 구분된다.
-              ex) {"name":"abc", "age":20, "phone":"010-1234-5678"}
-              또한, 대괄호'[ ]'로 표현되는 배열을 제공하며, 배열의 각 요소는 기본 자료형/객체/배열이 될 수 있다.
-        */
-
         if(rcsCur != null){     // RCS 가 하나도 없으면 팅김.(Null Point Exception)
             while (rcsCur.moveToNext()) {               // RCS
                 String body = rcsCur.getString(0);      // rcs 의 body
                 long timestamp = rcsCur.getLong(1);     // rcs 의 date(ms)
                 String address = rcsCur.getString(2);
+                Log.d("TEST",body);
 
                 try{
+                     /*
+                        JSON: Key-Value 의 집합으로 중괄호'{ }'를 사용. 각 쌍들은 쉼표(,)로 구분된다.
+                        ex) {"name":"abc", "age":20, "phone":"010-1234-5678"}
+                        또한, 대괄호'[ ]'로 표현되는 배열을 제공하며, 배열의 각 요소는 기본 자료형/객체/배열이 될 수 있다.
+                     */
                     JSONObject jObject = new JSONObject(body);      // body 전체를 담음
                     JSONArray jArray;
                     jObject = jObject.getJSONObject("layout");          // layout 키의 값을 담음
@@ -178,6 +175,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void readSMSMessage(Context context, AppDatabase db) {
+        Uri smsUri = Uri.parse("content://sms");        // 문자 접근
+
+        ZoneId zoneid = ZoneId.of("Asia/Seoul");
+        long beforeM = LocalDateTime.now().minusMonths(months).atZone(zoneid).toInstant().toEpochMilli();      // months 개월 전 ms
+        String where = "date >"+beforeM;     //날짜 조건 추가
+        ContentResolver cr = context.getContentResolver();
+
+        Cursor smsCur = cr.query(smsUri,              // .query(from / select / ? / where / order by);
+                new String[]{"body", "date", "address"},
+                where, null,
+                "date DESC");
+
+        Date timeInDate;
 
         if(smsCur != null){     // SMS 가 하나도 없으면 팅김.(Null Point Exception)
             while (smsCur.moveToNext()) {
@@ -198,16 +211,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-
-        Collections.sort(arrayList, new Comparator<Cost>() {        // arrayList 날짜순으로 정렬
-            @Override
-            public int compare(Cost c1, Cost c2) {
-                return c2.getUseDate().compareTo(c1.getUseDate());
-            }
-        });
-
-
-
     }
 
     public Long getMs(){
@@ -392,10 +395,10 @@ public class MainActivity extends AppCompatActivity {
         mBring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    months = Integer.parseInt(mMonths.getText().toString());
-                    setMessageList();
+                months = Integer.parseInt(mMonths.getText().toString());
+                setMessageList();
 
-                    dialog.dismiss();
+                dialog.dismiss();
             }
         });
     }
