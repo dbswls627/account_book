@@ -21,7 +21,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:text="분류명"
-                android:textSize="10dp"/>
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -37,7 +37,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="내용"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textColor="@color/black"/>
             <TextView
                 android:id="@+id/detailAsset_time"
@@ -47,7 +47,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="left"
                 android:text="시간"
-                android:textSize="13dp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,7 +63,7 @@
                 android:layout_marginRight="40dp"
                 android:gravity="right"
                 android:text="금액"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
             <TextView
                 android:id="@+id/detailAsset_balance"
                 android:layout_width="match_parent"

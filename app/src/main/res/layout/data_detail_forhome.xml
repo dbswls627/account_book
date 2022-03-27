@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="12sp"
                 android:text="분류명"
                 android:textSize="10dp"/>
         </LinearLayout>
@@ -37,7 +37,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="내용"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textColor="@color/black"/>
             <TextView
                 android:id="@+id/detailHome_time"
@@ -47,7 +47,7 @@
                 android:layout_marginBottom="12dp"
                 android:gravity="left"
                 android:text="시간"
-                android:textSize="13dp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,7 +63,7 @@
                 android:layout_marginRight="40dp"
                 android:gravity="right"
                 android:text="금액"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
             <TextView
                 android:id="@+id/detailHome_wayName"
                 android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                 android:layout_marginRight="40dp"
                 android:gravity="right"
                 android:text="수단명"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
