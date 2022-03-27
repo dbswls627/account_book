@@ -18,7 +18,15 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.Wearable;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,17 +39,21 @@ public class smsReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 0;           // Notification 에 대한 ID
     private NotificationCompat.Builder notifyBuilder;               // Notification Builder: Notification 을 생성
     private final MainActivity ma = new MainActivity();
-
+    Context context, ApplicationContext;
+    AppDatabase db;
+    LocalDate selectedDate;
     private String useDate, useAmount;
     private Pattern p;
     private Matcher m;
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
+        selectedDate = LocalDate.now();
+        db = AppDatabase.getInstance(context);
         Bundle bundle = intent.getExtras();
         SmsMessage[] messages = parseSms(bundle);    // sms 정보를 담을 객체 선언과 동시에 함수로 정보 저장
-
+        this.context = context;
+        ApplicationContext = context.getApplicationContext();
         if (messages.length > 0) {
             String sender = messages[0].getOriginatingAddress();
             String body = messages[0].getMessageBody();
@@ -137,7 +149,7 @@ public class smsReceiver extends BroadcastReceiver {
                             AddActivity addAc = new AddActivity();
                             addAc.updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
                                     cost.getUseDate(), wayName, "(미분류)", cost.getAmount(), cost.getContent(), "expense", ma.getMs(), "new");
-
+                            bluetooth();
                         }
                     }, 1000);   // 1초 후 자동저장이 실행됨.(SMS 를 다 읽기 전에(?) ms 값을 가져와서, 올바른 ms 값을 못가져옴. 딜레이를 줌으로 해결함)
 
@@ -220,7 +232,77 @@ public class smsReceiver extends BroadcastReceiver {
 
         return name;
     }
+    class SendThread extends Thread {
+        String path;
+        String message;
 
+        //constructor
+        SendThread(String p, String msg) {
+            path = p;
+            message = msg;
+        }
+
+        //sends the message via the thread.  this will send to all wearables connected, but
+        //since there is (should only?) be one, no problem.
+        public void run() {
+
+            //first get all the nodes, ie connected wearable devices.
+            Task<List<Node>> nodeListTask =
+                    Wearable.getNodeClient(ApplicationContext).getConnectedNodes();
+            try {
+                // Block on a task and get the result synchronously (because this is on a background
+                // thread).
+                List<Node> nodes = Tasks.await(nodeListTask);
+
+                //Now send the message to each device.
+                for (Node node : nodes) {
+                    Task<Integer> sendMessageTask =
+                            Wearable.getMessageClient(context).sendMessage(node.getId(), path, message.getBytes());
+
+                    try {
+                        // Block on a task and get the result synchronously (because this is on a background
+                        // thread).
+                        Integer result = Tasks.await(sendMessageTask);
+
+
+
+                    } catch (ExecutionException exception) {
+
+
+                    } catch (InterruptedException exception) {
+
+                    }
+
+                }
+
+            } catch (ExecutionException exception) {
+
+
+
+            } catch (InterruptedException exception) {
+
+            }
+        }
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        return date.format(formatter);
+    }
+
+
+
+    void bluetooth(){
+        if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense")!=null){
+            new SendThread("/message_path", String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense"))).start();
+        }
+        else{
+            new SendThread("/message_path", "0").start();
+        }
+    }
 
 
 }

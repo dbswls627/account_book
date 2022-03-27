@@ -44,12 +44,8 @@ public class ListenerService extends WearableListenerService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);   // WearAc 의 onReceive()함수가 실행됨*/
 
             selectedDate = LocalDate.now();
-            if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense") != null){
-                new SendThread("/message_path", String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense"))).start();
-            }
-            else{
-                new SendThread("/message_path", "0").start();
-            }
+
+            bluetooth();
 
         }
         else {
@@ -122,6 +118,12 @@ public class ListenerService extends WearableListenerService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
-
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void bluetooth() {
+        if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate), "expense") != null) {
+            new SendThread("/message_path", String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(selectedDate), "expense"))).start();
+        } else {
+            new SendThread("/message_path", "0").start();
+        }
+    }
 }
