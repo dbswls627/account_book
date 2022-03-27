@@ -2,6 +2,7 @@ package com.team_3.accountbook;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
@@ -9,16 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class SettingActivity extends AppCompatActivity {
     TextView add,list,sqlTest,wear,amountGoal_text;
@@ -32,6 +27,7 @@ public class SettingActivity extends AppCompatActivity {
         bottom_menu = findViewById(R.id.bottom_menu);
         bottom_menu.setSelectedItemId(R.id.setting);
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +86,7 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void showDialogOfAmountGoal(Dialog dialog) {
         dialog.show();
         EditText amountGoal;
@@ -105,60 +102,10 @@ public class SettingActivity extends AppCompatActivity {
        });
         save.setOnClickListener((view)->{
             dialog.dismiss();
-            new SendThread("/message_path", amountGoal.getText()+"!").start();
+            ListenerService LS = new ListenerService();
+            LS.bluetooth(SettingActivity.this, amountGoal.getText()+"!");
             db.dao().updateAmountGoal(amountGoal.getText().toString());
         });
     }
-    class SendThread extends Thread {
-        String path;
-        String message;
 
-        //constructor
-        SendThread(String p, String msg) {
-            path = p;
-            message = msg;
-        }
-
-        //sends the message via the thread.  this will send to all wearables connected, but
-        //since there is (should only?) be one, no problem.
-        public void run() {
-
-            //first get all the nodes, ie connected wearable devices.
-            Task<List<Node>> nodeListTask =
-                    Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
-            try {
-                // Block on a task and get the result synchronously (because this is on a background
-                // thread).
-                List<Node> nodes = Tasks.await(nodeListTask);
-
-                //Now send the message to each device.
-                for (Node node : nodes) {
-                    Task<Integer> sendMessageTask =
-                            Wearable.getMessageClient(SettingActivity.this).sendMessage(node.getId(), path, message.getBytes());
-
-                    try {
-                        // Block on a task and get the result synchronously (because this is on a background
-                        // thread).
-                        Integer result = Tasks.await(sendMessageTask);
-
-
-
-                    } catch (ExecutionException exception) {
-
-
-                    } catch (InterruptedException exception) {
-
-                    }
-
-                }
-
-            } catch (ExecutionException exception) {
-
-
-
-            } catch (InterruptedException exception) {
-
-            }
-        }
-    }
 }

@@ -26,19 +26,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @SuppressWarnings("deprecation")
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -510,8 +503,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 else {
                     Toast.makeText(this, "모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-
-                bluetooth();
+                ListenerService LS = new ListenerService();
+                LS.bluetooth(this, String.valueOf(db.dao().getAmountOfMonth(LS.monthYearFromDate(LocalDate.now()), "expense")));
                 break;
 
             case R.id.tv_delete:
@@ -697,7 +690,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                 dialog.dismiss();
                 updateBalanceOnByDelete(costAll.getUseDate(), costAll.getFK_wayName(), costAll.getAmount(), "delete");
-                bluetooth();
+                ListenerService LS = new ListenerService();
+                LS.bluetooth(AddActivity.this, String.valueOf(db.dao().getAmountOfMonth(LS.monthYearFromDate(LocalDate.now()), "expense")));
                 setResult(RESULT_OK);
                 finish();
                 overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
@@ -799,81 +793,4 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
     }
-
-
-
-    class SendThread extends Thread {
-        String path;
-        String message;
-
-        //constructor
-        SendThread(String p, String msg) {
-            path = p;
-            message = msg;
-        }
-
-        //sends the message via the thread.  this will send to all wearables connected, but
-        //since there is (should only?) be one, no problem.
-        public void run() {
-
-            //first get all the nodes, ie connected wearable devices.
-            Task<List<Node>> nodeListTask =
-                    Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
-            try {
-                // Block on a task and get the result synchronously (because this is on a background
-                // thread).
-                List<Node> nodes = Tasks.await(nodeListTask);
-
-                //Now send the message to each device.
-                for (Node node : nodes) {
-                    Task<Integer> sendMessageTask =
-                            Wearable.getMessageClient(AddActivity.this).sendMessage(node.getId(), path, message.getBytes());
-
-                    try {
-                        // Block on a task and get the result synchronously (because this is on a background
-                        // thread).
-                        Integer result = Tasks.await(sendMessageTask);
-
-
-
-                    } catch (ExecutionException exception) {
-
-
-                    } catch (InterruptedException exception) {
-
-                    }
-
-                }
-
-            } catch (ExecutionException exception) {
-
-
-
-            } catch (InterruptedException exception) {
-
-            }
-        }
-    }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
-        return date.format(formatter);
-    }
-
-
-
-    public void bluetooth(){
-        if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense")!=null){
-            new SendThread("/message_path", String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(selectedDate),"expense"))).start();
-        }
-        else{
-            new SendThread("/message_path", "0").start();
-        }
-    }
-
-
-
 }

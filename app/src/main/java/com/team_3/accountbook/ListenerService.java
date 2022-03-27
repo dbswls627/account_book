@@ -1,5 +1,6 @@
 package com.team_3.accountbook;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
@@ -45,7 +46,7 @@ public class ListenerService extends WearableListenerService {
 
             selectedDate = LocalDate.now();
 
-            bluetooth();
+            bluetooth(this, String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(LocalDate.now()), "expense")));
 
         }
         else {
@@ -59,11 +60,12 @@ public class ListenerService extends WearableListenerService {
     class SendThread extends Thread {
         String path;
         String message;
-
+        Context context;
         //constructor
-        SendThread(String p, String msg) {
+        SendThread(String p, String msg,Context context) {
             path = p;
             message = msg;
+            this.context = context;
         }
 
         //sends the message via the thread.  this will send to all wearables connected, but
@@ -72,7 +74,7 @@ public class ListenerService extends WearableListenerService {
 
             //first get all the nodes, ie connected wearable devices.
             Task<List<Node>> nodeListTask =
-                    Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
+                    Wearable.getNodeClient(context.getApplicationContext()).getConnectedNodes();
             try {
                 // Block on a task and get the result synchronously (because this is on a background
                 // thread).
@@ -81,7 +83,7 @@ public class ListenerService extends WearableListenerService {
                 //Now send the message to each device.
                 for (Node node : nodes) {
                     Task<Integer> sendMessageTask =
-                            Wearable.getMessageClient(ListenerService.this).sendMessage(node.getId(), path, message.getBytes());    // 워치로 sum 금액을 보냄
+                            Wearable.getMessageClient(context).sendMessage(node.getId(), path, message.getBytes());    // 워치로 sum 금액을 보냄
 
                     try {
                         // Block on a task and get the result synchronously (because this is on a background
@@ -111,19 +113,18 @@ public class ListenerService extends WearableListenerService {
         }
     }
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
+    public String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void bluetooth() {
-        if (db.dao().getAmountOfMonth(monthYearFromDate(selectedDate), "expense") != null) {
-            new SendThread("/message_path", String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(selectedDate), "expense"))).start();
+    void bluetooth(Context context, String message) {
+        db = AppDatabase.getInstance(ListenerService.this);
+        if (message != null) {
+            new SendThread("/message_path", message, context).start();
         } else {
-            new SendThread("/message_path", "0").start();
+            new SendThread("/message_path", "0",context).start();
         }
     }
 }
