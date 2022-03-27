@@ -55,11 +55,31 @@ public class MyTileService extends TileService {
         return Futures.immediateFuture(new ResourceBuilders.Resources.Builder()
                 .setVersion(RESOURCES_VERSION)
                 .addIdToImageMapping(       //이미지 파일 가져오기 
-                        "image",
+                        "money",
                         new ResourceBuilders.ImageResource.Builder()
                                 .setAndroidResourceByResId(
                                         new ResourceBuilders.AndroidImageResourceByResId.Builder()
                                                 .setResourceId(R.drawable.money)
+                                                .build()
+                                )
+                                .build()
+                )
+                .addIdToImageMapping(       //이미지 파일 가져오기
+                        "empty",
+                        new ResourceBuilders.ImageResource.Builder()
+                                .setAndroidResourceByResId(
+                                        new ResourceBuilders.AndroidImageResourceByResId.Builder()
+                                                .setResourceId(R.drawable.empty)
+                                                .build()
+                                )
+                                .build()
+                )
+                .addIdToImageMapping(       //이미지 파일 가져오기
+                        "warning",
+                        new ResourceBuilders.ImageResource.Builder()
+                                .setAndroidResourceByResId(
+                                        new ResourceBuilders.AndroidImageResourceByResId.Builder()
+                                                .setResourceId(R.drawable.warning)
                                                 .build()
                                 )
                                 .build()
@@ -77,6 +97,13 @@ public class MyTileService extends TileService {
         amountProgress.setGoal(Integer.parseInt(db.dao().get("goal")));   // 가격 목표값 설정
         dateProgress.setCurrent(date.getDayOfMonth());      //현재 날짜 값
         dateProgress.setGoal(yearMonth.lengthOfMonth());    //현재 월의 길이
+
+        String image;
+        /** 금액에 따른 이미지 변경*/
+        if (amountProgress.percentage() >= 0.7 && amountProgress.percentage() < 1) image = "warning";
+        else if (amountProgress.percentage() == 1) image = "empty";
+        else image = "money";
+
         return new LayoutElementBuilders.Box.Builder()
                 .setWidth(expand())
                 .setHeight(expand())
@@ -172,7 +199,7 @@ public class MyTileService extends TileService {
                                 .addContent(new LayoutElementBuilders.Image.Builder()
                                         .setWidth(dp(208f))
                                         .setHeight(dp(48f))
-                                        .setResourceId("image")
+                                        .setResourceId(image)
                                         .build()
                 )
                                 .build())
