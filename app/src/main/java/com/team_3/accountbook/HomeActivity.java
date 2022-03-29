@@ -234,7 +234,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         }
         catch (Exception e){ mExpenseTotal.setText("0"); }
 
-        mTotal.setText(myFormatter.format(total_in+total_ex));
+        mTotal.setText(myFormatter.format(total_in-total_ex));
     }
 
 
