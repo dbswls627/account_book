@@ -44,7 +44,6 @@ import java.util.regex.Pattern;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
-    private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
     public Context context = this;
     private TextView mTv_Months;
     private LinearLayout mLayoutNoData;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private int months = 1;
 
+    @SuppressLint("SimpleDateFormat")
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
 
 
@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
 
         mLayoutNoData.setVisibility(View.GONE);
-        callPermission();
 
         Intent intent = getIntent();
         months = intent.getIntExtra("months", -1);
@@ -322,25 +321,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void callPermission() {       // 문자 권한 얻기
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_SMS},
-                    PERMISSIONS_REQUEST_READ_SMS);
-        } else {
-            // 해당 로직으로 이동
-        }
-        String[] permissions = {Manifest.permission.RECEIVE_SMS};
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
-        if(permissionCheck == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(this, permissions, 1);
-        }
-    }
-
-
-
     @SuppressLint("NonConstantResourceId")
     public void mOnClick(View v){
         switch (v.getId()){
@@ -402,10 +382,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 
 
 

@@ -1,10 +1,13 @@
 package com.team_3.accountbook;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +20,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
+    private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     private long firstBackPressedTime = 0;          // 뒤로가기 체크시간
     private TextView monthYearText, mAutoState, mYearMonth, date, mDayInfo, mIncomeTotal, mExpenseTotal, mTotal;
@@ -83,6 +89,14 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         pre = findViewById(R.id.toPreMonth);
         next = findViewById(R.id.toNextMonth);
         db = AppDatabase.getInstance(this);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                callPermission();
+            }
+        }, 1000);   // 1초 후 권한 요청이 실행됨.(바로 요청하면 요청이 씹힘. 딜레이를 줌으로 해결함)
 
         initialSetting();
 
@@ -492,6 +506,25 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         }
         if(db.dao().getAmountGoal() == null){                        // 비어있으면 추가.  초기설정!
             db.dao().insertAmountGoal("300000");
+        }
+    }
+
+
+
+    private void callPermission() {       // 문자 권한 얻기
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                    new String[]{Manifest.permission.READ_SMS},
+                    PERMISSIONS_REQUEST_READ_SMS);
+        } else {
+            // 해당 로직으로 이동
+        }
+        String[] permissions = {Manifest.permission.RECEIVE_SMS};
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if(permissionCheck == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, permissions, 1);
         }
     }
 
