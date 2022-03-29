@@ -13,6 +13,137 @@
         android:orientation="vertical"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/green">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:text="설정" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/listSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="mOnClick"
+                android:paddingTop="30dp"
+                android:paddingBottom="25dp">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/hardDarkGray"
+                    android:src="@drawable/ic_baseline_edit_note_24"
+                    tools:ignore="UseAppTint" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="항목설정"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/watchSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="mOnClick"
+                android:paddingTop="30dp"
+                android:paddingBottom="25dp">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/hardDarkGray"
+                    android:src="@drawable/ic_baseline_watch_24"
+                    tools:ignore="UseAppTint" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="워치설정"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/autoSaveSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="mOnClick"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="11dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="Auto-Save"/>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/hardDarkGray"
+                    android:src="@drawable/ic_baseline_save_alt_24"
+                    tools:ignore="UseAppTint" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="ON/OFF"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="mOnClick"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/hardDarkGray"
+                    android:src="@drawable/ic_baseline_help_24"
+                    tools:ignore="UseAppTint" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/hardDarkGray"
+                    android:text="도움말"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
         <TextView
             android:textSize="40sp"
             android:id="@+id/list"

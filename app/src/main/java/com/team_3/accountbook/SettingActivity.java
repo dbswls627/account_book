@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -107,5 +109,32 @@ public class SettingActivity extends AppCompatActivity {
             db.dao().updateAmountGoal(amountGoal.getText().toString());
         });
     }
+
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.listSetting:
+                Toast.makeText(this, "자산/수단/분류 설정", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.watchSetting:
+                Toast.makeText(this, "목표금액/경고% 설정", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.autoSaveSetting:
+                Toast.makeText(this, "자동저장 ON/OFF 설정", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.help:
+                Toast.makeText(this, "도움말", Toast.LENGTH_SHORT).show();
+
+                break;
+        }
+    }
+
 
 }
