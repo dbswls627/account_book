@@ -1,10 +1,12 @@
 package com.team_3.accountbook;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -34,6 +36,7 @@ public class BarChartFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,34 +60,34 @@ public class BarChartFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setChart(String YYYY) {
         barEntries = new ArrayList<>();
-        //db.dao().getAmountOfMonth();
-        barEntries.add(new BarEntry(1f,10f));
-        barEntries.add(new BarEntry(2f,20f));
-        barEntries.add(new BarEntry(3,30f));
-        barEntries.add(new BarEntry(4,40f));
-        barEntries.add(new BarEntry(5,50f));
-        barEntries.add(new BarEntry(6,60f));
-        barEntries.add(new BarEntry(7,70f));
-        barEntries.add(new BarEntry(8,80f));
-        barEntries.add(new BarEntry(9,90f));
-        barEntries.add(new BarEntry(10,100f));
-        barEntries.add(new BarEntry(11,110f));
-        barEntries.add(new BarEntry(12,120f));
+
+        for (int i = 1; i <= 12; i++){
+            String s = String.valueOf(i);
+            if (s.length()==1){s = "0"+ s;} //1월이면->01월 이 되도록
+
+            try {
+                barEntries.add(new BarEntry(i-1,db.dao().getAmountOfMonth(YYYY+" "+s+"월","expense")));
+            }catch (Exception e){
+                barEntries.add(new BarEntry(i-1,0));        //해당 월에 쓴돈이 없어 null 값 이면 0원
+            }
+        }
 
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
         /** X축 글씨*/
         List<String> xAxisValues = new ArrayList<>(Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월","7월", "8월", "9월", "10월", "11월", "12월"));
+        barChart.getAxisLeft().setEnabled(false);       //왼쪽에 크기값 안뜨게  안하면 왼쪽 오른쪽 둘다 뜸
         XAxis xAxis = barChart.getXAxis();
         xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
         xAxis.setPosition (XAxis.XAxisPosition.BOTTOM); //아래에만 뜨게하기
-        xAxis.setCenterAxisLabels (true);
-
-        xAxis.setGranularity(.01f);  //글씨 간격
+        xAxis.setLabelCount(12);
+        xAxis.setCenterAxisLabels (false);
+        xAxis.setGranularity(1f);  //글씨 간격
         BarData barData = new BarData(barDataSet);
-        barData.setBarWidth(.2f); //막대 너비 설정하기
+        barData.setBarWidth(0.5f); //막대 너비 설정하기
         barChart.setData(barData);
         barChart.notifyDataSetChanged();
 
