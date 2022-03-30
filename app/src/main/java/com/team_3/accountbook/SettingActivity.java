@@ -131,11 +131,11 @@ public class SettingActivity extends AppCompatActivity {
             @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
-                mAccept.setSelected(true);
+                mAsset.setSelected(true);
                 mAsset.setBackgroundColor(getColor(R.color.lightGreen));
                 mWay.setSelected(false);
                 mWay.setBackgroundColor(getColor(R.color.white));
-                mSort.setSelected(true);
+                mSort.setSelected(false);
                 mSort.setBackgroundColor(getColor(R.color.white));
             }
         });
@@ -173,7 +173,7 @@ public class SettingActivity extends AppCompatActivity {
             Intent intent;
             @Override
             public void onClick(View v) {
-                if(mAccept.isSelected()){
+                if(mAsset.isSelected()){
                     Toast.makeText(getApplicationContext(), "asset", Toast.LENGTH_SHORT).show();
                 }
                 else if(mWay.isSelected()){
@@ -191,21 +191,6 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private String test(int n){
-        String s;
-        if(n == 1){
-            s = "asset";
-        }
-        else if(n == 2){
-            s = "way";
-        }
-        else{
-            s = "sort";
-        }
-
-        return s;
     }
 
 
