@@ -101,7 +101,7 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
             else {                      //막대 그래프 일때
                 selectedYear = selectedYear.minusYears(1);
                 monthYearText.setText(monthYearFromYear(selectedYear));
-                barChartFragment.setChart(monthYearFromDate(selectedYear));
+                barChartFragment.setChart(monthYearFromYear(selectedYear));
             }
         });
 

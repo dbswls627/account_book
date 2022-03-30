@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -47,8 +48,10 @@ public class BarChartFragment extends Fragment {
         barChart = view.findViewById(R.id.barchart);
         barChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
         barChart.setTouchEnabled(false); //확대하지못하게 막음
-        barChart.setDrawGridBackground(false); // 격자구조
+        barChart.setDrawValueAboveBar(true);
+        barChart.setDrawGridBackground(true); // 내부 회색
         barChart.setExtraOffsets(15, 15, 15, 15);//마진
+
         Legend l = barChart.getLegend();
         l.setEnabled(false);       //그래프 목록 표시 비활성화
 
@@ -77,17 +80,33 @@ public class BarChartFragment extends Fragment {
 
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
+        barDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);   //비율맞추기 1
         /** X축 글씨*/
         List<String> xAxisValues = new ArrayList<>(Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월","7월", "8월", "9월", "10월", "11월", "12월"));
-        barChart.getAxisLeft().setEnabled(false);       //왼쪽에 크기값 안뜨게  안하면 왼쪽 오른쪽 둘다 뜸
-        XAxis xAxis = barChart.getXAxis();
+        barChart.getAxisLeft().setEnabled(false);       //y축 왼쪽 안뜨게
+
+        XAxis xAxis = barChart.getXAxis();              //x축
+        YAxis yAxis = barChart.getAxisRight();          //y축 오른쪽
+
+
+
         xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
         xAxis.setPosition (XAxis.XAxisPosition.BOTTOM); //아래에만 뜨게하기
-        xAxis.setLabelCount(12);
-        xAxis.setCenterAxisLabels (false);
+        xAxis.setLabelCount(11);
         xAxis.setGranularity(1f);  //글씨 간격
+        xAxis.setDrawAxisLine(true); // 축 그리기 설정
+        xAxis.setDrawGridLines(false); //격자 라인 활용
+        xAxis.setDrawLimitLinesBehindData(true);
+
+
+        yAxis.setGranularity(10000);   //y축 간격
+        yAxis.setDrawGridLines(true); //격자 라인 활용
+        yAxis.setDrawAxisLine(true); // 축 그리기 설정
+        yAxis.setAxisMinimum(0f);   //비율맞추기 2
+
         BarData barData = new BarData(barDataSet);
         barData.setBarWidth(0.5f); //막대 너비 설정하기
+
         barChart.setData(barData);
         barChart.notifyDataSetChanged();
 
