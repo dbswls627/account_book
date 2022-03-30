@@ -14,6 +14,7 @@
     <color name="darkGray">#656565</color>
     <color name="hardDarkGray">#4C4C4C</color>
     <color name="hardLightGreen">#F4FDF4</color>
+    <color name="lightGreen">#DFFDE0</color>
     <color name="green">#2DB532</color>
     <color name="hardGreen">#1D9111</color>
     <color name="red">#FF5252</color>

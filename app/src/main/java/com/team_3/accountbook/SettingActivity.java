@@ -1,5 +1,6 @@
 package com.team_3.accountbook;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,10 +114,110 @@ public class SettingActivity extends AppCompatActivity {
 
 
 
+    private void showDialogToListProvisionSetting(Dialog dialog){
+        dialog.show();
+
+        LinearLayout mAsset, mWay, mSort;
+        TextView mCancel, mAccept;
+
+        mAsset = dialog.findViewById(R.id.assetProvision);
+        mWay = dialog.findViewById(R.id.wayProvision);
+        mSort = dialog.findViewById(R.id.sortProvision);
+        mCancel = dialog.findViewById(R.id.cancel_provisionSetting);
+        mAccept = dialog.findViewById(R.id.accept_provisionSetting);
+
+
+        mAsset.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+                mAccept.setSelected(true);
+                mAsset.setBackgroundColor(getColor(R.color.lightGreen));
+                mWay.setSelected(false);
+                mWay.setBackgroundColor(getColor(R.color.white));
+                mSort.setSelected(true);
+                mSort.setBackgroundColor(getColor(R.color.white));
+            }
+        });
+        mWay.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+                mAsset.setSelected(false);
+                mAsset.setBackgroundColor(getColor(R.color.white));
+                mWay.setSelected(true);
+                mWay.setBackgroundColor(getColor(R.color.lightGreen));
+                mSort.setSelected(false);
+                mSort.setBackgroundColor(getColor(R.color.white));
+            }
+        });
+        mSort.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+                mAsset.setSelected(false);
+                mAsset.setBackgroundColor(getColor(R.color.white));
+                mWay.setSelected(false);
+                mWay.setBackgroundColor(getColor(R.color.white));
+                mSort.setSelected(true);
+                mSort.setBackgroundColor(getColor(R.color.lightGreen));
+            }
+        });
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            Intent intent;
+            @Override
+            public void onClick(View v) {
+                if(mAccept.isSelected()){
+                    Toast.makeText(getApplicationContext(), "asset", Toast.LENGTH_SHORT).show();
+                }
+                else if(mWay.isSelected()){
+                    intent = new Intent(getApplicationContext(), AssetForEditActivity.class);
+                    startActivity(intent);
+                    dialog.dismiss();
+                    overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+                }
+                else if(mSort.isSelected()){
+                    Toast.makeText(getApplicationContext(), "sort", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "하나를 선택하세요.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    private String test(int n){
+        String s;
+        if(n == 1){
+            s = "asset";
+        }
+        else if(n == 2){
+            s = "way";
+        }
+        else{
+            s = "sort";
+        }
+
+        return s;
+    }
+
+
+
     public void mOnClick(View v){
         switch (v.getId()){
             case R.id.listSetting:
-                Toast.makeText(this, "자산/수단/분류 설정", Toast.LENGTH_SHORT).show();
+                Dialog dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_listprovisionsetting);
+
+                showDialogToListProvisionSetting(dialog);
 
                 break;
 
