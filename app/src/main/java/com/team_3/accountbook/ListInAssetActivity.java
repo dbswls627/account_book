@@ -87,14 +87,14 @@ public class ListInAssetActivity extends AppCompatActivity{
 
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "SimpleDateFormat"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthList(){
         mTopWayName.setText(wayName);
 
         LocalDate fistDate = localDate.withDayOfMonth(1);                           // 월의 첫째 날
         LocalDate lastDate = localDate.withDayOfMonth(localDate.lengthOfMonth());   // 월의 마지막 날
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         if(!fistDate.format(DateTimeFormatter.ofPattern("yyyy")).equals(sdf.format(now))){      // 현재 년도랑 이동한 달의 년도랑 다르면~
             mDuration.setText(fistDate.format(DateTimeFormatter.ofPattern("yy.MM.dd")) + " ~ " + lastDate.format(DateTimeFormatter.ofPattern("yy.MM.dd")));
         }
@@ -113,6 +113,7 @@ public class ListInAssetActivity extends AppCompatActivity{
         }
         catch (Exception e){ mIncomeTotal.setText(totalAmount+""); }
 
+        totalAmount = 0;
         try {
             totalAmount = db.dao().getAmountOfMonth(mNowMonth.getText().toString(), wayName, "expense");
             formatAmount = myFormatter.format(totalAmount);

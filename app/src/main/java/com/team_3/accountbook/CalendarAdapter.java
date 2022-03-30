@@ -64,9 +64,13 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
+        long now = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월dd");
+
         String day = daysOfMonth.get(position);
         if(daysOfMonth.get(position).length() == 1 || (daysOfMonth.get(position).length() == 2 && daysOfMonth.get(position).contains("?"))){      // 일이 1자리면 앞에 0을 붙여주어 데베랑 값 맞춤
             day = "0" + daysOfMonth.get(position);
@@ -82,12 +86,18 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             String preExpense = db.dao().getAmountOfDay(preYearMonth + " " + day1 + "일", "expense");      // 전월 해당 일 총 지출값
             String preIncome  = db.dao().getAmountOfDay(preYearMonth + " " + day1 + "일", "income");       // 전월 해당 일 총 수입값
 
+            Log.d("test", preYearMonth + " // " + day1);
+
             if(preExpense != null) { preExpense = decFormat.format(Integer.parseInt(preExpense)); }         //null 일때 변환하면 팅김
             if(preIncome != null)  { preIncome  = decFormat.format(Integer.parseInt(preIncome)); }          //null 일때 변환하면 팅김
 
             holder.layout.setBackground(ContextCompat.getDrawable(context, R.color.hardLightGray));
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.gray));
             holder.dayOfMonth.setText(day1);
+            if((preYearMonth+day1).equals(sdf.format(now))){
+                holder.dayOfMonth.setBackgroundColor(ContextCompat.getColor(context, R.color.mustard));
+                holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.white));
+            }
             holder.expense.setText(preExpense);             // 날짜의 총 지출값 출력
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.income.setText(preIncome);               // 날짜의 총 수입값 출력
@@ -105,12 +115,18 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             String nextExpense = db.dao().getAmountOfDay(nextYearMonth + " " + day1 + "일", "expense");    // 다음월 해당 일 총 지출값
             String nextIncome  = db.dao().getAmountOfDay(nextYearMonth + " " + day1 + "일", "income");     // 다음월 해당 일 총 수입값
 
+            Log.d("test", nextYearMonth + " // " + day1);
+
             if(nextExpense != null) { nextExpense = decFormat.format(Integer.parseInt(nextExpense)); }      //null 일때 변환하면 팅김
             if(nextIncome != null)  { nextIncome  = decFormat.format(Integer.parseInt(nextIncome)); }       //null 일때 변환하면 팅김
 
             holder.layout.setBackground(ContextCompat.getDrawable(context, R.color.hardLightGray));
             holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.gray));
             holder.dayOfMonth.setText(day1);
+            if((nextYearMonth+day1).equals(sdf.format(now))){
+                holder.dayOfMonth.setBackgroundColor(ContextCompat.getColor(context, R.color.mustard));
+                holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.white));
+            }
             holder.expense.setTextColor(ContextCompat.getColor(context, R.color.redGray));
             holder.expense.setText(nextExpense);            // 날짜의 총 지출값 출력
             holder.income.setText(nextIncome);              // 날짜의 총 수입값 출력
@@ -129,10 +145,16 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewH
             String expense = db.dao().getAmountOfDay(nowYM + " " + day1 + "일", "expense");                      // 현재 해당 일 총 지출값
             String income  = db.dao().getAmountOfDay(nowYM + " " + day1 + "일", "income");                       // 현재 해당 일 총 수입값
 
+            Log.d("test", nowYM + " // " + day1 + "..." + sdf.format(now));
+
             if(expense != null) { expense = decFormat.format(Integer.parseInt(expense)); }                  //null 일때 변환하면 팅김
             if(income != null)  { income  = decFormat.format(Integer.parseInt(income)); }                   //null 일때 변환하면 팅김
 
             holder.dayOfMonth.setText(daysOfMonth.get(position));
+            if((nowYM+day1).equals(sdf.format(now))){
+                holder.dayOfMonth.setBackgroundColor(ContextCompat.getColor(context, R.color.mustard));
+                holder.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.white));
+            }
             holder.expense.setText(expense);                // 날짜의 총 지출값 출력
             holder.income.setText(income);                  // 날짜의 총 수입값 출력
             holder.itemView.setOnClickListener((i)->{       // 달력 날짜 클릭시
