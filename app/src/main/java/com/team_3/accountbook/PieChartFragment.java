@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +42,6 @@ public class PieChartFragment extends Fragment {
     String YYYYMM;
 
     public PieChartFragment(String date) {
-        YYYYMM = date;
-    }
-
-    public void setDate(String date) {
         YYYYMM = date;
     }
 
@@ -98,7 +93,7 @@ public class PieChartFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setChart(String YYYYMM) {
-
+        this.YYYYMM = YYYYMM;
         if (db.dao().getMDate(YYYYMM, "expense").isEmpty()) {
             listLayout.setVisibility(View.GONE);
             chartLayout.setVisibility(View.GONE);

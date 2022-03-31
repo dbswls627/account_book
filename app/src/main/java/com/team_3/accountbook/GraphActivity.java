@@ -142,7 +142,6 @@ public class GraphActivity extends AppCompatActivity {
                 graphCheck = false;
             }
             else {                 //막대 그래프 일때(원 그래프로 가는 버튼)
-                pieChartFragment.setDate(monthYearFromDate(selectedDate));
                 monthYearText.setText(monthYearFromDate(selectedDate));
                 transaction.replace(R.id.container, pieChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_bar_chart_24);
