@@ -374,6 +374,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         setWayAndSortRV();
     }
 
+    
 
     public void mOnClick(View v) {
         switch (v.getId()) {
