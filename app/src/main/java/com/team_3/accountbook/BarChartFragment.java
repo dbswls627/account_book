@@ -1,5 +1,6 @@
 package com.team_3.accountbook;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,10 +25,10 @@ import java.util.List;
 public class BarChartFragment extends Fragment {
     AppDatabase db;
     BarChart barChart;
-    List<BarEntry> barEntries;
+    List<BarEntry> barEntries = new ArrayList<>();
     String YYYY;
     ArrayList<Integer> amountList = new ArrayList<>(); // ArrayList 선언
-
+    Context context;
     public BarChartFragment(String YYYY) {
         // Required empty public constructor
         this.YYYY = YYYY;
@@ -47,15 +48,31 @@ public class BarChartFragment extends Fragment {
 
         barChart = view.findViewById(R.id.barchart);
         barChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
-        barChart.setTouchEnabled(false); //확대하지못하게 막음
+        barChart.setTouchEnabled(true);
+        barChart.setScaleEnabled(false);    //확대하지 못하게 하기
         barChart.setDrawValueAboveBar(true);
         barChart.setDrawGridBackground(true); // 내부 회색
         barChart.setExtraOffsets(15, 15, 15, 15);//마진
-
         Legend l = barChart.getLegend();
         l.setEnabled(false);       //그래프 목록 표시 비활성화
 
-        setChart(YYYY);
+        setChart(YYYY," 상반기");
+
+       /* barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Log.d("TEST", String.valueOf(barEntries.get((int) h.getX())));
+                Log.d("TEST", String.valueOf(e));
+                Log.d("TEST",h+"");
+                Log.d("TEST",h.getY()+"");
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });*/
 
         return view;
 
@@ -64,10 +81,12 @@ public class BarChartFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setChart(String YYYY) {
-        barEntries = new ArrayList<>();
-
-        for (int i = 1; i <= 12; i++){
+    public void setChart(String YYYY,String halfYear) {
+        int mon = 1;
+        if (halfYear.equals(" 상반기")){ mon = 1;}
+        else if (halfYear.equals(" 하반기")){ mon = 7;}
+        barEntries.clear();
+        for (int i = mon; i <= mon + 5; i++){
             String s = String.valueOf(i);
             if (s.length()==1){s = "0"+ s;} //1월이면->01월 이 되도록
 

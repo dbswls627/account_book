@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -75,7 +78,18 @@ public class PieChartFragment extends Fragment {
         l.setEnabled(false);       //그래프 목록 표시 비활성화
         //pieChart.setCenterText("TEST");   //가운데 글씨
         //pieChart.setHoleColor(Color.WHITE);//가운데 구멍 색
-        pieChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) context);
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                sortName.setText(graphDateList.get((int)h.getX()).getSortName());
+                setList((ArrayList<Cost>) db.dao().getMDate(YYYYMM,graphDateList.get((int)h.getX()).getSortName(),"expense"));
+            }
+            @Override
+            public void onNothingSelected() {
+                sortName.setText("전체");
+                setList((ArrayList<Cost>) db.dao().getMDate(YYYYMM,"expense"));
+            }
+        });
         setChart(YYYYMM);
 
 

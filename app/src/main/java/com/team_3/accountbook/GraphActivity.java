@@ -14,16 +14,12 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
-public class GraphActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+public class GraphActivity extends AppCompatActivity {
     BottomNavigationView bottom_menu;
     ImageView preButton,nextButton;
     private TextView monthYearText;
@@ -36,6 +32,7 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
     LocalDate selectedYear;
     FragmentTransaction transaction;
     boolean graphCheck;
+    String halfYear;
 
     @Override
     protected void onStart() {
@@ -60,6 +57,7 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         selectedYear = LocalDate.now();
         graphCheck = true;
+        halfYear = " 상반기";
 
         transaction = getSupportFragmentManager().beginTransaction();
 
@@ -99,9 +97,14 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
                 pieChartFragment.setChart(monthYearFromDate(selectedDate));
             }
             else {                      //막대 그래프 일때
-                selectedYear = selectedYear.minusYears(1);
-                monthYearText.setText(monthYearFromYear(selectedYear));
-                barChartFragment.setChart(monthYearFromYear(selectedYear));
+                if (monthYearText.getText().toString().contains(" 상반기")) {
+                    halfYear = " 하반기";
+                    selectedYear = selectedYear.minusYears(1);
+                }else {
+                    halfYear = " 상반기";
+                }
+                monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
+                barChartFragment.setChart(monthYearFromYear(selectedYear),halfYear);
             }
         });
 
@@ -112,22 +115,27 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
                 pieChartFragment.setChart(monthYearFromDate(selectedDate));
             }
             else {                      //막대그래프 일때
-                selectedYear = selectedYear.plusYears(1);
-                monthYearText.setText(monthYearFromYear(selectedYear));
-                barChartFragment.setChart(monthYearFromYear(selectedYear));
+                if (monthYearText.getText().toString().contains("하반기")) {
+                    halfYear = " 상반기";
+                    selectedYear = selectedYear.plusYears(1);
+                }else {
+                    halfYear = " 하반기";
+                }
+                monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
+                barChartFragment.setChart(monthYearFromYear(selectedYear),halfYear);
             }
         });
 
         graph.setOnClickListener(view -> {
             transaction = getSupportFragmentManager().beginTransaction();
-            if (graphCheck) {       //원 그래프 일때
+            if (graphCheck) {       //원 그래프 일때(막대 그래프로 가는 버튼)
                 barChartFragment.setDate(monthYearFromYear(selectedYear));
-                monthYearText.setText(monthYearFromYear(selectedYear));
+                monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
                 transaction.replace(R.id.container, barChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_pie_chart_24);
                 graphCheck = false;
             }
-            else {                 //막대 그래프 일때
+            else {                 //막대 그래프 일때(원 그래프로 가는 버튼)
                 pieChartFragment.setDate(monthYearFromDate(selectedDate));
                 monthYearText.setText(monthYearFromDate(selectedDate));
                 transaction.replace(R.id.container, pieChartFragment).commit();
@@ -148,20 +156,4 @@ public class GraphActivity extends AppCompatActivity implements OnChartValueSele
         return date.format(formatter);
     }
 
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onValueSelected(Entry e, Highlight h) { // 그래프 클릭
-        pieChartFragment.sortName.setText(pieChartFragment.graphDateList.get((int)h.getX()).getSortName());
-        pieChartFragment.setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),pieChartFragment.graphDateList.get((int)h.getX()).getSortName(),"expense"));
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onNothingSelected() {   //클릭해서 아무것도 선택 안되어 있는 상태
-        pieChartFragment.sortName.setText("전체");
-        pieChartFragment.setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(selectedDate),"expense"));
-
-    }
 }
