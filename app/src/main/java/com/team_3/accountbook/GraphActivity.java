@@ -57,7 +57,13 @@ public class GraphActivity extends AppCompatActivity {
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
         selectedYear = LocalDate.now();
         graphCheck = true;
-        halfYear = " 상반기";
+
+        if (selectedYear.getMonthValue() <= 6) {
+            halfYear = " 상반기";
+        }
+        else{
+            halfYear = " 하반기";
+        }
 
         transaction = getSupportFragmentManager().beginTransaction();
 
@@ -129,7 +135,7 @@ public class GraphActivity extends AppCompatActivity {
         graph.setOnClickListener(view -> {
             transaction = getSupportFragmentManager().beginTransaction();
             if (graphCheck) {       //원 그래프 일때(막대 그래프로 가는 버튼)
-                barChartFragment.setDate(monthYearFromYear(selectedYear));
+                barChartFragment.setDate(monthYearFromYear(selectedYear), halfYear);
                 monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
                 transaction.replace(R.id.container, barChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_pie_chart_24);

@@ -27,14 +27,16 @@ public class BarChartFragment extends Fragment {
     BarChart barChart;
     List<BarEntry> barEntries = new ArrayList<>();
     String YYYY;
+    String halfYear;
     ArrayList<Integer> amountList = new ArrayList<>(); // ArrayList 선언
     Context context;
     public BarChartFragment(String YYYY) {
         // Required empty public constructor
         this.YYYY = YYYY;
     }
-    public void setDate(String date){
+    public void setDate(String date,String halfYear){
         YYYY = date;
+        this.halfYear = halfYear;
     }
 
 
@@ -56,7 +58,7 @@ public class BarChartFragment extends Fragment {
         Legend l = barChart.getLegend();
         l.setEnabled(false);       //그래프 목록 표시 비활성화
 
-        setChart(YYYY," 상반기");
+        setChart(YYYY,halfYear);
 
        /* barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
