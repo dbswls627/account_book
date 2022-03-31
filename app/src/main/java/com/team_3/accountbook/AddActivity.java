@@ -17,12 +17,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
+@SuppressLint("UseSwitchCompatOrMaterialCode")
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.touchItem {
     List<String> WayAndSortList;
@@ -52,6 +55,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     int cursorPosition = -1;
     private String callValue = "nothing";
     private int myCostId = -1;
+    private LinearLayout mSetGaol;
+    private Switch mSwitch;
+    private boolean goalToggle = true;
     Cost costAll;
 
     InputMethodManager imm;
@@ -112,6 +118,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mWay.setText(getIntent().getStringExtra("wayName"));
 
             setColorOfDivision(action);
+            mSwitch.setChecked(true);
         }
         else if(callValue.equals("Main")){
             // MainActivity 에서 리스트 클릭시 실행되는 부분
@@ -128,6 +135,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         else if(callValue.equals("nothing")){
             // HomeActivity 에서 추가버튼 클릭시 실행되는 부분
             mExpense.setSelected(true);
+            mSwitch.setChecked(true);
             mSave.setSelected(true);
         }
         if (!mDate.getText().toString().equals("")) {   // date 가 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
@@ -193,6 +201,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mSort = findViewById(R.id.sort);            // 분류
         mSum = findViewById(R.id.edit_sum);         // 금액
         mBody = findViewById(R.id.body);            // 내용
+        mSetGaol = findViewById(R.id.setGaolAmount);
+        mSwitch = findViewById(R.id.toggleButton);
         mSave = findViewById(R.id.tv_save);         // 저장버튼
         mDelete = findViewById(R.id.tv_delete);     // 삭제버튼
         mRV_WayAndSort = findViewById(R.id.rv_WayAndSort);
@@ -223,6 +233,14 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
         mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
         mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
+
+        if(action.equals("expense")){
+            mSetGaol.setVisibility(View.VISIBLE);
+            if(goalToggle){ mSwitch.setChecked(true); }
+        }
+        else if(action.equals("income")){
+            mSetGaol.setVisibility(View.INVISIBLE);
+        }
 
         mSave.setVisibility(View.VISIBLE);
         mDelete.setVisibility(View.GONE);
@@ -400,6 +418,13 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
                 break;
 
+            case R.id.toggleButton:
+                if(goalToggle){ goalToggle = false; }
+                else { goalToggle = true; }
+
+
+                break;
+
             case R.id.tv_save:
                 String amount = mSum.getText().toString();
                 try { amount = amount.replaceAll(",", ""); }          // 금액의 쉼표(,) 제거 <- null 값을 받으면 에러가 나서 예외처리 사용.
@@ -455,7 +480,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                                 catch (Exception ignored) { }
 
                                 updateBalanceOnByNewData(afterData_detail, preCostId, afterCostId,
-                                        changeDate, changeWay, changeSort, changeAmount, changeContent, action, ms, "change");
+                                        changeDate, changeWay, changeSort, changeAmount, changeContent, action, ms, "change", goalToggle);
                             }
                         }
 
@@ -493,7 +518,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         catch (Exception ignored) { }
 
                         updateBalanceOnByNewData(afterData_today, preCostId, afterCostId,
-                                mDate.getText().toString(), wayName, mSort.getText().toString(), int_amount, mBody.getText().toString(), action, ms, "new");
+                                mDate.getText().toString(), wayName, mSort.getText().toString(), int_amount, mBody.getText().toString(), action, ms, "new", goalToggle);
 
                         if(callValue.equals("ListInAsset_add")){ setResult(RESULT_OK); }
                         finish();
@@ -564,7 +589,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     
 
     public void updateBalanceOnByNewData(List<Cost> afterData, int preCostId, int afterCostId,
-                                         String date, String wayName, String sortName, int int_amount, String body, String action, Long ms, String flag) {
+                                         String date, String wayName, String sortName, int int_amount, String body, String action, Long ms, String flag, boolean goalToggle) {
         AppDatabase db = AppDatabase.getInstance(this);
         int myBalance = -1;
 
@@ -573,7 +598,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
             else if (action.equals("expense")) { myBalance = db.dao().getCostBalance(preCostId) - int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms, goalToggle); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             db.dao().updateWayBal(myBalance, wayName);
@@ -584,7 +609,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance = db.dao().getCostBalance(preCostId) + int_amount; }  // 바로 이전 행의 잔액으로 현재 잔액을 계산
             else if (action.equals("expense")) { myBalance = db.dao().getCostBalance(preCostId) - int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms, goalToggle); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             if(action.equals("expense")) { int_amount = -int_amount; }      // 지출이면 이후 잔액들에 금액만큼 (-)를 해야함.
@@ -612,7 +637,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance += int_amount; }       // 현재 나의 잔액 구하는 부분
             else if (action.equals("expense")) { myBalance -= int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms, goalToggle); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             if(action.equals("expense")) { int_amount = -int_amount; }      // 지출이면 이후 잔액들에 금액만큼 (-)를 해야함.
@@ -633,7 +658,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             if (action.equals("income")) { myBalance = db.dao().getWayBalance(wayName) + int_amount; }
             else if (action.equals("expense")) { myBalance = db.dao().getWayBalance(wayName) - int_amount; }
 
-            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms); }
+            if(flag.equals("new")){ insertDataToCostTable(date, wayName, sortName, int_amount, body, myBalance, action, ms, goalToggle); }
             else if(flag.equals("change")){ updateCostData(int_amount, myBalance); }
 
             db.dao().updateWayBal(myBalance, wayName);
@@ -641,7 +666,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
 
-    private void insertDataToCostTable(String date, String wayName, String sortName, int amount, String body, int balance, String action, Long ms) {
+    private void insertDataToCostTable(String date, String wayName, String sortName, int amount, String body, int balance, String action, Long ms, boolean goalToggle) {
         AppDatabase db = AppDatabase.getInstance(this);
         db.dao().insertCost(
                 date,                   // 날짜
@@ -651,7 +676,9 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 body,                   // 내용
                 balance,                // 잔액
                 action,                 // 구분
-                ms                      // 수신시간(마이크로초)
+                ms,                     // 수신시간(마이크로초)
+                goalToggle,               // 목표금액 반영 여부
+                true                    // 수입or지출 반영 여부
         );
     }
 

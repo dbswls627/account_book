@@ -29,7 +29,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
     private TextView mWayName_top, mInfo;
     private EditText mAssetName, mWayName, mBalance, mMemo, mPhoneNumber, mDelimiter;
     private LinearLayout mLayout;
-    private String assetName, wayName, formatBalance, flag = "", division = "expense";
+    private String assetName, wayName, formatBalance, flag = "", division = "income";
     private RecyclerView mRV;
     private int balance, gap = 0;
     private AppDatabase db;
@@ -115,6 +115,14 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                 break;
 
             case R.id.tv_save_editWay:
+                Dialog dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_editway_modifybalance);
+
+                long now = System.currentTimeMillis();
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 hh:mm");
+                String processedNow = sdf.format(now);
+
                 int FK_assetId = db.dao().getAssetId(mAssetName.getText().toString());
 
                 String s = mBalance.getText().toString();
@@ -124,32 +132,21 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
 
                 try {
                     if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){      // Way 수정시
-                        if(balance != int_balance){     // 수단 잔액이 변경됐을 때~
-                            gap = balance - int_balance;
-                            if(gap < 0){            // 기존 수단 잔액보다 큰 금액으로 수정한 경우
-                                gap = -gap;
-                                division = "income";
-                            }
-                            long now = System.currentTimeMillis();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 hh:mm");
-                            String processedNow = sdf.format(now);
-
-                            db.dao().insertCost(
-                                    processedNow,
-                                    mWayName.getText().toString(),
-                                    "잔액수정",
-                                    gap,
-                                    "차액",
-                                    int_balance,
-                                    division,
-                                    0
-                            );
-                        }
-
                         if(mWayName.getText().toString().equals("(Auto)")){
                             Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
                             break;
                         }
+
+                        if(balance != int_balance){     // 수단 잔액이 변경됐을 때~
+                            gap = int_balance - balance;
+                            if(gap < 0){            // 기존 수단 잔액보다 작은 금액으로 수정한 경우
+                                gap = -gap;
+                                division = "expense";
+                            }
+
+                            showDialogOfReflection(dialog, processedNow, gap, int_balance);
+                        }
+
                         db.dao().updateWayData(
                                 FK_assetId,
                                 mWayName.getText().toString(),
@@ -163,6 +160,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                             db.dao().updateCostWayName(wayName, mWayName.getText().toString());
                         }
                     }
+
                     else if(flag.equals("new")){    // Way 추가시
                         if(mWayName.getText().toString().equals("(Auto)")){
                             Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -176,10 +174,9 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                                 mPhoneNumber.getText().toString(),
                                 mDelimiter.getText().toString()
                         );
-                    }
 
-                    finishForResult();
-                    fadeOutActivity();
+                        showDialogOfReflection(dialog, processedNow, int_balance, int_balance);
+                    }
 
                 }
                 catch (Exception e){
@@ -282,6 +279,72 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
             mLayout.setVisibility(View.GONE);
 
             return false;
+        });
+    }
+
+
+
+    @SuppressLint("SetTextI18n")
+    private void showDialogOfReflection(Dialog dialog, String processedNow, int gap, int int_balance){
+        dialog.show();
+
+        TextView mTitle, mInOrEx, mRefuse, mAccept;
+
+        mTitle = dialog.findViewById(R.id.InOrEx_title);
+        mInOrEx = dialog.findViewById(R.id.InOrEx);
+        mRefuse = dialog.findViewById(R.id.refuse_editWay);
+        mAccept = dialog.findViewById(R.id.accept_editWay);
+
+        if(division.equals("income")) {
+            mTitle.setText("수입 반영");
+            mInOrEx.setText("수입");
+        }
+        else if(division.equals("expense")){
+            mTitle.setText("지출 반영");
+            mInOrEx.setText("지출");
+        }
+
+        mRefuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.dao().insertCost(
+                        processedNow,       // 날짜
+                        mWayName.getText().toString(),  // 수단
+                        "잔액수정",           // 분류
+                        gap,                // 금액
+                        "차액",              // 내용
+                        int_balance,        // 잔액
+                        division,           // 구분
+                        0,                  // 문자 수신 마이크로초
+                        false,              // 목표금액 반영 여부
+                        false               // 수입or지출 반영 여부
+                );
+                dialog.dismiss();
+
+                finishForResult();
+                fadeOutActivity();
+            }
+        });
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.dao().insertCost(
+                        processedNow,       // 날짜
+                        mWayName.getText().toString(),  // 수단
+                        "잔액수정",           // 분류
+                        gap,                // 금액
+                        "차액",              // 내용
+                        int_balance,        // 잔액
+                        division,           // 구분
+                        0,                  // 문자 수신 마이크로초
+                        false,              // 목표금액 반영 여부
+                        true                // 수입or지출 반영 여부
+                );
+                dialog.dismiss();
+
+                finishForResult();
+                fadeOutActivity();
+            }
         });
     }
 

@@ -24,9 +24,9 @@ public interface sqlDao {
     @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
     void insertSort(String name, String division);
 
-    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms) " +
-            "VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms)")
-    void insertCost(String date, String FK_wayName, String sortName, int amount, String content, int balance, String division, long ms);
+    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms, forGaol, forInEx) " +
+            "VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms, :forGoal, :forInEx)")
+    void insertCost(String date, String FK_wayName, String sortName, int amount, String content, int balance, String division, long ms, boolean forGoal, boolean forInEx);
 
     @Query("INSERT INTO AutoSave(state) VALUES(:state)")
     void insertAutoState(Boolean state);
