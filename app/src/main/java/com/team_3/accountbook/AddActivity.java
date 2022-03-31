@@ -430,7 +430,14 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 String amount = mSum.getText().toString();
                 try { amount = amount.replaceAll(",", ""); }          // 금액의 쉼표(,) 제거 <- null 값을 받으면 에러가 나서 예외처리 사용.
                 catch (Exception ignored) { }
-                int int_amount = Integer.parseInt(amount);
+                int int_amount = 0;
+                try { int_amount = Integer.parseInt(amount); }
+                catch (Exception e){
+                    if(!mSum.getText().toString().isEmpty()){
+                        Toast.makeText(this, "금액에 숫자만 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
 
                 if (mDate.length() > 0 && mWay.length() > 0 && mSort.length() > 0 && mSum.length() > 0) {
                     if (callValue.equals("ListInAsset_modify")) {         // 기존 데이터 수정 - ListInAssetActivity 에서 왔을 때
@@ -440,6 +447,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         String changeWay = mWay.getText().toString(), initWay = costAll.getFK_wayName();
                         String changeSort = mSort.getText().toString(), initSort = costAll.getSortName();
                         int changeAmount = Integer.parseInt(amount), initAmount = costAll.getAmount();
+
                         String changeContent = mBody.getText().toString(), initContent = costAll.getContent();
 
                         if(!action.equals(initDivision) || !changeDate.equals(initDate) || !changeWay.equals(initWay) ||

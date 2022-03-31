@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -123,65 +124,96 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 hh:mm");
                 String processedNow = sdf.format(now);
 
-                int FK_assetId = db.dao().getAssetId(mAssetName.getText().toString());
-
                 String s = mBalance.getText().toString();
                 try { s = s.replaceAll(",", ""); }          // 금액의 쉼표(,) 제거 <- null 값을 받으면 에러가 나서 예외처리 사용.
                 catch (Exception ignored) { }
-                int int_balance = Integer.parseInt(s);
+                int int_balance = 0;
+                try { int_balance = Integer.parseInt(s); }
+                catch (Exception e){
+                    if(!mBalance.getText().toString().isEmpty()){
+                        Toast.makeText(this, "잔액에 숫자만 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
 
-                try {
-                    if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){      // Way 수정시
-                        if(mWayName.getText().toString().equals("(Auto)")){
-                            Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
+                if(!mAssetName.getText().toString().isEmpty() && !mWayName.getText().toString().isEmpty()){
+                    int FK_assetId = db.dao().getAssetId(mAssetName.getText().toString());
+                    boolean modifyBalance = true;
 
-                        if(balance != int_balance){     // 수단 잔액이 변경됐을 때~
-                            gap = int_balance - balance;
-                            if(gap < 0){            // 기존 수단 잔액보다 작은 금액으로 수정한 경우
-                                gap = -gap;
-                                division = "expense";
+                    try {
+                        if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){      // Way 수정시
+                            if(mWayName.getText().toString().equals("(Auto)")){
+                                Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                                break;
                             }
 
-                            showDialogOfReflection(dialog, processedNow, gap, int_balance);
+                            if(balance != int_balance){     // 수단 잔액이 변경됐을 때~
+                                modifyBalance = false;
+                                gap = int_balance - balance;
+                                if(gap < 0){            // 기존 수단 잔액보다 작은 금액으로 수정한 경우
+                                    gap = -gap;
+                                    division = "expense";
+                                }
+
+                                showDialogOfReflection(dialog, processedNow, gap, int_balance, FK_assetId);
+                            }
+
+                            if(modifyBalance){
+                                db.dao().updateWayData(
+                                        FK_assetId,
+                                        mWayName.getText().toString(),
+                                        int_balance,
+                                        mMemo.getText().toString(),
+                                        mPhoneNumber.getText().toString(),
+                                        mDelimiter.getText().toString(),
+                                        wayName
+                                );
+                                if(!wayName.equals(mWayName.getText().toString())){     // 수단명 변경시 수단명 update
+                                    db.dao().updateCostWayName(wayName, mWayName.getText().toString());
+                                }
+
+                                finishForResult();
+                                fadeOutActivity();
+                            }
                         }
 
-                        db.dao().updateWayData(
-                                FK_assetId,
-                                mWayName.getText().toString(),
-                                int_balance,
-                                mMemo.getText().toString(),
-                                mPhoneNumber.getText().toString(),
-                                mDelimiter.getText().toString(),
-                                wayName
-                        );
-                        if(!wayName.equals(mWayName.getText().toString())){     // 수단명 변경시 수단명 update
-                            db.dao().updateCostWayName(wayName, mWayName.getText().toString());
+                        else if(flag.equals("new")){    // Way 추가시
+                            if(mWayName.getText().toString().equals("(Auto)")){
+                                Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+
+                            try {
+                                if(Integer.parseInt(mBalance.getText().toString()) != 0){
+                                    modifyBalance = false;
+                                    showDialogOfReflection(dialog, processedNow, int_balance, int_balance, FK_assetId);
+                                }
+                            }
+                            catch (Exception ignore){  }
+
+                            if(modifyBalance){      // 새로운 수단 입력시 잔액이 null||0이 아닐 때 실행
+                                db.dao().insertWayAll(
+                                        mWayName.getText().toString(),
+                                        int_balance,
+                                        FK_assetId,
+                                        mMemo.getText().toString(),
+                                        mPhoneNumber.getText().toString(),
+                                        mDelimiter.getText().toString()
+                                );
+                                finishForResult();
+                                fadeOutActivity();
+                            }
                         }
+
                     }
-
-                    else if(flag.equals("new")){    // Way 추가시
-                        if(mWayName.getText().toString().equals("(Auto)")){
-                            Toast.makeText(this, "수단명 '(Auto)'는 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        db.dao().insertWayAll(
-                                mWayName.getText().toString(),
-                                int_balance,
-                                FK_assetId,
-                                mMemo.getText().toString(),
-                                mPhoneNumber.getText().toString(),
-                                mDelimiter.getText().toString()
-                        );
-
-                        showDialogOfReflection(dialog, processedNow, int_balance, int_balance);
+                    catch (Exception e){
+                        Toast.makeText(this, "중복된 수단명은 입력할 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
+                }
+                else{
+                    Toast.makeText(this, "자산과 수단명은 필수 입력사항입니다.", Toast.LENGTH_SHORT).show();
+                }
 
-                }
-                catch (Exception e){
-                    Toast.makeText(this, "중복된 수단명은 입력할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                }
 
                 break;
         }
@@ -285,7 +317,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
 
 
     @SuppressLint("SetTextI18n")
-    private void showDialogOfReflection(Dialog dialog, String processedNow, int gap, int int_balance){
+    private void showDialogOfReflection(Dialog dialog, String processedNow, int gap, int int_balance, int FK_assetId){
         dialog.show();
 
         TextView mTitle, mInOrEx, mRefuse, mAccept;
@@ -316,9 +348,33 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                         int_balance,        // 잔액
                         division,           // 구분
                         0,                  // 문자 수신 마이크로초
-                        false,              // 목표금액 반영 여부(false 고정)
+                        false,              // 목표금액 반영 여부  ※false 고정
                         false               // 수입or지출 반영 여부
                 );
+                if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){
+                    db.dao().updateWayData(
+                            FK_assetId,
+                            mWayName.getText().toString(),
+                            int_balance,
+                            mMemo.getText().toString(),
+                            mPhoneNumber.getText().toString(),
+                            mDelimiter.getText().toString(),
+                            wayName
+                    );
+                    if(!wayName.equals(mWayName.getText().toString())){     // 수단명 변경시 수단명 update
+                        db.dao().updateCostWayName(wayName, mWayName.getText().toString());
+                    }
+                }
+                else if(flag.equals("new")){
+                    db.dao().insertWayAll(
+                            mWayName.getText().toString(),
+                            int_balance,
+                            FK_assetId,
+                            mMemo.getText().toString(),
+                            mPhoneNumber.getText().toString(),
+                            mDelimiter.getText().toString()
+                    );
+                }
                 dialog.dismiss();
 
                 finishForResult();
@@ -340,6 +396,31 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                         false,              // 목표금액 반영 여부  ※false 고정
                         true                // 수입or지출 반영 여부
                 );
+                if(flag.equals("modify_LIA") || flag.equals("modify_AFE")){
+                    db.dao().updateWayData(
+                            FK_assetId,
+                            mWayName.getText().toString(),
+                            int_balance,
+                            mMemo.getText().toString(),
+                            mPhoneNumber.getText().toString(),
+                            mDelimiter.getText().toString(),
+                            wayName
+                    );
+                    if(!wayName.equals(mWayName.getText().toString())){     // 수단명 변경시 수단명 update
+                        db.dao().updateCostWayName(wayName, mWayName.getText().toString());
+                    }
+                }
+                else if(flag.equals("new")){
+                    db.dao().insertWayAll(
+                            mWayName.getText().toString(),
+                            int_balance,
+                            FK_assetId,
+                            mMemo.getText().toString(),
+                            mPhoneNumber.getText().toString(),
+                            mDelimiter.getText().toString()
+                    );
+                }
+
                 dialog.dismiss();
 
                 finishForResult();
