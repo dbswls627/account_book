@@ -212,16 +212,16 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c ORDER BY useDate desc, c.content ASC")
     List<Cost> getItemList();
 
-    @Query("SELECT * FROM Cost c  WHERE substr(useDate,0,14) = :date ORDER BY useDate DESC, c.content ASC, c.costId ASC")        // 날짜에 맞는 값을 정렬하여 리턴
+    @Query("SELECT * FROM Cost c  WHERE substr(useDate,0,14) = :date AND c.forInEx = 1 ORDER BY useDate DESC, c.content ASC, c.costId ASC")        // 날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getItemList(String date);
 
     @Query("SELECT * FROM Cost c  where substr(useDate,0,14) = :date ORDER BY useDate DESC, c.content ASC, c.costId ASC")        // 날짜에 맞는 값을 정렬하여 리턴
     List<Cost> getDate(String date);
 
-    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division")    // 날짜에 맞는  amount 값의 합
+    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 14) = :date AND division = :division AND c.forInEx = 1")    // day에 맞는 amount 값의 합
     String getAmountOfDay(String date, String division);
 
-    @Query("SELECT sum(amount) FROM Cost c  WHERE substr(useDate, 0, 10) = :date AND division = :division")    // 날짜에 맞는  amount 값의 합
+    @Query("SELECT sum(c.amount) FROM Cost c  WHERE substr(c.useDate, 0, 10) = :date AND c.division = :division AND c.forInEx = 1")    // month에 맞는 amount 값의 합
     Integer getAmountOfMonth(String date, String division);
 
 
@@ -234,13 +234,13 @@ public interface sqlDao {
     @Query("SELECT * FROM Cost c WHERE c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getCostInWayName(String wayName);
 
-    @Query("SELECT sum(amount) amount,sortName FROM Cost c WHERE substr(c.useDate,0,10) = :date  and division = :division group by sortName order by sum(amount)")
+    @Query("SELECT sum(amount) amount,sortName FROM Cost c WHERE substr(c.useDate,0,10) = :date  and division = :division AND c.forInEx = 1 group by sortName order by sum(amount)")
     List<graphDate> getGraphDate(String date,String division);
 
-    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and division = :division ORDER BY useDate DESC, c.content ASC, c.costId ASC")
+    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and division = :division AND c.forInEx = 1 ORDER BY useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getMDate(String date,String division);
 
-    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and sortName = :sortName  and division = :division ORDER BY useDate DESC, c.content ASC, c.costId ASC")
+    @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date and sortName = :sortName and division = :division AND c.forInEx = 1 ORDER BY useDate DESC, c.content ASC, c.costId ASC")
     List<Cost> getMDate(String date,String sortName,String division);
 
     @Query("SELECT * FROM Cost c WHERE substr(c.useDate,0,10) = :date AND c.FK_wayName = :wayName ORDER BY c.useDate DESC, c.content ASC, c.costId ASC")

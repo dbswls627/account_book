@@ -678,8 +678,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 balance,                // 잔액
                 action,                 // 구분
                 ms,                     // 수신시간(마이크로초)
-                goalToggle,               // 목표금액 반영 여부
-                true                    // 수입or지출 반영 여부
+                goalToggle,             // 목표금액 반영 여부
+                true                    // 수입or지출 반영 여부  ※wayBalance 수정시에만 반영 여부 선택함
         );
     }
 

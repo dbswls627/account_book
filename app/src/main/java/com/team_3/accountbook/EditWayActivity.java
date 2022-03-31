@@ -316,7 +316,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                         int_balance,        // 잔액
                         division,           // 구분
                         0,                  // 문자 수신 마이크로초
-                        false,              // 목표금액 반영 여부
+                        false,              // 목표금액 반영 여부(false 고정)
                         false               // 수입or지출 반영 여부
                 );
                 dialog.dismiss();
@@ -337,7 +337,7 @@ public class EditWayActivity extends AppCompatActivity implements WayAndSortAdap
                         int_balance,        // 잔액
                         division,           // 구분
                         0,                  // 문자 수신 마이크로초
-                        false,              // 목표금액 반영 여부
+                        false,              // 목표금액 반영 여부  ※false 고정
                         true                // 수입or지출 반영 여부
                 );
                 dialog.dismiss();
