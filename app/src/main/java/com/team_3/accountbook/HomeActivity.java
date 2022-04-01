@@ -3,11 +3,14 @@ package com.team_3.accountbook;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -33,7 +36,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements CalendarAdapter.OnItemClick {
     private static final int PERMISSIONS_REQUEST_READ_SMS = 100;
@@ -50,6 +55,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     BottomNavigationView bottom_menu;
     LocalDate selectedDate;                         // 날짜 변수
 
+    boolean permission = true;
 
     protected void onStart() {
         super.onStart();
@@ -90,13 +96,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         next = findViewById(R.id.toNextMonth);
         db = AppDatabase.getInstance(this);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                callPermission();
-            }
-        }, 1000);   // 1초 후 권한 요청이 실행됨.(바로 요청하면 요청이 씹힘. 딜레이를 줌으로 해결함)
 
         initialSetting();
 
@@ -142,22 +141,14 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         });
 
 
-    }
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                callPermission();
+            }
+        }, 1000);   // 1초 후 권한 요청이 실행됨.(바로 요청하면 요청이 씹힘. 딜레이를 줌으로 해결함)
 
-
-    public void onBackPressed() {
-        // ↓ 기존 뒤로가기 버튼의 기능을 막기위해 주석처리
-        //super.onBackPressed();
-
-        // 뒤로가기를 누르고 2초가 지났다면~
-        if(System.currentTimeMillis() > firstBackPressedTime + 2000) {
-            firstBackPressedTime = System.currentTimeMillis();
-            Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
-        }
-        // 뒤로가기 버튼을 누른지 2초가 안지났다면~
-        else if(System.currentTimeMillis() <= firstBackPressedTime + 2000) {
-            finish();
-        }
     }
 
 
@@ -408,6 +399,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     private void showDialogToMain(Dialog dialog){
+//        dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.show();
 
         TextView mNoBring, mBring;
@@ -453,6 +445,30 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                     Toast.makeText(getApplicationContext(), "숫자만 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+    }
+
+
+    private void dialogForPermission(Dialog dialog){
+        dialog.show();
+
+        TextView mRefuse, mAccept;
+
+        mRefuse = dialog.findViewById(R.id.refuse_permission);
+        mAccept = dialog.findViewById(R.id.accept_permission);
+
+        mRefuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPermission();
+                dialog.dismiss();
             }
         });
     }
@@ -512,19 +528,92 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     private void callPermission() {       // 문자 권한 얻기
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+//                && checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+//
+//            requestPermissions(
+//                    new String[]{Manifest.permission.READ_SMS},
+//                    PERMISSIONS_REQUEST_READ_SMS);
+//        } else {
+//            // 해당 로직으로 이동
+//        }
+        List<String> listPermissionsNeeded = new ArrayList<>();
 
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_SMS},
-                    PERMISSIONS_REQUEST_READ_SMS);
-        } else {
-            // 해당 로직으로 이동
+        int permissionCheck_READ = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
+        if(permissionCheck_READ == PackageManager.PERMISSION_DENIED){
+            listPermissionsNeeded.add(Manifest.permission.READ_SMS);
         }
-        String[] permissions = {Manifest.permission.RECEIVE_SMS};
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
-        if(permissionCheck == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(this, permissions, 1);
+
+        int permissionCheck_RECEIVE = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if(permissionCheck_RECEIVE == PackageManager.PERMISSION_DENIED){
+            listPermissionsNeeded.add(Manifest.permission.RECEIVE_SMS);
+        }
+
+        try {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
+        }
+        catch (Exception ignore){  }
+
+    }
+
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 1:
+                Map<String, Integer> perms = new HashMap<>();
+
+                perms.put(Manifest.permission.READ_SMS, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.RECEIVE_SMS, PackageManager.PERMISSION_GRANTED);
+
+                if(grantResults.length > 0) {      // 권한 요청이 1개 이상이었을 때~
+                    for (int i = 0; i < permissions.length; i++)
+                        perms.put(permissions[i], grantResults[i]);
+
+                    if(perms.get(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED         // 권한이 수락됐을 때~
+                            && perms.get(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
+
+                        Toast.makeText(this, "SMS 접근 권한 수락됨", Toast.LENGTH_SHORT).show();
+                    }
+                    else{       // 권한이 처음 거부됐을 때~
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS) ||
+                                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECEIVE_SMS)) {
+                            Dialog dialog = new Dialog(this);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setContentView(R.layout.dialog_permission);
+                            dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.round_dialog));
+
+                            dialogForPermission(dialog);
+                            break;
+
+                        }
+                        else {      // 권한 완전거부 상태(재요청 마저도 거절)
+                            Toast.makeText(this, "휴대폰 앱 설정에서 문자 접근 권한을 허용하세요.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                break;
+
+        }
+    }
+
+
+
+    public void onBackPressed() {
+        // ↓ 기존 뒤로가기 버튼의 기능을 막기위해 주석처리
+        //super.onBackPressed();
+
+        // 뒤로가기를 누르고 2초가 지났다면~
+        if(System.currentTimeMillis() > firstBackPressedTime + 2000) {
+            firstBackPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+        // 뒤로가기 버튼을 누른지 2초가 안지났다면~
+        else if(System.currentTimeMillis() <= firstBackPressedTime + 2000) {
+            finish();
         }
     }
 
