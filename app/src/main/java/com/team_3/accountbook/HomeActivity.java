@@ -149,6 +149,12 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             }
         }, 1000);   // 1초 후 권한 요청이 실행됨.(바로 요청하면 요청이 씹힘. 딜레이를 줌으로 해결함)
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED){
+            db.dao().updateAutoState(false);
+            mAutoState.setText("Auto-OFF");
+        }
+
     }
 
 
@@ -322,20 +328,32 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
                 break;
 
             case R.id.auto_home:
-                Dialog dialog1 = new Dialog(this);
-                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog1.setContentView(R.layout.dialog_autosave);
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED){
+                    Dialog dialog1 = new Dialog(this);
+                    dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog1.setContentView(R.layout.dialog_autosave);
 
-                showDialogOfAutoSave(dialog1);
+                    showDialogOfAutoSave(dialog1);
+                }
+                else{
+                    dialogForDeniedPermission("auto");
+                }
 
                 break;
 
             case R.id.message_home:
-                Dialog dialog2 = new Dialog(this);
-                dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog2.setContentView(R.layout.dialog_movetomain);
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED){
+                    Dialog dialog2 = new Dialog(this);
+                    dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog2.setContentView(R.layout.dialog_movetomain);
 
-                showDialogToMain(dialog2);
+                    showDialogToMain(dialog2);
+                }
+                else{
+                    dialogForDeniedPermission("bring");
+                }
 
                 break;
 
@@ -450,6 +468,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
 
+
     private void dialogForPermission(Dialog dialog){
         dialog.show();
 
@@ -468,6 +487,35 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             @Override
             public void onClick(View v) {
                 callPermission();
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+
+    private void dialogForDeniedPermission(String flag){
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_denied_permission);
+        dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.round_dialog));
+        dialog.show();
+
+        ImageView mDeniedImage = dialog.findViewById(R.id.deniedImage);
+        TextView mAccept = dialog.findViewById(R.id.accept_deniedPermission);
+        TextView mAutoOrBring = dialog.findViewById(R.id.autoOrBring);
+
+        if(flag.equals("auto")){
+            mAutoOrBring.setText("자동저장");
+        }
+        else if(flag.equals("bring")){
+            mDeniedImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_email_24));
+            mAutoOrBring.setText("가져오기");
+        }
+
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dialog.dismiss();
             }
         });
@@ -549,10 +597,9 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             listPermissionsNeeded.add(Manifest.permission.RECEIVE_SMS);
         }
 
-        try {
+        if(!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
         }
-        catch (Exception ignore){  }
 
     }
 
@@ -590,7 +637,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
 
                         }
                         else {      // 권한 완전거부 상태(재요청 마저도 거절)
-                            Toast.makeText(this, "휴대폰 앱 설정에서 문자 접근 권한을 허용하세요.", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(this, "앱 설정에서 SMS 접근 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
