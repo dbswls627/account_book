@@ -118,7 +118,7 @@
                     android:text="ON/OFF"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/help"
+                android:id="@+id/test"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -127,20 +127,46 @@
                 android:paddingTop="25dp"
                 android:paddingBottom="25dp">
                 <ImageView
+                    android:id="@+id/permissionImage_setting"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:tint="@color/hardDarkGray"
-                    android:src="@drawable/ic_baseline_help_24"
+                    android:src="@drawable/ic_baseline_admin_panel_settings_24"
                     tools:ignore="UseAppTint" />
                 <TextView
+                    android:id="@+id/permissionText_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/hardDarkGray"
-                    android:text="도움말"/>
+                    android:text="권한설정"/>
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/help"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:onClick="mOnClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:tint="@color/hardDarkGray"
+                android:src="@drawable/ic_baseline_help_24"
+                tools:ignore="UseAppTint" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/hardDarkGray"
+                android:text="도움말"/>
         </LinearLayout>
 
 

@@ -1,14 +1,18 @@
 package com.team_3.accountbook;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,14 +20,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SettingActivity extends AppCompatActivity {
-    TextView add,list,sqlTest,wear,amountGoal_text;
+    ImageView mPermissionImage;
+    TextView add , list, sqlTest, wear, amountGoal_text, mPermissionText;
     Intent intent;
     AppDatabase db;
     BottomNavigationView bottom_menu;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setPermissionSettingView();
+    }
+
     @Override
     protected void onStart() {
 
@@ -42,6 +56,8 @@ public class SettingActivity extends AppCompatActivity {
         list = findViewById(R.id.list);
         sqlTest = findViewById(R.id.sqlTest);
         amountGoal_text = findViewById(R.id.amountGoal_text);
+        mPermissionImage = findViewById(R.id.permissionImage_setting);
+        mPermissionText = findViewById(R.id.permissionText_setting);
 
 
         list.setOnClickListener((view)->{
@@ -88,6 +104,10 @@ public class SettingActivity extends AppCompatActivity {
             }
             return true;
         });
+
+
+        setPermissionSettingView();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -220,6 +240,25 @@ public class SettingActivity extends AppCompatActivity {
                 Toast.makeText(this, "도움말", Toast.LENGTH_SHORT).show();
 
                 break;
+
+            case R.id.test:
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED){
+                    startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + BuildConfig.APPLICATION_ID)));
+                }
+
+                break;
+        }
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setPermissionSettingView() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED){
+            mPermissionImage.setColorFilter(getColor(R.color.gray));
+            mPermissionText.setTextColor(getColor(R.color.gray));
         }
     }
 

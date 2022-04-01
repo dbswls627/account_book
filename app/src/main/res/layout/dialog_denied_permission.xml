@@ -51,7 +51,7 @@
             android:layout_marginTop="3dp"
             android:textColor="@color/black"
             android:textSize="13dp"
-            android:text="'핸드폰 설정 - 앱 설정'에서 SMS 접근 권한을 허용한 후"/>
+            android:text="'설정'탭의 권한설정으로 SMS 접근 권한을 허용한 후"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
