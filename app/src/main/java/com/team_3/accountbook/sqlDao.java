@@ -224,6 +224,9 @@ public interface sqlDao {
     @Query("SELECT sum(c.amount) FROM Cost c  WHERE substr(c.useDate, 0, 10) = :date AND c.division = :division AND c.forInEx = 1")    // month에 맞는 amount 값의 합
     Integer getAmountOfMonth(String date, String division);
 
+    @Query("SELECT sum(c.amount) FROM Cost c  WHERE substr(c.useDate, 0, 10) = :date AND c.division = :division AND c.forInEx = 1 AND c.forGoal=1")    // month에 맞는 amount 값의 합
+    Integer getAmountOfMonthForWatch(String date, String division);
+
 
     @Query("SELECT a.assetName, w.wayName, w.wayBalance FROM asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
     List<AssetNameWayNameAndBalance> getAnWnWb();

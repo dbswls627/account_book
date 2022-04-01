@@ -24,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -549,7 +548,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     Toast.makeText(this, "모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 ListenerService LS = new ListenerService();
-                LS.bluetooth(this, String.valueOf(db.dao().getAmountOfMonth(LS.monthYearFromDate(LocalDate.now()), "expense")));
+                LS.bluetooth(this, String.valueOf(db.dao().getAmountOfMonthForWatch(LS.monthYearFromDate(LocalDate.now()), "expense")));
                 break;
 
             case R.id.tv_delete:
@@ -739,7 +738,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 dialog.dismiss();
                 updateBalanceOnByDelete(costAll.getUseDate(), costAll.getFK_wayName(), costAll.getAmount(), "delete");
                 ListenerService LS = new ListenerService();
-                LS.bluetooth(AddActivity.this, String.valueOf(db.dao().getAmountOfMonth(LS.monthYearFromDate(LocalDate.now()), "expense")));
+                LS.bluetooth(AddActivity.this, String.valueOf(db.dao().getAmountOfMonthForWatch(LS.monthYearFromDate(LocalDate.now()), "expense")));
                 setResult(RESULT_OK);
                 finish();
                 overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)

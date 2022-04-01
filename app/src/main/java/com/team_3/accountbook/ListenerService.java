@@ -46,7 +46,7 @@ public class ListenerService extends WearableListenerService {
 
             selectedDate = LocalDate.now();
 
-            bluetooth(this, String.valueOf(db.dao().getAmountOfMonth(monthYearFromDate(LocalDate.now()), "expense")));
+            bluetooth(this, String.valueOf(db.dao().getAmountOfMonthForWatch(monthYearFromDate(LocalDate.now()), "expense")));
 
         }
         else {
