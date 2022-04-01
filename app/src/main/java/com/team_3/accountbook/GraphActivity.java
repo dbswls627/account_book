@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class GraphActivity extends AppCompatActivity {
     BottomNavigationView bottom_menu;
@@ -111,6 +112,7 @@ public class GraphActivity extends AppCompatActivity {
                 }
                 monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
                 barChartFragment.setChart(monthYearFromYear(selectedYear),halfYear);
+                barChartFragment.setList((new ArrayList<Cost>())) ; //빈리스트 띄우기
             }
         });
 
@@ -129,6 +131,7 @@ public class GraphActivity extends AppCompatActivity {
                 }
                 monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
                 barChartFragment.setChart(monthYearFromYear(selectedYear),halfYear);
+                barChartFragment.setList((new ArrayList<Cost>())); //빈리스트 띄우기
             }
         });
 

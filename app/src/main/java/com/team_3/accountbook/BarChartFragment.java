@@ -1,14 +1,18 @@
 package com.team_3.accountbook;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -17,7 +21,11 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,12 +35,17 @@ public class BarChartFragment extends Fragment {
     BarChart barChart;
     List<BarEntry> barEntries = new ArrayList<>();
     String YYYY;
+
+    String MM;
+    RecyclerView rv;
     String halfYear;
-    ArrayList<Integer> amountList = new ArrayList<>(); // ArrayList 선언
+    ArrayList<String> xAxisValues;
     Context context;
     public BarChartFragment(String YYYY) {
         // Required empty public constructor
         this.YYYY = YYYY;
+
+
     }
     public void setDate(String date,String halfYear){
         YYYY = date;
@@ -40,15 +53,19 @@ public class BarChartFragment extends Fragment {
     }
 
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        context = container.getContext();
         View view = inflater.inflate(R.layout.fragment_bar_chart, container, false);
         db = AppDatabase.getInstance(container.getContext());
 
+        rv = (view).findViewById(R.id.rv);
         barChart = view.findViewById(R.id.barchart);
+
         barChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
         barChart.setTouchEnabled(true);
         barChart.setScaleEnabled(false);    //확대하지 못하게 하기
@@ -58,23 +75,26 @@ public class BarChartFragment extends Fragment {
         Legend l = barChart.getLegend();
         l.setEnabled(false);       //그래프 목록 표시 비활성화
 
+        MM = LocalDate.now().getMonthValue() +"월";
+
         setChart(YYYY,halfYear);
 
-       /* barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+        /**클릭 이벤트*/
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Log.d("TEST", String.valueOf(barEntries.get((int) h.getX())));
-                Log.d("TEST", String.valueOf(e));
-                Log.d("TEST",h+"");
-                Log.d("TEST",h.getY()+"");
+                MM = xAxisValues.get((int) h.getX());
 
+                Log.d("TEST",YYYY);
+                Log.d("TEST",halfYear);
+                setChart(YYYY,halfYear);
             }
 
             @Override
             public void onNothingSelected() {
-
+                setList((new ArrayList<Cost>()));       //빈리스트
             }
-        });*/
+        });
 
         return view;
 
@@ -82,8 +102,12 @@ public class BarChartFragment extends Fragment {
 
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setChart(String YYYY,String halfYear) {
+        if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
+        this.YYYY = YYYY;
+        this.halfYear = halfYear;
         int mon = 1;
         if (halfYear.equals(" 상반기")){ mon = 1;}
         else if (halfYear.equals(" 하반기")){ mon = 7;}
@@ -99,11 +123,13 @@ public class BarChartFragment extends Fragment {
             }
         }
 
+        setList((ArrayList<Cost>) db.dao().getMDate(YYYY+" "+MM, "expense"));
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
         barDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);   //비율맞추기 1
         /** X축 글씨*/
-        List<String> xAxisValues = new ArrayList<>(Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월","7월", "8월", "9월", "10월", "11월", "12월"));
+
+        xAxisValues = new ArrayList<>(Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월","7월", "8월", "9월", "10월", "11월", "12월"));
         barChart.getAxisLeft().setEnabled(false);       //y축 왼쪽 안뜨게
 
         XAxis xAxis = barChart.getXAxis();              //x축
@@ -134,6 +160,17 @@ public class BarChartFragment extends Fragment {
         barChart.invalidate();  //다시그리기
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void setList(ArrayList<Cost> arrayList) {
+        ArrayList<String> dateArray = new ArrayList<>();        // 중복 제거한 날짜(yyyy년 MM월 dd일)만 담는 리스트 (adapter2로 넘겨주기 위함)
+        for (Cost cost : arrayList) {
+            if (!dateArray.contains(cost.getUseDate().substring(0, 14))) {
+                dateArray.add(cost.getUseDate().substring(0, 14));
+            }
+        }
+        rv.setAdapter(new adapter2(context, arrayList, dateArray));
+        rv.setLayoutManager(new LinearLayoutManager(context));
+        Log.d("TEST",MM);
+    }
 
 }

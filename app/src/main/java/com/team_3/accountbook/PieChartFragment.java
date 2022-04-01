@@ -73,6 +73,7 @@ public class PieChartFragment extends Fragment {
         l.setEnabled(false);       //그래프 목록 표시 비활성화
         //pieChart.setCenterText("TEST");   //가운데 글씨
         //pieChart.setHoleColor(Color.WHITE);//가운데 구멍 색
+                    /** 차트 클릭 이벤트*/
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
