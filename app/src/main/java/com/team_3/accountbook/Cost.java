@@ -15,7 +15,7 @@ public class Cost {
     private String division;        // 구분
     private String FK_wayName;      // 수단명(외래키)
     private long ms;                // 문자 수신 마이크로초
-    private boolean forGaol;        // 목표금액 반영 여부
+    private boolean forGoal;        // 목표금액 반영 여부
     private boolean forInEx;        // 수입or지출 반영 여부
 
     public Cost(int costId, int amount, String content, String useDate, int balance, String sortName, String division, String FK_wayName, long ms) {
@@ -102,12 +102,12 @@ public class Cost {
         this.ms = ms;
     }
 
-    public boolean isForGaol() {
-        return forGaol;
+    public boolean isForGoal() {
+        return forGoal;
     }
 
-    public void setForGaol(boolean forGaol) {
-        this.forGaol = forGaol;
+    public void setForGoal(boolean forGoal) {
+        this.forGoal = forGoal;
     }
 
     public boolean isForInEx() {

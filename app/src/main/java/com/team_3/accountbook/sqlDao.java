@@ -24,7 +24,7 @@ public interface sqlDao {
     @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
     void insertSort(String name, String division);
 
-    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms, forGaol, forInEx) " +
+    @Query("INSERT INTO Cost(useDate, FK_wayName, sortName, amount, content, balance, division, ms, forGoal, forInEx) " +
             "VALUES(:date, :FK_wayName, :sortName, :amount, :content, :balance, :division, :ms, :forGoal, :forInEx)")
     void insertCost(String date, String FK_wayName, String sortName, int amount, String content, int balance, String division, long ms, boolean forGoal, boolean forInEx);
 
@@ -52,8 +52,8 @@ public interface sqlDao {
     void update_NextCostBal(int amount, int costId);
 
     @Query("UPDATE Cost SET useDate = :useDate, FK_wayName = :wayName, sortName = :sortName, " +
-                            "amount = :amount, balance = :balance, content = :content, division = :division, ms = :ms WHERE costId = :costId")
-    void update_CostData(String useDate, String wayName, String sortName, int amount, int balance, String content, String division, long ms, int costId);
+                            "amount = :amount, balance = :balance, content = :content, division = :division, ms = :ms, forGoal = :forGoal WHERE costId = :costId")
+    void update_CostData(String useDate, String wayName, String sortName, int amount, int balance, String content, String division, long ms, boolean forGoal, int costId);
 
 
     @Query("UPDATE Way " +

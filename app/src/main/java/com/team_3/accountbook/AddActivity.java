@@ -101,6 +101,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             myCostId = getIntent().getIntExtra("costId", -1);
             costAll = db.dao().getCostAllOfCostId(myCostId);
 
+            goalToggle = costAll.isForGoal();
             action = costAll.getDivision();
             setColorOfDivision(action);
 
@@ -109,6 +110,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSort.setText(costAll.getSortName());
             mSum.setText(costAll.getAmount() + "");
             mBody.setText(costAll.getContent());
+            mSwitch.setChecked(goalToggle);
 
             mSave.setVisibility(View.GONE);
             mDelete.setVisibility(View.VISIBLE);
@@ -129,6 +131,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             else{ mWay.setText(getIntent().getStringExtra("way")); }                        // 저장된 번호의 문자이면 저장된 번호의 수단 이름을 setText
             mBody.setText(getIntent().getStringExtra("body"));
             mSum.setText(String.valueOf(getIntent().getIntExtra("amount", 0)));
+            mSwitch.setChecked(true);
 
             setColorOfDivision(action);
         }
@@ -376,6 +379,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     
 
+    @SuppressLint("NonConstantResourceId")
     public void mOnClick(View v) {
         switch (v.getId()) {
             case R.id.toBack_add:
@@ -390,6 +394,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 break;
 
             case R.id.tv_income:
+                Log.d("income", "click");
                 if (!checkIncome) {
                     setColorOfDivision("income");
                 }
@@ -397,6 +402,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
             case R.id.tv_expense:
                 //mRV_WayAndSort.setVisibility(View.GONE);    // 자산 리스트 제거 <-- 입력하던 곳 rv는 띄워줘야 한다고 생각
+                Log.d("expense", "click");
                 if (!checkExpense) {
                     setColorOfDivision("expense");
                 }
@@ -420,9 +426,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 break;
 
             case R.id.toggleButton:
-                if(goalToggle){ goalToggle = false; }
-                else { goalToggle = true; }
+                goalToggle = !goalToggle;
 
+                mSave.setVisibility(View.VISIBLE);
+                mDelete.setVisibility(View.GONE);
 
                 break;
 
@@ -447,22 +454,26 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                         String changeWay = mWay.getText().toString(), initWay = costAll.getFK_wayName();
                         String changeSort = mSort.getText().toString(), initSort = costAll.getSortName();
                         int changeAmount = Integer.parseInt(amount), initAmount = costAll.getAmount();
+                        boolean initForGoal = costAll.isForGoal();
 
                         String changeContent = mBody.getText().toString(), initContent = costAll.getContent();
 
-                        if(!action.equals(initDivision) || !changeDate.equals(initDate) || !changeWay.equals(initWay) ||
-                                !changeSort.equals(initSort) || changeAmount != initAmount || !changeContent.equals(initContent)){          // 날짜/자산/금액/내용 중 하나라도 바뀌면 실행
-                            if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) &&
-                                    changeSort.equals(initSort) && changeAmount != initAmount && changeContent.equals(initContent)) {       // 값만 변경시~
+                        if(!action.equals(initDivision) || !changeDate.equals(initDate) || !changeWay.equals(initWay) || !changeSort.equals(initSort)
+                                || changeAmount != initAmount || !changeContent.equals(initContent) || goalToggle != initForGoal){          // 날짜/자산/금액/내용 중 하나라도 바뀌면 실행
+                            if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) && changeSort.equals(initSort)
+                                    && changeAmount != initAmount && changeContent.equals(initContent) && goalToggle == initForGoal) {       // 값만 변경시~
 
                                 updateBalanceOnByDelete(initDate, changeWay, changeAmount, "onlyMoney");
 
                             }
-                            else if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) &&
-                                    !changeSort.equals(initSort) && changeAmount == initAmount && changeContent.equals(initContent)){       //
-                                Log.d("onlySort", "yes");
+                            else if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) && !changeSort.equals(initSort)
+                                    && changeAmount == initAmount && changeContent.equals(initContent) && goalToggle == initForGoal){       // 분류만 변경시~
                                 updateCostData(initAmount, costAll.getBalance());
 
+                            }
+                            else if(action.equals(initDivision) && changeDate.equals(initDate) && changeWay.equals(initWay) && changeSort.equals(initSort)
+                                    && changeAmount == initAmount && changeContent.equals(initContent) && goalToggle != initForGoal){       // 목표금액 반영 여부만 변경시~
+                                updateCostData(initAmount, costAll.getBalance());
                             }
 
                             else{           // 값만 변경을 제외한 모든 경우
@@ -702,6 +713,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 mBody.getText().toString(),         // 내용
                 action,                             // 구분(수입/지출)
                 costAll.getMs(),                    // ms
+                goalToggle,                         // 목표금액 반영 여부
                 myCostId                            // 업데이트 행의 costId
         );
     }
