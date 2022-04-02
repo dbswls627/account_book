@@ -89,7 +89,10 @@ public class MyTileService extends TileService {
     }
     @SuppressLint("WrongConstant")
     private LayoutElementBuilders.LayoutElement myLayout(GoalProgress amountProgress, GoalProgress dateProgress) {
-        int amount = Integer.parseInt(db.dao().get("amount"));
+        int amount =0;
+        try {
+            amount = Integer.parseInt(db.dao().get("amount"));
+        }catch (Exception e){}
         LocalDate date = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(date);
 
@@ -185,7 +188,7 @@ public class MyTileService extends TileService {
                         new LayoutElementBuilders.Column.Builder()
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
-                                        .setText(myFormatter.format(Integer.parseInt(db.dao().get("amount"))))
+                                        .setText(myFormatter.format(amount))
                                         .build()
                                 )
                                 .addContent(new Text.Builder()              //텍스트
