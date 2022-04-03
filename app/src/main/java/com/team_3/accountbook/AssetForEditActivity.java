@@ -26,6 +26,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
     private Intent intent;
     private String wayName = "";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +63,8 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
 
     @Override
-    public void listItemClick(String wayName2) {
-        this.wayName = wayName2;
+    public void listItemClick(String name) {
+        this.wayName = name;
 
         Intent intent = new Intent(this, EditWayActivity.class);
         intent.putExtra("wayName", wayName);
@@ -100,6 +101,8 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
         mAssetRV.setAdapter(new AssetOutAdapter(ANWNList, assetNameList, this));
         mAssetRV.setLayoutManager(new LinearLayoutManager(this));
+
+
     }
 
 
@@ -136,6 +139,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
     public void onBackPressed() {
         setResult(RESULT_OK);
         super.onBackPressed();
+
         overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 }

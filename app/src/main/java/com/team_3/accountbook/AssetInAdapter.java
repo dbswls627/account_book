@@ -1,12 +1,11 @@
 package com.team_3.accountbook;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,22 +14,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomViewHolder>{
     private DecimalFormat myFormatter = new DecimalFormat("###,###");
     private ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances;
+    private List<String> assetNameList;
     private Context context;
     private OnItemClickInAssetAc mClickInAssetAc;
     private AppDatabase db;
     public interface OnItemClickInAssetAc{
-        void listItemClick(String wayName);
+        void listItemClick(String name);
     }
 
 
 
-    public AssetInAdapter(ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances, OnItemClickInAssetAc mClickInAssetAc) {
+    public AssetInAdapter(ArrayList<AssetNameWayNameAndBalance> wayNameAndBalances, OnItemClickInAssetAc mClickInAssetAc, Context context) {
         this.wayNameAndBalances = wayNameAndBalances;
         this.mClickInAssetAc = mClickInAssetAc;
+        this.context = context;
+    }
+
+    public AssetInAdapter(List<String> assetNameList, OnItemClickInAssetAc mClickInAssetAc, Context context) {
+        this.assetNameList = assetNameList;
+        this.mClickInAssetAc = mClickInAssetAc;
+        this.context = context;
     }
 
 
@@ -47,6 +55,9 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
         }
         else if(context instanceof AssetForEditActivity){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_wayinasset_foredit, parent, false);
+        }
+        else if(context instanceof EditAssetActivity){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_edit_asset, parent, false);
         }
 
         AssetInAdapter.CumstomViewHolder holder = new AssetInAdapter.CumstomViewHolder(view);
@@ -83,14 +94,35 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
                 mClickInAssetAc.listItemClick(holder.mWayName_edit.getText().toString());
             });
         }
+        else if(context instanceof EditAssetActivity){
+            holder.mAssetName.setText(assetNameList.get(position));
+
+            holder.mAssetLayout.setOnClickListener(View -> {
+                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString());
+            });
+            holder.mDeleteAsset.setOnClickListener(View -> {
+                Toast.makeText(context, "삭제 기능", Toast.LENGTH_SHORT).show();
+//                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString());
+            });
+        }
 
 
     }
 
 
+    // 한가지 알아낸 사실: 어댑터의 getItemCount() 메소드는 onCreateViewHolder() 메소드보다 먼저 실행된다.
     @Override
     public int getItemCount() {
-        return wayNameAndBalances.size();
+        int listSize = 0;
+
+        if(context instanceof EditAssetActivity){
+            listSize = assetNameList.size();
+        }
+        else if(context instanceof AssetsActivity || context instanceof AssetForEditActivity){
+            listSize = wayNameAndBalances.size();
+        }
+
+        return listSize;
     }
 
 
@@ -99,12 +131,20 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
         private ImageView mExistAutoData;
         private TextView mWayName_edit;
 
+        private LinearLayout mAssetLayout;
+        private TextView mAssetName;
+        private ImageView mDeleteAsset;
+
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
             mWayName = itemView.findViewById(R.id.tv_wayNameInAsset);
             mWayBalance = itemView.findViewById(R.id.tv_wayBalance);
             mExistAutoData = itemView.findViewById(R.id.existAutoData_way);
             mWayName_edit = itemView.findViewById(R.id.tv_wayNameInAsset2);
+
+            mAssetLayout = itemView.findViewById(R.id.goTo_editForAsset);
+            mAssetName = itemView.findViewById(R.id.tv_editAsset);
+            mDeleteAsset = itemView.findViewById(R.id.deleteAsset);
         }
     }
 }

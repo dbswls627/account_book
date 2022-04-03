@@ -285,6 +285,9 @@ public interface sqlDao {
     @Query("SELECT w.notiAutoData FROM Way w WHERE w.wayName = :wayName")
     Boolean getWayNotiState(String wayName);
 
+    @Query("SELECT a.assetName FROM Asset a WHERE a.assetName <> '자동저장'")
+    List<String> getAssetName();
+
 
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")

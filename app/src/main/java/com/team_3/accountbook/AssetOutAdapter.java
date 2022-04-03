@@ -54,7 +54,7 @@ public class AssetOutAdapter extends RecyclerView.Adapter<AssetOutAdapter.Cumsto
 
         holder.mAssetNameInRV.setText(assetNameList.get(position));
 
-        holder.mSortInWay.setAdapter(new AssetInAdapter(wayNameAndBalances, (AssetInAdapter.OnItemClickInAssetAc) context));
+        holder.mSortInWay.setAdapter(new AssetInAdapter(wayNameAndBalances, (AssetInAdapter.OnItemClickInAssetAc) context, context));
         holder.mSortInWay.setLayoutManager(new LinearLayoutManager(context));
     }
 

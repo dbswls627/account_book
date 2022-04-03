@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="com.samsung.rcs.im.READ_PERMISSION"/>
+    <uses-permission android:name="com.samsung.rcs.im.READ_PERMISSION" />
+
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
@@ -13,6 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Accountbook">
+        <activity
+            android:name=".EditItemNameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditAssetActivity"
+            android:exported="false" />
         <activity
             android:name=".AssetForEditActivity"
             android:exported="false" />
@@ -53,16 +60,17 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
-            android:parentActivityName=".HomeActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity"/>
+                android:value=".HomeActivity" />
         </activity>
 
         <meta-data
@@ -95,15 +103,16 @@
         </receiver>
         <receiver
             android:name=".rcsReceiver"
-            android:permission="com.samsung.rcs.permission.RCS_APP_PERMISSION"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:permission="com.samsung.rcs.permission.RCS_APP_PERMISSION">
             <intent-filter>
-                <category android:name="com.samsung.rcs.framework.instantmessaging.category.ACTION"/>
-                <category android:name="com.samsung.rcs.framework.instantmessaging"/>
-                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_CHAT_INVITATION"/>
-                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_PARTICIPANT_INSERTED"/>
-                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_PARTICIPANT_UPDATED"/>
+                <category android:name="com.samsung.rcs.framework.instantmessaging.category.ACTION" />
+                <category android:name="com.samsung.rcs.framework.instantmessaging" />
+
+                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_CHAT_INVITATION" />
+                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_PARTICIPANT_INSERTED" />
+                <action android:name="com.samsung.rcs.framework.instantmessaging.action.RECEIVE_PARTICIPANT_UPDATED" />
             </intent-filter>
         </receiver>
     </application>

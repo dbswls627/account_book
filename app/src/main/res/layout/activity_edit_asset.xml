@@ -19,7 +19,7 @@
             android:layout_height="50dp"
             android:background="@color/green">
             <ImageView
-                android:id="@+id/toBack_assetFotEdit"
+                android:id="@+id/toBack_editAsset"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -34,14 +34,14 @@
                 android:layout_gravity="center"
                 android:textColor="@color/white"
                 android:textSize="15dp"
-                android:text="수단설정" />
+                android:text="자산설정" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/addWay"
+                    android:id="@+id/addAsset"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="right"
@@ -56,7 +56,7 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_AssetAndWay2"
+            android:id="@+id/rv_Asset"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
