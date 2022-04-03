@@ -43,8 +43,9 @@
 
         <ImageView
             android:id="@+id/deleteAsset"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="14dp"
             android:src="@drawable/ic_baseline_delete_forever_24"
