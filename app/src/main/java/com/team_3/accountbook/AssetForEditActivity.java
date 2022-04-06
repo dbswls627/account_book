@@ -63,7 +63,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
 
     @Override
-    public void listItemClick(String name) {
+    public void listItemClick(String name, String doFlag) {
         this.wayName = name;
 
         Intent intent = new Intent(this, EditWayActivity.class);

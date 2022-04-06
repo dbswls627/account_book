@@ -29,14 +29,7 @@
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:textSize="15dp"
-            android:text="자산|분류" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:textSize="15dp"
-            android:text="명 수정" />
+            android:text="자산|분류 수정|추가" />
     </LinearLayout>
 
     <LinearLayout

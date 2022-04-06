@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="330dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white">
@@ -8,18 +8,16 @@
         android:id="@+id/deleteMassage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="35dp"
         android:layout_marginBottom="7dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
         android:textColor="@color/black"
         android:text="해당 내역이 사라집니다."/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="35dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
         android:textColor="@color/black"
         android:text="삭제하시겠습니까?"/>
 

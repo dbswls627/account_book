@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditItemNameActivity extends AppCompatActivity {
+    private TextView mAssetOrSort;
     private EditText mItemName;
     private AppDatabase db;
+    private String itemName;
     private String flag;
 
     @Override
@@ -17,12 +20,15 @@ public class EditItemNameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item_name);
 
+        mAssetOrSort = findViewById(R.id.assetOrSort);
         mItemName = findViewById(R.id.name_editItemName);
         db = AppDatabase.getInstance(this);
 
-        String itemName = getIntent().getStringExtra("itemName");
+        itemName = getIntent().getStringExtra("itemName");
         flag = getIntent().getStringExtra("flag");
 
+        if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정"); }
+        else if(flag.equals("new_assetName")){ mAssetOrSort.setText("자산 추가"); }
         mItemName.setText(itemName);
 
     }
@@ -44,10 +50,12 @@ public class EditItemNameActivity extends AppCompatActivity {
 
             case R.id.save_editItemName:
                 if(flag.equals("modify_assetName")){
-                    Toast.makeText(this, "수정 자산명 저장", Toast.LENGTH_SHORT).show();
+                    db.dao().updateAsset(mItemName.getText().toString(), itemName);
+                    closeAnimation();
                 }
                 else if(flag.equals("new_assetName")){
-                    Toast.makeText(this, "새로운 자산명 저장", Toast.LENGTH_SHORT).show();
+                    db.dao().insertAsset(mItemName.getText().toString());
+                    closeAnimation();
                 }
 
 
@@ -57,16 +65,23 @@ public class EditItemNameActivity extends AppCompatActivity {
 
 
 
-    @Override
-    public void onBackPressed() {
+    private void closeAnimation(){
         setResult(RESULT_OK);
-        super.onBackPressed();
-
+        finish();
         if(flag.equals("modify_assetName")){
             overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         }
         else if(flag.equals("new_assetName")){
             overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         }
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        closeAnimation();
     }
 }

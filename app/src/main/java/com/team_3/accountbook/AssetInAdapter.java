@@ -24,7 +24,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
     private OnItemClickInAssetAc mClickInAssetAc;
     private AppDatabase db;
     public interface OnItemClickInAssetAc{
-        void listItemClick(String name);
+        void listItemClick(String name, String doFlag);
     }
 
 
@@ -56,7 +56,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
         else if(context instanceof AssetForEditActivity){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_wayinasset_foredit, parent, false);
         }
-        else if(context instanceof EditAssetActivity){
+        else if(context instanceof EditAssetOrSortActivity){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_edit_asset, parent, false);
         }
 
@@ -84,25 +84,24 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
                 if(db.dao().getWayNotiState(wayName)){     // way 의 자동저장 데이터가 있으면 알림을 지우게 함.
                     db.dao().updateWayNotiState(wayName, false);
                 }
-                mClickInAssetAc.listItemClick(wayName);
+                mClickInAssetAc.listItemClick(wayName, "");
             });
         }
         else if(context instanceof AssetForEditActivity){
             holder.mWayName_edit.setText(wayNameAndBalances.get(position).getWayName());
 
             holder.itemView.setOnClickListener(View -> {
-                mClickInAssetAc.listItemClick(holder.mWayName_edit.getText().toString());
+                mClickInAssetAc.listItemClick(holder.mWayName_edit.getText().toString(), "");
             });
         }
-        else if(context instanceof EditAssetActivity){
+        else if(context instanceof EditAssetOrSortActivity){
             holder.mAssetName.setText(assetNameList.get(position));
 
             holder.mAssetLayout.setOnClickListener(View -> {
-                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString());
+                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString(), "click");
             });
             holder.mDeleteAsset.setOnClickListener(View -> {
-                Toast.makeText(context, "삭제 기능", Toast.LENGTH_SHORT).show();
-//                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString());
+                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString(), "delete");
             });
         }
 
@@ -115,7 +114,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
     public int getItemCount() {
         int listSize = 0;
 
-        if(context instanceof EditAssetActivity){
+        if(context instanceof EditAssetOrSortActivity){
             listSize = assetNameList.size();
         }
         else if(context instanceof AssetsActivity || context instanceof AssetForEditActivity){

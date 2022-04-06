@@ -194,7 +194,8 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mAsset.isSelected()){
-                    intent = new Intent(getApplicationContext(), EditAssetActivity.class);
+                    intent = new Intent(getApplicationContext(), EditAssetOrSortActivity.class);
+                    intent.putExtra("forWhat", "asset");
                     startActivity(intent);
                     dialog.dismiss();
                     overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)

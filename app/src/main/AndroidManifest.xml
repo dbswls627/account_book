@@ -18,7 +18,7 @@
             android:name=".EditItemNameActivity"
             android:exported="false" />
         <activity
-            android:name=".EditAssetActivity"
+            android:name=".EditAssetOrSortActivity"
             android:exported="false" />
         <activity
             android:name=".AssetForEditActivity"

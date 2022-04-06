@@ -134,7 +134,7 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
     public void mOnClick(View v){
         switch (v.getId()){
             case R.id.zoneOfAutoSave:
-                listItemClick("(Auto)");
+                listItemClick("(Auto)", "");
 
                 break;
         }
@@ -143,10 +143,9 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
 
 
     @Override
-    public void listItemClick(String wayName) {
+    public void listItemClick(String wayName, String doFlag) {
         Intent intent = new Intent(this, ListInAssetActivity.class);
         intent.putExtra("wayName", wayName);
-        Toast.makeText(this, wayName+"(으)로 이동", Toast.LENGTH_SHORT).show();   // 테스트용
 
         startActivityForResult(intent, 10);
         overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)

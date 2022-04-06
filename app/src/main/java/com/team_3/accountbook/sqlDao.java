@@ -34,6 +34,11 @@ public interface sqlDao {
     @Query("INSERT INTO AmountGoal(amountGoal) VALUES(:amountGoal)")
     void insertAmountGoal(String amountGoal);
 
+    @Query("INSERT INTO Asset(assetName) VALUES(:assetName)")
+    void insertAsset(String assetName);
+
+
+
 
 
     @Update
@@ -74,6 +79,9 @@ public interface sqlDao {
     @Query("UPDATE Way SET notiAutoData = :state WHERE wayName = :wayName")
     void updateWayNotiState(String wayName, Boolean state);
 
+    @Query("UPDATE Asset SET assetName = :assetName WHERE assetName = :initName")
+    void updateAsset(String assetName, String initName);
+
 
 
 
@@ -94,6 +102,9 @@ public interface sqlDao {
 
     @Query("DELETE FROM Way WHERE wayName = :wayName")
     void deleteWayData(String wayName);
+
+    @Query("DELETE FROM Asset WHERE assetName = :assetName")
+    void deleteAsset(String assetName);
 
 
 

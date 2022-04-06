@@ -378,7 +378,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
     
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "UseCompatLoadingForDrawables"})
     public void mOnClick(View v) {
         switch (v.getId()) {
             case R.id.toBack_add:
@@ -555,6 +555,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                 dialog = new Dialog(this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog);
+                dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.round_dialog));
 
                 showDialog();
 

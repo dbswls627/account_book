@@ -55,7 +55,6 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
     BottomNavigationView bottom_menu;
     LocalDate selectedDate;                         // 날짜 변수
 
-    boolean permission = true;
 
     protected void onStart() {
         super.onStart();
@@ -74,6 +73,8 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         }
     }
 
+
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

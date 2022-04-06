@@ -19,7 +19,7 @@
             android:layout_height="50dp"
             android:background="@color/green">
             <ImageView
-                android:id="@+id/toBack_editAsset"
+                android:id="@+id/toBack_editAssetOrSort"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -29,19 +29,20 @@
                 android:src="@drawable/ic_baseline_arrow_back"
                 tools:ignore="OnClick" />
             <TextView
+                android:id="@+id/assetOrSortSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
                 android:textSize="15dp"
-                android:text="자산설정" />
+                android:text="자산|분류설정" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/addAsset"
+                    android:id="@+id/addItem"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="right"
