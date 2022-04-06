@@ -140,8 +140,8 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
 //            imageView.getLayoutParams().width = 110;
 //            imageView.requestLayout();
 
-            ObjectAnimator ani = ObjectAnimator.ofFloat(imageView_final, "translationX", 90f, 0f);
-            ani.setDuration(400);
+            ObjectAnimator ani = ObjectAnimator.ofFloat(imageView_final, "translationX", 130f, 0f);
+            ani.setDuration(300);
             ani.start();
 
             imageView_final.setOnClickListener(new View.OnClickListener() {

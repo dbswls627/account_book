@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EditItemNameActivity extends AppCompatActivity {
     private TextView mAssetOrSort;
     private EditText mItemName;
@@ -49,13 +52,30 @@ public class EditItemNameActivity extends AppCompatActivity {
                 break;
 
             case R.id.save_editItemName:
-                if(flag.equals("modify_assetName")){
-                    db.dao().updateAsset(mItemName.getText().toString(), itemName);
-                    closeAnimation();
+                if(mItemName.getText().length() > 0){
+                    List<String> assetName = db.dao().getAssetName();
+                    boolean notExist = true;
+
+                    for(String str : assetName){
+                        if(str.equals(mItemName.getText().toString())){ notExist = false; }
+                    }
+
+                    if(notExist){       // 존재하지 않는 이름이면 실행
+                        if(flag.equals("modify_assetName")){
+                            db.dao().updateAsset(mItemName.getText().toString(), itemName);
+                            closeAnimation();
+                        }
+                        else if(flag.equals("new_assetName")){
+                            db.dao().insertAsset(mItemName.getText().toString());
+                            closeAnimation();
+                        }
+                    }
+                    else{
+                        Toast.makeText(this, "중복된 자산명은 입력할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else if(flag.equals("new_assetName")){
-                    db.dao().insertAsset(mItemName.getText().toString());
-                    closeAnimation();
+                else{
+                    Toast.makeText(this, "한글자 이상 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
 
 

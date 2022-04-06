@@ -37,18 +37,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right">
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="20sp"
+                    android:layout_height="20sp"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/ic_baseline_arrow_forward"
                     app:tint="@color/hardDarkGray"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/hardDarkGray"
-                    android:text="|"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -57,8 +51,10 @@
             android:layout_width="43dp"
             android:layout_height="43dp"
             android:layout_gravity="center"
+            android:layout_marginTop="1.5dp"
             android:layout_marginLeft="1.5dp"
             android:layout_marginRight="1.5dp"
+            android:layout_marginBottom="1.5dp"
             android:paddingLeft="10dp"
             android:paddingRight="12dp"
             android:src="@drawable/ic_baseline_delete_forever_24"
@@ -70,8 +66,9 @@
             android:layout_gravity="center"
             android:paddingLeft="9dp"
             android:paddingRight="11dp"
+            android:background="@color/red"
             android:src="@drawable/ic_baseline_delete_forever_24"
-            app:tint="@color/red"/>
+            app:tint="@color/white"/>
     </LinearLayout>
 
     <View

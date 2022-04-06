@@ -300,6 +300,7 @@ public interface sqlDao {
     List<String> getAssetName();
 
 
+
     @Transaction
     @Query("SELECT * FROM Asset a INNER JOIN Way w ON a.assetId = w.FK_assetId")
     List<AssetWithWay> getAssetWithWays();
