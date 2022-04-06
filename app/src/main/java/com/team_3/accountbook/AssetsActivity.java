@@ -134,7 +134,7 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
     public void mOnClick(View v){
         switch (v.getId()){
             case R.id.zoneOfAutoSave:
-                listItemClick("(Auto)", "");
+                listItemClick("(Auto)", "", null, null);
 
                 break;
         }
@@ -143,7 +143,7 @@ public class AssetsActivity extends AppCompatActivity implements AssetInAdapter.
 
 
     @Override
-    public void listItemClick(String wayName, String doFlag) {
+    public void listItemClick(String wayName, String doFlag, ImageView imageView, ImageView imageView_final) {
         Intent intent = new Intent(this, ListInAssetActivity.class);
         intent.putExtra("wayName", wayName);
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -63,7 +64,7 @@ public class AssetForEditActivity extends AppCompatActivity implements AssetInAd
 
 
     @Override
-    public void listItemClick(String name, String doFlag) {
+    public void listItemClick(String name, String doFlag, ImageView imageView, ImageView imageView_final) {
         this.wayName = name;
 
         Intent intent = new Intent(this, EditWayActivity.class);

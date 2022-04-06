@@ -24,7 +24,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
     private OnItemClickInAssetAc mClickInAssetAc;
     private AppDatabase db;
     public interface OnItemClickInAssetAc{
-        void listItemClick(String name, String doFlag);
+        void listItemClick(String name, String doFlag, ImageView imageView, ImageView imageView_final);
     }
 
 
@@ -84,24 +84,25 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
                 if(db.dao().getWayNotiState(wayName)){     // way 의 자동저장 데이터가 있으면 알림을 지우게 함.
                     db.dao().updateWayNotiState(wayName, false);
                 }
-                mClickInAssetAc.listItemClick(wayName, "");
+                mClickInAssetAc.listItemClick(wayName, "", null, null);
             });
         }
         else if(context instanceof AssetForEditActivity){
             holder.mWayName_edit.setText(wayNameAndBalances.get(position).getWayName());
 
             holder.itemView.setOnClickListener(View -> {
-                mClickInAssetAc.listItemClick(holder.mWayName_edit.getText().toString(), "");
+                mClickInAssetAc.listItemClick(holder.mWayName_edit.getText().toString(), "", null, null);
             });
         }
         else if(context instanceof EditAssetOrSortActivity){
             holder.mAssetName.setText(assetNameList.get(position));
+            holder.mDeleteAsset2.setVisibility(View.GONE);
 
             holder.mAssetLayout.setOnClickListener(View -> {
-                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString(), "click");
+                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString(), "click", null, null);
             });
             holder.mDeleteAsset.setOnClickListener(View -> {
-                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString(), "delete");
+                mClickInAssetAc.listItemClick(holder.mAssetName.getText().toString(), "delete", holder.mDeleteAsset, holder.mDeleteAsset2);
             });
         }
 
@@ -132,7 +133,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
 
         private LinearLayout mAssetLayout;
         private TextView mAssetName;
-        private ImageView mDeleteAsset;
+        private ImageView mDeleteAsset, mDeleteAsset2;
 
         public CumstomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -144,6 +145,7 @@ public class AssetInAdapter extends RecyclerView.Adapter<AssetInAdapter.CumstomV
             mAssetLayout = itemView.findViewById(R.id.goTo_editForAsset);
             mAssetName = itemView.findViewById(R.id.tv_editAsset);
             mDeleteAsset = itemView.findViewById(R.id.deleteAsset);
+            mDeleteAsset2 = itemView.findViewById(R.id.deleteAsset2);
         }
     }
 }
