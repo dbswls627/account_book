@@ -90,14 +90,19 @@ public class MyTileService extends TileService {
     @SuppressLint("WrongConstant")
     private LayoutElementBuilders.LayoutElement myLayout(GoalProgress amountProgress, GoalProgress dateProgress) {
         int amount =0;
+        int goal = 300000;
         try {
             amount = Integer.parseInt(db.dao().get("amount"));
+        }catch (Exception e){}
+
+        try {
+            goal = Integer.parseInt(db.dao().get("goal"));
         }catch (Exception e){}
         LocalDate date = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(date);
 
         amountProgress.setCurrent(amount);                   //이번달 쓴돈
-        amountProgress.setGoal(Integer.parseInt(db.dao().get("goal")));   // 가격 목표값 설정
+        amountProgress.setGoal(goal);   // 가격 목표값 설정
         dateProgress.setCurrent(date.getDayOfMonth());      //현재 날짜 값
         dateProgress.setGoal(yearMonth.lengthOfMonth());    //현재 월의 길이
 
