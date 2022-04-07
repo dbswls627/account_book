@@ -428,7 +428,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
         mBring = dialog.findViewById(R.id.tv_bring);
         mMonths = dialog.findViewById(R.id.months);
 
-        mMonths.setOnEditorActionListener((textView,i, keyEvent)->{
+        mMonths.setOnEditorActionListener((textView, i, keyEvent)->{
             try {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("months", Integer.parseInt(mMonths.getText().toString()));

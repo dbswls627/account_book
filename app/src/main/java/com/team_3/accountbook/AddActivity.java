@@ -31,6 +31,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -104,6 +105,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             action = costAll.getDivision();
             setColorOfDivision(action);
 
+            setClearFocus();                    // 결제 정보들을 setText 하기 전에 포커스를 잡혀있어서 포커스를 삭제해야 함.
+
             mDate.setText(costAll.getUseDate());
             mWay.setText(costAll.getFK_wayName());
             mSort.setText(costAll.getSortName());
@@ -118,8 +121,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             // ListInAssetActivity 에서 추가버튼 클릭시 실행되는 부분
             mWay.setText(getIntent().getStringExtra("wayName"));
 
-            setColorOfDivision(action);
-            mSwitch.setChecked(true);
+            moveToFocus();
         }
         else if(callValue.equals("Main")){
             // MainActivity 에서 리스트 클릭시 실행되는 부분
@@ -139,6 +141,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mExpense.setSelected(true);
             mSwitch.setChecked(true);
             mSave.setSelected(true);
+
+            moveToFocus();
         }
         if (!mDate.getText().toString().equals("")) {   // date 가 비어 있으면 실행이 되지 않아 현재 시간 아니면 edittext 의 값
 //            Log.d("Test","notEmpty");
@@ -229,7 +233,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         } else if (cursorPosition == 4) {
             mBody.requestFocus();
         }
-        if (cursorPosition == 3 || cursorPosition == 4 || cursorPosition == -1) {
+        if (cursorPosition == 0 || cursorPosition == 3 || cursorPosition == 4 || cursorPosition == -1) {
             mLayout.setVisibility(View.GONE);
         }
 
@@ -249,7 +253,10 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
 
 
         mDate.setOnTouchListener((view, motionEvent) -> {       // 터치즉시 이벤트 발생(mOnClick 시 2번 터치)
+            setClearFocus();
+
             focus = "";
+            cursorPosition = 0;
             mLayout.setVisibility(View.GONE);
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기 (다른 edittext 누른후 누른면 키보드가 뜸)
             mRV_WayAndSort.setVisibility(View.INVISIBLE);
@@ -261,7 +268,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             focus = "way";
             cursorPosition = 1;
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
-            mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
             setWayAndSortRV();
             saveOrDeleteSetting();
             return false;
@@ -270,7 +276,6 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             focus = "sort";
             cursorPosition = 2;
             imm.hideSoftInputFromWindow(mWay.getWindowToken(), 0);      // 키보드 내리기
-            mLayout.setVisibility(View.VISIBLE);                        // 상단바 보이기
             setWayAndSortRV();
             saveOrDeleteSetting();
             return false;
@@ -291,11 +296,44 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             saveOrDeleteSetting();
             return false;
         });
+
+
+        mSum.setOnEditorActionListener((editText, i, keyEvent)->{       // (EditText editText, int i, KeyEvent keyEvent)
+            if(mWay.getText().length() > 0 && mSort.getText().length() > 0 && mSum.getText().length() > 0 && mBody.getText().length() > 0){
+                imm.hideSoftInputFromWindow(mSum.getWindowToken(), 0);
+                mSum.clearFocus();
+            }
+            else{
+                if(mSum.getText().length() == 0){ mSum.setText("0"); }
+                moveToFocus();
+            }
+
+            // true: 설정한 이벤트 처리만 진행. 키보드 이동 X
+            // false: 설정한 이벤트 처리 후 원래의 키보드 이동 이벤트도 수행
+            return true;
+        });
+        mBody.setOnEditorActionListener((editText, i, keyEvent)->{       // (EditText editText, int i, KeyEvent keyEvent)
+            if(mWay.getText().length() > 0 && mSort.getText().length() > 0 && mSum.getText().length() > 0 && mBody.getText().length() > 0){
+                imm.hideSoftInputFromWindow(mBody.getWindowToken(), 0);
+                mBody.clearFocus();
+            }
+            else{
+                if(mBody.getText().length() == 0){ mBody.setText("-"); }
+                moveToFocus();
+            }
+
+            // true: 설정한 이벤트 처리만 진행. 키보드 이동 X
+            // false: 설정한 이벤트 처리 후 원래의 키보드 이동 이벤트도 수행
+            return true;
+        });
+
+
     }
 
 
     private void setWayAndSortRV() {
         if (!focus.equals("")) {
+            mLayout.setVisibility(View.VISIBLE);
             if (focus.equals("way")) {
                 if(afterModify){
                     mWay.setText("");
@@ -373,7 +411,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             mSave.setTextColor(getResources().getColor(R.color.red));               // 빨간색
             mSort.setText("");
         }
-        setWayAndSortRV();
+
+        moveToFocus();
     }
 
     
@@ -748,13 +787,84 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
     }
 
 
+
     @Override
     public void clickItem(String itemName) {
         if (focus.equals("way")) {
             mWay.setText(itemName);
-        } else if (focus.equals("sort")) {
-            mSort.setText(itemName);
+            moveToFocus();
         }
+        else if (focus.equals("sort")) {
+            mSort.setText(itemName);
+            moveToFocus();
+        }
+    }
+
+
+
+    private void moveToFocus(){
+        if(mWay.getText().length() == 0){
+            imm.hideSoftInputFromWindow(mSum.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(mBody.getWindowToken(), 0);
+
+            focus = "way";
+            cursorPosition = 1;
+            mWay.requestFocus();
+            setWayAndSortRV();
+        }
+
+        else if(mSort.getText().length() == 0){
+            imm.hideSoftInputFromWindow(mSum.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(mBody.getWindowToken(), 0);
+
+            focus = "sort";
+            cursorPosition = 2;
+            mSort.requestFocus();
+            setWayAndSortRV();
+        }
+
+        else if(mSum.getText().length() == 0){
+            mLayout.setVisibility(View.GONE);
+
+            focus = "";
+            cursorPosition = 3;
+            mSum.requestFocus();
+            imm.showSoftInput(mSum, 0);
+        }
+
+        else if(mBody.getText().length() == 0){
+            mLayout.setVisibility(View.GONE);
+
+            focus = "";
+            cursorPosition = 4;
+            mBody.requestFocus();
+            imm.showSoftInput(mBody, 0);
+        }
+
+        else{       // 모두 입력된 상태에서 호출됐을 때의 부분
+            setClearFocus();
+        }
+    }
+
+
+    private void setClearFocus(){
+        if(cursorPosition <= 2){    // 수단|분류
+            if(cursorPosition == 1) { mWay.clearFocus(); }
+            else if(cursorPosition == 2) { mSort.clearFocus(); }
+            mLayout.setVisibility(View.GONE);
+        }
+        else{       // 금액|내용
+            if(cursorPosition == 3) {
+                mSum.clearFocus();
+                imm.hideSoftInputFromWindow(mSum.getWindowToken(), 0);
+            }
+            else if(cursorPosition == 4) {
+                mBody.clearFocus();
+                imm.hideSoftInputFromWindow(mBody.getWindowToken(), 0);
+            }
+        }
+
+
     }
 
 
