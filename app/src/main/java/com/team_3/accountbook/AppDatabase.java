@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-@Database(entities = {Asset.class, Way.class, Sort.class, Cost.class, AutoSave.class, WatchSetting.class}, version = 3)
+@Database(entities = {Asset.class, Way.class, Sort.class, Cost.class, AutoSave.class, Watch.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract sqlDao dao();
 

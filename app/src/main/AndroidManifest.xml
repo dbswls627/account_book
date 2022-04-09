@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Accountbook">
         <activity
-            android:name=".WearOSActivity"
+            android:name=".WatchSettingActivity"
             android:exported="true" />
         <activity
             android:name=".EditItemNameActivity"

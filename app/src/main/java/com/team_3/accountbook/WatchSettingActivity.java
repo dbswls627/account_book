@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class WearOSActivity extends AppCompatActivity {
+public class WatchSettingActivity extends AppCompatActivity {
     EditText amountGoal, warning;
     ImageView back;
     TextView save;
@@ -18,7 +18,7 @@ public class WearOSActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wear_osactivity);
+        setContentView(R.layout.activity_watch_setting);
         db = AppDatabase.getInstance(this);
         amountGoal = findViewById(R.id.amountGoal);
         back = findViewById(R.id.toBack);
@@ -32,7 +32,7 @@ public class WearOSActivity extends AppCompatActivity {
         });
         save.setOnClickListener((view) -> {
             ListenerService LS = new ListenerService();
-            LS.bluetooth(WearOSActivity.this, amountGoal.getText() + "!");
+            LS.bluetooth(WatchSettingActivity.this, amountGoal.getText() + "!");
             db.dao().updateAmountGoal(amountGoal.getText().toString());
             finish();
         });

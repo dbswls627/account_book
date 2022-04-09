@@ -204,7 +204,7 @@ public class SettingActivity extends AppCompatActivity {
                 break;
 
             case R.id.watchSetting:
-                Intent intent = new Intent(this,WearOSActivity.class);
+                Intent intent = new Intent(this, WatchSettingActivity.class);
                 startActivity(intent);
 
                 break;

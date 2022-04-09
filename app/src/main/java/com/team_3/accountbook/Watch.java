@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 
 @Entity
-public class WatchSetting {
+public class Watch {
 
     @NonNull
     @PrimaryKey

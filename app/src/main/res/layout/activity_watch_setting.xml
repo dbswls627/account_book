@@ -34,19 +34,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="워치 설정" />
+                android:textColor="@color/black"
+                android:text="워치 기능" />
 
             <Switch
                 android:trackTint="@drawable/newtrack"
@@ -61,65 +66,76 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dp"
-            android:background="@color/lightGray" />
+            android:background="@color/gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="33dp"
+            android:layout_marginRight="25dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="3"
+                android:textColor="@color/black"
                 android:text="목표 금액" />
 
             <EditText
                 android:id="@+id/amountGoal"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
                 android:inputType="date"
                 android:text="300000"
-                android:textColor="@color/black" />
-
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.7dp"
-            android:background="@color/lightGray" />
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center">
+                android:textColor="@color/hardDarkGray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="경고" />
-
-            <EditText
-                android:id="@+id/warning"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:inputType="date"
-                android:maxLength="3"
-                android:text="70"
-                android:textColor="@color/black" />
+                android:padding="5dp"
+                android:text="원"/>
 
 
         </LinearLayout>
 
-        <View
+
+        <LinearLayout
+
             android:layout_width="match_parent"
-            android:layout_height="0.7dp"
-            android:background="@color/lightGray" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="33dp"
+            android:layout_marginRight="25dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="@color/black"
+                android:text="경고 %" />
+
+            <EditText
+                android:id="@+id/warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="date"
+                android:maxLength="3"
+                android:text="70"
+                android:textColor="@color/hardDarkGray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="%"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <View
