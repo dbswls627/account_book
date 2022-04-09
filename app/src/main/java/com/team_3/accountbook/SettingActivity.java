@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -103,27 +102,7 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void showDialogOfAmountGoal(Dialog dialog) {
-        dialog.show();
-        EditText amountGoal;
-        TextView cancel,save;
-        amountGoal = dialog.findViewById(R.id.amountGoal);
-        cancel = dialog.findViewById(R.id.cancel);
-        save = dialog.findViewById(R.id.save);
 
-        amountGoal.setText(db.dao().getAmountGoal());
-
-       cancel.setOnClickListener((view)->{
-           dialog.dismiss();
-       });
-        save.setOnClickListener((view)->{
-            dialog.dismiss();
-            ListenerService LS = new ListenerService();
-            LS.bluetooth(SettingActivity.this, amountGoal.getText()+"!");
-            db.dao().updateAmountGoal(amountGoal.getText().toString());
-        });
-    }
 
 
 
@@ -225,11 +204,8 @@ public class SettingActivity extends AppCompatActivity {
                 break;
 
             case R.id.watchSetting:
-                Dialog wearDialog = new Dialog(this);
-                wearDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                wearDialog.setContentView(R.layout.dialog_watch_amountgoal);
-
-                showDialogOfAmountGoal(wearDialog);
+                Intent intent = new Intent(this,WearOSActivity.class);
+                startActivity(intent);
 
                 break;
 
