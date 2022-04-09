@@ -200,16 +200,7 @@
             android:background="#ff0000"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
-        <TextView
-            android:textSize="40sp"
-            android:id="@+id/amountGoal_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="워치 목표 금액 설정"/>
-        <View
-            android:background="#ff0000"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+        
     </LinearLayout>
 
 

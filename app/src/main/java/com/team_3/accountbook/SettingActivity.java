@@ -55,7 +55,6 @@ public class SettingActivity extends AppCompatActivity {
         add = findViewById(R.id.add);
         list = findViewById(R.id.list);
         sqlTest = findViewById(R.id.sqlTest);
-        amountGoal_text = findViewById(R.id.amountGoal_text);
         mPermissionImage = findViewById(R.id.permissionImage_setting);
         mPermissionText = findViewById(R.id.permissionText_setting);
 
@@ -73,13 +72,7 @@ public class SettingActivity extends AppCompatActivity {
             intent = new Intent(this, WearActivity.class);
             startActivity(intent);
         });
-        amountGoal_text.setOnClickListener((view)->{
-            Dialog dialog = new Dialog(this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_watch_amountgoal);
 
-            showDialogOfAmountGoal(dialog);
-        });
         bottom_menu = findViewById(R.id.bottom_menu);
 
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
@@ -219,6 +212,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("NewApi")
     public void mOnClick(View v){
         switch (v.getId()){
             case R.id.listSetting:
@@ -231,7 +225,11 @@ public class SettingActivity extends AppCompatActivity {
                 break;
 
             case R.id.watchSetting:
-                Toast.makeText(this, "목표금액/경고% 설정", Toast.LENGTH_SHORT).show();
+                Dialog wearDialog = new Dialog(this);
+                wearDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                wearDialog.setContentView(R.layout.dialog_watch_amountgoal);
+
+                showDialogOfAmountGoal(wearDialog);
 
                 break;
 
