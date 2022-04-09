@@ -49,6 +49,8 @@
                 android:text="워치 설정" />
 
             <Switch
+                android:trackTint="@drawable/newtrack"
+                android:thumbTint="@drawable/newthumb"
                 android:id="@+id/onOff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
