@@ -12,7 +12,13 @@ public class Watch {
     @PrimaryKey
     private String amountGoal;
     private String warning;
-    private Boolean WatchOnOff;
+    private Boolean watchOnOff;
+
+    public Watch(String amountGoal, String warning, boolean watchOnOff) {
+        this.amountGoal = amountGoal;
+        this.warning = warning;
+        this.watchOnOff = watchOnOff;
+    }
 
     public String getWarning() {
         return warning;
@@ -23,11 +29,11 @@ public class Watch {
     }
 
     public Boolean getWatchOnOff() {
-        return WatchOnOff;
+        return watchOnOff;
     }
 
     public void setWatchOnOff(Boolean watchOnOff) {
-        WatchOnOff = watchOnOff;
+        watchOnOff = watchOnOff;
     }
 
     public String getAmountGoal() {

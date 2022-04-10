@@ -31,11 +31,11 @@ public interface sqlDao {
     @Query("INSERT INTO AutoSave(state) VALUES(:state)")
     void insertAutoState(Boolean state);
 
-    @Query("INSERT INTO Watch(amountGoal) VALUES(:amountGoal)")
-    void insertAmountGoal(String amountGoal);
-
     @Query("INSERT INTO Asset(assetName) VALUES(:assetName)")
     void insertAsset(String assetName);
+
+    @Insert
+    void insertWatch(Watch watch);
 
 
 
@@ -73,8 +73,8 @@ public interface sqlDao {
     @Query("UPDATE AutoSave SET state = :stateFlag")
     void updateAutoState(Boolean stateFlag);
 
-    @Query("UPDATE Watch SET amountGoal = :amountGoal")
-    void updateAmountGoal(String amountGoal);
+    @Query("UPDATE Watch SET amountGoal = :amountGoal, warning = :warning, watchOnOff = :watchOnOff")
+    void updateWatch(String amountGoal, String warning, boolean watchOnOff);
 
     @Query("UPDATE Way SET notiAutoData = :state WHERE wayName = :wayName")
     void updateWayNotiState(String wayName, Boolean state);
@@ -289,6 +289,12 @@ public interface sqlDao {
 
     @Query("SELECT a.amountGoal FROM Watch a")
     String getAmountGoal();
+
+    @Query("SELECT a.WatchOnOff FROM Watch a")
+    boolean getWatchOnOff();
+
+    @Query("SELECT a.warning FROM Watch a")
+    String getWarning();
 
     @Query("SELECT w.wayBalance FROM Way w WHERE w.wayName = '(Auto)'")
     Integer getAutoBalance();

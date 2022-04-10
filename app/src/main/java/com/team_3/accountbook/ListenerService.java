@@ -121,7 +121,8 @@ public class ListenerService extends WearableListenerService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     void bluetooth(Context context, String message) {
         db = AppDatabase.getInstance(ListenerService.this);
-        if (message != null) {
+
+        if (message != null && db.dao().getWatchOnOff()) {
             new SendThread("/message_path", message, context).start();
         } else {
             new SendThread("/message_path", "0",context).start();

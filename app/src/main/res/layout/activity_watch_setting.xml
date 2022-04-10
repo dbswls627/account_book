@@ -90,7 +90,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:inputType="date"
-                android:text="300000"
+                android:text="N"
                 android:textColor="@color/hardDarkGray" />
 
             <TextView
@@ -126,7 +126,7 @@
                 android:gravity="right"
                 android:inputType="date"
                 android:maxLength="3"
-                android:text="70"
+                android:text="N"
                 android:textColor="@color/hardDarkGray" />
 
             <TextView

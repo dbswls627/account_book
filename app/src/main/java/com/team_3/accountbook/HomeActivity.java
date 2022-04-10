@@ -3,14 +3,11 @@ package com.team_3.accountbook;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -570,7 +567,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             db.dao().insertAutoState(true);
         }
         if(db.dao().getAmountGoal() == null){                        // 비어있으면 추가.  초기설정!
-            db.dao().insertAmountGoal("300000");
+            db.dao().insertWatch(new Watch("300000","70",true));
         }
     }
 

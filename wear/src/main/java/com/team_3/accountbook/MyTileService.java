@@ -7,8 +7,10 @@ import static androidx.wear.tiles.DimensionBuilders.expand;
 import static androidx.wear.tiles.LayoutElementBuilders.ARC_ANCHOR_START;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.wear.tiles.DimensionBuilders;
 import androidx.wear.tiles.LayoutElementBuilders;
@@ -31,6 +33,7 @@ public class MyTileService extends TileService {
     DimensionBuilders.DpProp Tdp = dp(12f);      //두께
     AppDatabase db;
     private DecimalFormat myFormatter = new DecimalFormat("###,###");
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     protected ListenableFuture<TileBuilders.Tile> onTileRequest(@NonNull RequestBuilders.TileRequest requestParams) {
@@ -87,16 +90,20 @@ public class MyTileService extends TileService {
                 .build()
         );
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")
     private LayoutElementBuilders.LayoutElement myLayout(GoalProgress amountProgress, GoalProgress dateProgress) {
         int amount =0;
         int goal = 300000;
+        int warning = 70;
         try {
             amount = Integer.parseInt(db.dao().get("amount"));
         }catch (Exception e){}
-
         try {
             goal = Integer.parseInt(db.dao().get("goal"));
+        }catch (Exception e){}
+        try {
+            warning = Integer.parseInt(db.dao().get("warning"));
         }catch (Exception e){}
         LocalDate date = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(date);
@@ -108,7 +115,7 @@ public class MyTileService extends TileService {
 
         String image;
         /** 금액에 따른 이미지 변경*/
-        if (amountProgress.percentage() >= 0.7 && amountProgress.percentage() < 1) image = "warning";
+        if (amountProgress.percentage() >= warning * 0.01 && amountProgress.percentage() < 1) image = "warning";
         else if (amountProgress.percentage() == 1) image = "empty";
         else image = "money";
 
