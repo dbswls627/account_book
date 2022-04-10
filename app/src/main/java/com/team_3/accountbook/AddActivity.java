@@ -240,13 +240,19 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
         mWay.setInputType(InputType.TYPE_NULL);         // 클릭시 키보드 안올라오게 함.
         mSort.setInputType(InputType.TYPE_NULL);        // 클릭시 키보드 안올라오게 함.
 
-        if(action.equals("expense")){
-            mSetGaol.setVisibility(View.VISIBLE);
-            if(goalToggle){ mSwitch.setChecked(true); }
+        if(db.dao().getWatchOnOff()){
+            if(action.equals("expense")){
+                mSetGaol.setVisibility(View.VISIBLE);
+                if(goalToggle){ mSwitch.setChecked(true); }
+            }
+            else if(action.equals("income")){
+                mSetGaol.setVisibility(View.INVISIBLE);
+            }
         }
-        else if(action.equals("income")){
-            mSetGaol.setVisibility(View.INVISIBLE);
+        else{
+            mSetGaol.setVisibility(View.GONE);
         }
+
 
         mSave.setVisibility(View.VISIBLE);
         mDelete.setVisibility(View.GONE);

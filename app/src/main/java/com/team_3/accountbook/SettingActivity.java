@@ -206,6 +206,7 @@ public class SettingActivity extends AppCompatActivity {
             case R.id.watchSetting:
                 Intent intent = new Intent(this, WatchSettingActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
                 break;
 

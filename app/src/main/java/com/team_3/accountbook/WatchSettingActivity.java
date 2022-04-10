@@ -50,6 +50,7 @@ public class WatchSettingActivity extends AppCompatActivity {
 
         back.setOnClickListener((view) -> {
             finish();
+            overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         });
 
         save.setOnClickListener((view) -> {
@@ -60,6 +61,7 @@ public class WatchSettingActivity extends AppCompatActivity {
             }
             db.dao().updateWatch(amountGoal.getText().toString().replace(",", ""), warning.getText().toString(), mSwitch.isChecked());
             finish();
+            overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         });
     }
 
@@ -95,5 +97,13 @@ public class WatchSettingActivity extends AppCompatActivity {
             amountGoal.setEnabled(false);
             warning.setEnabled(false);
         }
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
     }
 }
