@@ -31,13 +31,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BarChartFragment extends Fragment {
     AppDatabase db;
     BarChart barChart;
     List<BarEntry> barEntries = new ArrayList<>();
     TextView month;
-    LinearLayout MMLayout;
+    LinearLayout MMLayout,listLayout, chartLayout, noData;
     String YYYY;
     String MM;
     RecyclerView rv;
@@ -69,7 +70,10 @@ public class BarChartFragment extends Fragment {
         rv = (view).findViewById(R.id.rv);
         MMLayout = (view).findViewById(R.id.MMLayout);
         month = (view).findViewById(R.id.month);
-        barChart = view.findViewById(R.id.barchart);
+        barChart = (view).findViewById(R.id.barchart);
+        listLayout = (view).findViewById(R.id.listLayout);
+        chartLayout = (view).findViewById(R.id.chartLayout);
+        noData = (view).findViewById(R.id.layout_noData);
 
         barChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
         barChart.setTouchEnabled(true);
@@ -112,6 +116,7 @@ public class BarChartFragment extends Fragment {
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setChart(String YYYY,String halfYear) {
+        AtomicBoolean barEntriesIsEmpty = new AtomicBoolean(true); //forEach 에서 쓰려면 이런 형태여야 한다네? 원랜 boolean barEntriesIsEmpty =true 란 의미
         if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
         month.setText(MM);
         this.YYYY = YYYY;
@@ -130,6 +135,24 @@ public class BarChartFragment extends Fragment {
                 barEntries.add(new BarEntry(i-1,0));        //해당 월에 쓴돈이 없어 null 값 이면 0원
             }
         }
+
+        barEntries.forEach((item)->{
+            if (item.getY() != 0){  //하나라도 값이 있으면..
+                barEntriesIsEmpty.set(false);
+            }
+        });
+
+        if (barEntriesIsEmpty.get()){//비어 있으면..
+            listLayout.setVisibility(View.GONE);
+            chartLayout.setVisibility(View.GONE);
+            noData.setVisibility(View.VISIBLE);
+        } else {
+            listLayout.setVisibility(View.VISIBLE);
+            chartLayout.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.GONE);
+        }
+
+
 
         setList((ArrayList<Cost>) db.dao().getMDate(YYYY+" "+MM, "expense"));
 
