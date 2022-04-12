@@ -113,6 +113,7 @@ public class GraphActivity extends AppCompatActivity {
                 monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
                 barChartFragment.setChart(monthYearFromYear(selectedYear),halfYear);
                 barChartFragment.setList((new ArrayList<Cost>())) ; //빈리스트 띄우기
+                barChartFragment.MMLayoutInvisible();
             }
         });
 
@@ -132,6 +133,7 @@ public class GraphActivity extends AppCompatActivity {
                 monthYearText.setText(monthYearFromYear(selectedYear) + halfYear);
                 barChartFragment.setChart(monthYearFromYear(selectedYear),halfYear);
                 barChartFragment.setList((new ArrayList<Cost>())); //빈리스트 띄우기
+                barChartFragment.MMLayoutInvisible();
             }
         });
 

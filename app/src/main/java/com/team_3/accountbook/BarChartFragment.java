@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -34,8 +36,9 @@ public class BarChartFragment extends Fragment {
     AppDatabase db;
     BarChart barChart;
     List<BarEntry> barEntries = new ArrayList<>();
+    TextView month;
+    LinearLayout MMLayout;
     String YYYY;
-
     String MM;
     RecyclerView rv;
     String halfYear;
@@ -64,6 +67,8 @@ public class BarChartFragment extends Fragment {
         db = AppDatabase.getInstance(container.getContext());
 
         rv = (view).findViewById(R.id.rv);
+        MMLayout = (view).findViewById(R.id.MMLayout);
+        month = (view).findViewById(R.id.month);
         barChart = view.findViewById(R.id.barchart);
 
         barChart.getDescription().setEnabled(false);    //오른쪽에 있는 라벨 제거
@@ -77,22 +82,24 @@ public class BarChartFragment extends Fragment {
 
         MM = LocalDate.now().getMonthValue() +"월";
 
+
         setChart(YYYY,halfYear);
 
         /**클릭 이벤트*/
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
+                MMLayout.setVisibility(View.VISIBLE);
                 MM = xAxisValues.get((int) h.getX());
-
-                Log.d("TEST",YYYY);
-                Log.d("TEST",halfYear);
-                setChart(YYYY,halfYear);
+                if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
+                month.setText(MM);
+                setList((ArrayList<Cost>) db.dao().getMDate(YYYY+" "+MM, "expense"));
             }
 
             @Override
             public void onNothingSelected() {
                 setList((new ArrayList<Cost>()));       //빈리스트
+                MMLayoutInvisible();
             }
         });
 
@@ -106,6 +113,7 @@ public class BarChartFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setChart(String YYYY,String halfYear) {
         if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
+        month.setText(MM);
         this.YYYY = YYYY;
         this.halfYear = halfYear;
         int mon = 1;
@@ -156,8 +164,8 @@ public class BarChartFragment extends Fragment {
 
         barChart.setData(barData);
         barChart.notifyDataSetChanged();
-
         barChart.invalidate();  //다시그리기
+        barChart.highlightValues(null); //그래프 클릭 안된 상태로 바꾸기
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -171,6 +179,9 @@ public class BarChartFragment extends Fragment {
         rv.setAdapter(new adapter2(context, arrayList, dateArray));
         rv.setLayoutManager(new LinearLayoutManager(context));
         Log.d("TEST",MM);
+    }
+    void MMLayoutInvisible (){
+        MMLayout.setVisibility(View.INVISIBLE);
     }
 
 }

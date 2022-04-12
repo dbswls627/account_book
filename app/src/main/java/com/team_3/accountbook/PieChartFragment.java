@@ -130,6 +130,7 @@ public class PieChartFragment extends Fragment {
 
         pieChart.setData(data);
         pieChart.invalidate();  //다시그리기
+        pieChart.highlightValue(null);  //그래프 클릭 안된 상태로 바꾸기
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
