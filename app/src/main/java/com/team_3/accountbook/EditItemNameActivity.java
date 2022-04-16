@@ -32,6 +32,8 @@ public class EditItemNameActivity extends AppCompatActivity {
 
         if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정"); }
         else if(flag.equals("new_assetName")){ mAssetOrSort.setText("자산 추가"); }
+        else if(flag.equals("modify_sortName")){ mAssetOrSort.setText("분류 수정"); }
+        else if(flag.equals("new_sortName")){ mAssetOrSort.setText("분류 추가"); }
         mItemName.setText(itemName);
 
     }
@@ -48,30 +50,62 @@ public class EditItemNameActivity extends AppCompatActivity {
                 else if(flag.equals("new_assetName")){
                     overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                 }
+                else if(flag.equals("modify_sortName")){
+                    overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+                }
+                else if(flag.equals("new_sortName")){
+                    overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+                }
 
                 break;
 
             case R.id.save_editItemName:
                 if(mItemName.getText().length() > 0){
                     List<String> assetName = db.dao().getAssetName();
+                    List<String> sortName = db.dao().getSortName();
                     boolean notExist = true;
 
-                    for(String str : assetName){
-                        if(str.equals(mItemName.getText().toString())){ notExist = false; }
+                    if( flag.equals("modify_assetName") || flag.equals("new_assetName") ){
+
+                        for (String str : assetName) {
+                            if (str.equals(mItemName.getText().toString())) {
+                                notExist = false;
+                            }
+                        }
+
+                        if (notExist) {       // 존재하지 않는 이름이면 실행
+                            if (flag.equals("modify_assetName")) {
+                                db.dao().updateAsset(mItemName.getText().toString(), itemName);
+                                closeAnimation();
+                            } else if (flag.equals("new_assetName")) {
+                                db.dao().insertAsset(mItemName.getText().toString());
+                                closeAnimation();
+                            }
+                        }
+                        else {
+                            Toast.makeText(this, "중복된 자산명은 입력할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
-                    if(notExist){       // 존재하지 않는 이름이면 실행
-                        if(flag.equals("modify_assetName")){
-                            db.dao().updateAsset(mItemName.getText().toString(), itemName);
-                            closeAnimation();
+                    if( flag.equals("modify_sortName") || flag.equals("new_sortName") ){
+
+                        for (String str : sortName) {
+                            if (str.equals(mItemName.getText().toString())) {
+                                notExist = false;
+                            }
                         }
-                        else if(flag.equals("new_assetName")){
-                            db.dao().insertAsset(mItemName.getText().toString());
-                            closeAnimation();
+
+                        if (notExist) {       // 존재하지 않는 이름이면 실행
+                            if (flag.equals("modify_sortName")) {
+                                db.dao().updateSort(mItemName.getText().toString(), itemName);
+                                closeAnimation();
+                            } else if (flag.equals("new_sortName")) {
+                                db.dao().insertSortName(mItemName.getText().toString());
+                                closeAnimation();
+                            }
+                        } else {
+                            Toast.makeText(this, "중복된 분류명은 입력할 수 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                    else{
-                        Toast.makeText(this, "중복된 자산명은 입력할 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
@@ -92,6 +126,12 @@ public class EditItemNameActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.hold_activity, R.anim.left_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         }
         else if(flag.equals("new_assetName")){
+            overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+        }
+        else if(flag.equals("new_sortName")){
+            overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
+        }
+        else if(flag.equals("modify_sortName")){
             overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         }
     }

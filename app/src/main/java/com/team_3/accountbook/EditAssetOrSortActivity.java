@@ -42,6 +42,7 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
         Intent intent = getIntent();
         forWhat = intent.getStringExtra("forWhat");     // 자산설정 or 분류설정 구분자
         if(forWhat.equals("asset")){ mAssetOrSortSetting.setText("자산설정"); }
+        if(forWhat.equals("sort")){ mAssetOrSortSetting.setText("분류설정"); }
 
         settingBottomMenu();
         setRV();
@@ -54,6 +55,13 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
             List<String> assetNameList = db.dao().getAssetName();
 
             mAssetRV.setAdapter(new AssetInAdapter(assetNameList, this, this));
+            mAssetRV.setLayoutManager(new LinearLayoutManager(this));
+        }
+
+        if(forWhat.equals("sort")){
+            List<String> sortNameList = db.dao().getSortName();
+
+            mAssetRV.setAdapter(new AssetInAdapter(sortNameList, this, this));
             mAssetRV.setLayoutManager(new LinearLayoutManager(this));
         }
     }
@@ -101,7 +109,12 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
 
             case R.id.addItem:
                 Intent intent = new Intent(this, EditItemNameActivity.class);
-                intent.putExtra("flag", "new_assetName");
+                if(forWhat.equals("asset")) {
+                    intent.putExtra("flag", "new_assetName");
+                }
+                if(forWhat.equals("sort")){
+                    intent.putExtra("flag", "new_sortName");
+                }
                 startActivityForResult(intent, 0);
                 overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
@@ -127,8 +140,14 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
     public void listItemClick(String assetName, String doFlag, ImageView imageView, ImageView imageView_final) {
         if(doFlag.equals("click")){
             Intent intent = new Intent(this, EditItemNameActivity.class);
-            intent.putExtra("itemName", assetName);
-            intent.putExtra("flag", "modify_assetName");
+            if(forWhat.equals("asset")) {
+                intent.putExtra("itemName", assetName);
+                intent.putExtra("flag", "modify_assetName");
+            }
+            if(forWhat.equals("sort")){
+                intent.putExtra("itemName", assetName);
+                intent.putExtra("flag", "modify_sortName");
+            }
             startActivityForResult(intent, 0);
             overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
         }
@@ -147,7 +166,12 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
             imageView_final.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    db.dao().deleteAsset(assetName);
+                    if(forWhat.equals("asset")) {
+                        db.dao().deleteAsset(assetName);
+                    }
+                    if(forWhat.equals("sort")){
+                        db.dao().deleteSort(assetName);
+                    }
                     setRV();
                 }
             });

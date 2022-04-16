@@ -179,7 +179,11 @@ public class SettingActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);     // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                 }
                 else if(mSort.isSelected()){
-                    Toast.makeText(getApplicationContext(), "sort", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(getApplicationContext(), EditAssetOrSortActivity.class);
+                    intent.putExtra("forWhat", "sort");
+                    startActivity(intent);
+                    dialog.dismiss();
+                    overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "하나를 선택하세요.", Toast.LENGTH_SHORT).show();
