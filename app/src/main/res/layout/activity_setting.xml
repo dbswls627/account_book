@@ -109,13 +109,15 @@
                     android:tint="@color/hardDarkGray"
                     android:src="@drawable/ic_baseline_save_alt_24"
                     tools:ignore="UseAppTint" />
+
                 <TextView
+                    android:id="@+id/autoState_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/hardDarkGray"
-                    android:text="ON/OFF"/>
+                    android:text="OFF"
+                    android:textColor="@color/hardDarkGray" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/test"
