@@ -25,7 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SettingActivity extends AppCompatActivity {
     ImageView mPermissionImage;
-    TextView add , list, sqlTest, wear, amountGoal_text, mPermissionText;
+    TextView add , list, sqlTest, wear, amountGoal_text, mPermissionText, mAutoState;
     Intent intent;
     AppDatabase db;
     BottomNavigationView bottom_menu;
@@ -56,6 +56,7 @@ public class SettingActivity extends AppCompatActivity {
         sqlTest = findViewById(R.id.sqlTest);
         mPermissionImage = findViewById(R.id.permissionImage_setting);
         mPermissionText = findViewById(R.id.permissionText_setting);
+        mAutoState = findViewById(R.id.autoState_setting);
 
 
         list.setOnClickListener((view)->{
@@ -100,8 +101,20 @@ public class SettingActivity extends AppCompatActivity {
 
         setPermissionSettingView();
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED){
+            db.dao().updateAutoState(false);
+            mAutoState.setText("Auto-OFF");
+        }
+
+        setTotalAmount();
+
     }
 
+    private void setTotalAmount(){
+        if(db.dao().getAutoState()){ mAutoState.setText("ON"); }
+        else { mAutoState.setText("OFF"); }
+    }
 
 
 
@@ -215,9 +228,20 @@ public class SettingActivity extends AppCompatActivity {
                 break;
 
             case R.id.autoSaveSetting:
-                Toast.makeText(this, "자동저장 ON/OFF 설정", Toast.LENGTH_SHORT).show();
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED){
+                    Dialog dialog1 = new Dialog(this);
+                    dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog1.setContentView(R.layout.dialog_autosave);
+
+                    showDialogOfAutoSave(dialog1);
+                }
+                else{
+                    dialogForDeniedPermission("auto");
+                }
 
                 break;
+
 
             case R.id.help:
                 Toast.makeText(this, "도움말", Toast.LENGTH_SHORT).show();
@@ -232,6 +256,77 @@ public class SettingActivity extends AppCompatActivity {
 
                 break;
         }
+    }
+
+    private void showDialogOfAutoSave(Dialog dialog){
+        dialog.show();
+
+        TextView mOnOff, mQuestion, mCancel, mAccept;
+
+        mOnOff = dialog.findViewById(R.id.onOff);
+        mQuestion = dialog.findViewById(R.id.questionForAutoSave);
+        mCancel = dialog.findViewById(R.id.cancel_autoSave);
+        mAccept = dialog.findViewById(R.id.accept_autoSave);
+
+        if(mAutoState.getText().equals("OFF")){
+            mOnOff.setText("자동 저장 ON");
+            mQuestion.setText("자동 저장 기능을 활성화 하시겠습니까?");
+        }
+        else if(mAutoState.getText().equals("ON")){
+            mOnOff.setText("자동 저장 OFF");
+            mQuestion.setText("자동 저장 기능을 종료하시겠습니까?");
+        }
+
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                if(mAutoState.getText().equals("OFF")){
+                    db.dao().updateAutoState(true);
+                    mAutoState.setText("ON");
+                    Toast.makeText(getApplicationContext(), "자동 저장 기능이 활성화 되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if(mAutoState.getText().equals("ON")){
+                    db.dao().updateAutoState(false);
+                    mAutoState.setText("OFF");
+                    Toast.makeText(getApplicationContext(), "자동 저장 기능이 종료되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void dialogForDeniedPermission(String flag){
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_denied_permission);
+        dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.round_dialog));
+        dialog.show();
+
+        ImageView mDeniedImage = dialog.findViewById(R.id.deniedImage);
+        TextView mAccept = dialog.findViewById(R.id.accept_deniedPermission);
+        TextView mAutoOrBring = dialog.findViewById(R.id.autoOrBring);
+
+        if(flag.equals("auto")){
+            mAutoOrBring.setText("자동저장");
+        }
+        else if(flag.equals("bring")){
+            mDeniedImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_email_24));
+            mAutoOrBring.setText("가져오기");
+        }
+
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
 
