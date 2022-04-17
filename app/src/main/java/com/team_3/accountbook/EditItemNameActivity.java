@@ -1,19 +1,15 @@
 package com.team_3.accountbook;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EditItemNameActivity extends AppCompatActivity {
@@ -23,7 +19,7 @@ public class EditItemNameActivity extends AppCompatActivity {
     private String itemName;
     private String flag;
     private String action = "expense", actionKorean = "지출";
-    private LinearLayout layout;
+    private LinearLayout mInExLayout;
     private boolean checkIncome = false, checkExpense = true;
 
 
@@ -33,25 +29,25 @@ public class EditItemNameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item_name);
 
         mAssetOrSort = findViewById(R.id.assetOrSort);
-        mItemName = findViewById(R.id.name_editItemName);
-        db = AppDatabase.getInstance(this);
-        layout = findViewById(R.id.button_layout_add);
+
+        mInExLayout = findViewById(R.id.button_layout_add);
         mIncome = findViewById(R.id.tv_income_add);
         mExpense = findViewById(R.id.tv_expense_add);
+        mItemName = findViewById(R.id.name_editItemName);
         mSave = findViewById(R.id.save_editItemName);
+
+        db = AppDatabase.getInstance(this);
 
         itemName = getIntent().getStringExtra("itemName");
         flag = getIntent().getStringExtra("flag");
 
-        mItemName.setText(itemName);
-
 
         if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정");
-            layout.setVisibility(View.GONE);
+            mInExLayout.setVisibility(View.GONE);
         }
         else if(flag.equals("new_assetName")){
             mAssetOrSort.setText("자산 추가");
-            layout.setVisibility(View.GONE);
+            mInExLayout.setVisibility(View.GONE);
         }
         else if(flag.equals("modify_sortName")) {
             mAssetOrSort.setText("분류 수정");
@@ -70,6 +66,7 @@ public class EditItemNameActivity extends AppCompatActivity {
         mItemName.setText(itemName);
 
     }
+
 
 
     public void mOnClick(View v){
@@ -184,6 +181,8 @@ public class EditItemNameActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void setColorOfDivision(String division) {
         if (division.equals("income")) {
             action = "income";
@@ -219,6 +218,8 @@ public class EditItemNameActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void setColorOfTheme(String actionFlag) {
 
         if (actionFlag.equals("income")) {
@@ -227,6 +228,7 @@ public class EditItemNameActivity extends AppCompatActivity {
             setTheme(R.style.editText_expense);
         }
     }
+
 
 
     @Override

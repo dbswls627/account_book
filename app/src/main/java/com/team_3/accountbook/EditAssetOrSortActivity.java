@@ -34,6 +34,7 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
     private String action = "expense";
     private Boolean checkIncome = false, checkExpense = true;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,10 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
 
         settingBottomMenu();
         setRV();
+
     }
+
+
 
     private void setColorOfDivision(String division) {
         if (division.equals("income")) {
@@ -86,6 +90,8 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
         }
     }
 
+
+
     private void setColorOfTheme(String actionFlag) {
 
         if (actionFlag.equals("income")) {
@@ -94,6 +100,8 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
             setTheme(R.style.editText_expense);
         }
     }
+
+
 
     private void setRV(){
         if(forWhat.equals("asset")){
@@ -195,6 +203,8 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
             }
         }
     }
+
+
 
     @SuppressWarnings("deprecation")
     @Override
