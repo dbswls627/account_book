@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class GraphActivity extends AppCompatActivity {
     BottomNavigationView bottom_menu;
     ImageView preButton,nextButton;
-    private TextView monthYearText;
+    private TextView monthYearText, graphName;
     LinearLayout graph;
     PieChartFragment pieChartFragment;
     BarChartFragment barChartFragment;
@@ -34,6 +34,7 @@ public class GraphActivity extends AppCompatActivity {
     FragmentTransaction transaction;
     boolean graphCheck;
     String halfYear;
+    private TextView GraphName;
 
     @Override
     protected void onStart() {
@@ -53,6 +54,7 @@ public class GraphActivity extends AppCompatActivity {
         monthYearText = findViewById(R.id.monthYearTV);
         nextButton = findViewById(R.id.nextButton);
         graphImage = findViewById(R.id.graph_image);
+        GraphName = findViewById(R.id.graph_name);
 
 
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
@@ -145,12 +147,15 @@ public class GraphActivity extends AppCompatActivity {
                 transaction.replace(R.id.container, barChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_pie_chart_24);
                 graphCheck = false;
+                GraphName.setText("원형 그래프");
+
             }
             else {                 //막대 그래프 일때(원 그래프로 가는 버튼)
                 monthYearText.setText(monthYearFromDate(selectedDate));
                 transaction.replace(R.id.container, pieChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_bar_chart_24);
                 graphCheck = true;
+                GraphName.setText("막대 그래프");
             }
         });
     }

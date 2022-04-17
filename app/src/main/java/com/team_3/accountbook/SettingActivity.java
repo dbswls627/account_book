@@ -50,28 +50,25 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         db = AppDatabase.getInstance(this);
-        wear = findViewById(R.id.wear);
         add = findViewById(R.id.add);
-        list = findViewById(R.id.list);
-        sqlTest = findViewById(R.id.sqlTest);
         mPermissionImage = findViewById(R.id.permissionImage_setting);
         mPermissionText = findViewById(R.id.permissionText_setting);
         mAutoState = findViewById(R.id.autoState_setting);
 
 
-        list.setOnClickListener((view)->{
-            intent = new Intent(this, ListActivity.class);
-            startActivity(intent);
-        });
 
-        sqlTest.setOnClickListener((view)->{
-            intent = new Intent(this, SqlTestActivity.class);
-            startActivity(intent);
-        });
-        wear.setOnClickListener((view)->{
-            intent = new Intent(this, WearActivity.class);
-            startActivity(intent);
-        });
+        //list.setOnClickListener((view)->{
+            //intent = new Intent(this, ListActivity.class);
+            //startActivity(intent);
+        //});
+       // sqlTest.setOnClickListener((view)->{
+           // intent = new Intent(this, SqlTestActivity.class);
+            //startActivity(intent);
+        //});
+       // wear.setOnClickListener((view)->{
+            //intent = new Intent(this, WearActivity.class);
+           // startActivity(intent);
+        //});
 
         bottom_menu = findViewById(R.id.bottom_menu);
 

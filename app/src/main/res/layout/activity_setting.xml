@@ -170,39 +170,6 @@
                 android:textColor="@color/hardDarkGray"
                 android:text="도움말"/>
         </LinearLayout>
-
-
-        <TextView
-            android:textSize="40sp"
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="저장된 리스트"/>
-        <View
-            android:background="#ff0000"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-        <TextView
-            android:textSize="40sp"
-            android:id="@+id/sqlTest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SQL Test"/>
-        <View
-            android:background="#ff0000"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-        <TextView
-            android:textSize="40sp"
-            android:id="@+id/wear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Wear Test"/>
-        <View
-            android:background="#ff0000"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-        
     </LinearLayout>
 
 

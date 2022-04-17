@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +26,13 @@ import java.util.List;
 
 public class EditAssetOrSortActivity extends AppCompatActivity implements AssetInAdapter.OnItemClickInAssetAc{
     private BottomNavigationView mBottom_menu;
-    private TextView mAssetOrSortSetting;
+    private TextView mAssetOrSortSetting, mIncome, mExpense;
     private RecyclerView mAssetRV;
     private AppDatabase db;
     private String forWhat;
+    private LinearLayout layout;
+    private String action = "expense";
+    private Boolean checkIncome = false, checkExpense = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +42,58 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
         mAssetOrSortSetting = findViewById(R.id.assetOrSortSetting);
         mAssetRV = findViewById(R.id.rv_Asset);
         db = AppDatabase.getInstance(this);
+        layout = findViewById(R.id.button_layout_setting);
+        mIncome = findViewById(R.id.tv_income_setting);
+        mExpense = findViewById(R.id.tv_expense_setting);
 
         Intent intent = getIntent();
         forWhat = intent.getStringExtra("forWhat");     // 자산설정 or 분류설정 구분자
-        if(forWhat.equals("asset")){ mAssetOrSortSetting.setText("자산설정"); }
+        if(forWhat.equals("asset")){
+            mAssetOrSortSetting.setText("자산설정");
+            layout.setVisibility(View.GONE);
+        }
         if(forWhat.equals("sort")){ mAssetOrSortSetting.setText("분류설정"); }
+        setColorOfDivision("expense");
 
         settingBottomMenu();
         setRV();
     }
 
+    private void setColorOfDivision(String division) {
+        if (division.equals("income")) {
+            action = "income";
+            setColorOfTheme(action);
 
+            checkIncome = true;
+            checkExpense = false;
+
+            mIncome.setSelected(true);
+            mExpense.setSelected(false);
+            mIncome.setTextColor(getResources().getColor(R.color.hardGreen));           // 초록색
+            mExpense.setTextColor(getResources().getColor(R.color.grayForText));    // 진회색
+        }
+        else if (division.equals("expense")) {
+            action = "expense";
+            setColorOfTheme(action);
+
+            checkIncome = false;
+            checkExpense = true;
+
+            mIncome.setSelected(false);
+            mExpense.setSelected(true);
+            mIncome.setTextColor(getResources().getColor(R.color.grayForText));     // 진회색
+            mExpense.setTextColor(getResources().getColor(R.color.red));            // 빨간색
+        }
+    }
+
+    private void setColorOfTheme(String actionFlag) {
+
+        if (actionFlag.equals("income")) {
+            setTheme(R.style.editText_income);
+        } else if (actionFlag.equals("expense")) {
+            setTheme(R.style.editText_expense);
+        }
+    }
 
     private void setRV(){
         if(forWhat.equals("asset")){
@@ -59,7 +104,7 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
         }
 
         if(forWhat.equals("sort")){
-            List<String> sortNameList = db.dao().getSortName();
+            List<String> sortNameList = db.dao().getSortNames(action);
 
             mAssetRV.setAdapter(new AssetInAdapter(sortNameList, this, this));
             mAssetRV.setLayoutManager(new LinearLayoutManager(this));
@@ -118,6 +163,22 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
                 startActivityForResult(intent, 0);
                 overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
 
+                break;
+
+            case R.id.tv_income_setting:
+                Log.d("income", "click");
+                if (!checkIncome) {
+                    setColorOfDivision("income");
+                }
+                setRV();
+                break;
+
+            case R.id.tv_expense_setting:
+                Log.d("expense", "click");
+                if (!checkExpense) {
+                    setColorOfDivision("expense");
+                }
+                setRV();
                 break;
         }
     }

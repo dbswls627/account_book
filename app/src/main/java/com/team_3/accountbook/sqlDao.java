@@ -34,8 +34,8 @@ public interface sqlDao {
     @Query("INSERT INTO Asset(assetName) VALUES(:assetName)")
     void insertAsset(String assetName);
 
-    @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, null)")
-    void insertSortName(String name);
+    @Query("INSERT INTO Sort(sortName, sortDivision) VALUES(:name, :division)")
+    void insertSortName(String name,String division);
 
     @Insert
     void insertWatch(Watch watch);
@@ -87,6 +87,7 @@ public interface sqlDao {
 
     @Query("UPDATE Sort SET sortName = :sortName WHERE sortName = :initName")
     void updateSort(String sortName, String initName);
+
 
 
 
@@ -214,6 +215,12 @@ public interface sqlDao {
     @Query("SELECT sortName FROM Sort WHERE sortDivision = :division")
     List<String> getSortNames(String division);
 
+    @Query("SELECT s.sortName FROM Sort s" )
+    List<String> getSortName();
+
+    @Query("SELECT sortDivision FROM Sort WHERE sortName = :sortName" )
+    String getSortDivision(String sortName);
+
     @Query("SELECT * FROM Cost c ORDER BY useDate desc, c.content ASC, c.costId ASC")
     List<Cost> getCostAll();
 
@@ -314,8 +321,7 @@ public interface sqlDao {
     @Query("SELECT a.assetName FROM Asset a WHERE a.assetName <> '자동저장'")
     List<String> getAssetName();
 
-    @Query("SELECT s.sortName FROM Sort s" )
-    List<String> getSortName();
+
 
 
 

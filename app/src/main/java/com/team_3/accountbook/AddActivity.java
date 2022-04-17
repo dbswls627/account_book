@@ -459,7 +459,11 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
                     overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                 }
                 else if(focus.equals("sort")){
-                    Toast.makeText(this, "분류 편집 이동예정", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(this, EditAssetOrSortActivity.class);
+                    intent.putExtra("forWhat", "sort");
+                    startActivityForResult(intent, 0);
+                    overridePendingTransition(R.anim.left_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                 }
 
                 break;

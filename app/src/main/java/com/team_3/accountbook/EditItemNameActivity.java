@@ -1,10 +1,15 @@
 package com.team_3.accountbook;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,11 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditItemNameActivity extends AppCompatActivity {
-    private TextView mAssetOrSort;
+    private TextView mAssetOrSort, mSave, mExpense, mIncome;
     private EditText mItemName;
     private AppDatabase db;
     private String itemName;
     private String flag;
+    private String action = "expense", actionKorean = "지출";
+    private LinearLayout layout;
+    private boolean checkIncome = false, checkExpense = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +35,38 @@ public class EditItemNameActivity extends AppCompatActivity {
         mAssetOrSort = findViewById(R.id.assetOrSort);
         mItemName = findViewById(R.id.name_editItemName);
         db = AppDatabase.getInstance(this);
+        layout = findViewById(R.id.button_layout_add);
+        mIncome = findViewById(R.id.tv_income_add);
+        mExpense = findViewById(R.id.tv_expense_add);
+        mSave = findViewById(R.id.save_editItemName);
 
         itemName = getIntent().getStringExtra("itemName");
         flag = getIntent().getStringExtra("flag");
 
-        if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정"); }
-        else if(flag.equals("new_assetName")){ mAssetOrSort.setText("자산 추가"); }
-        else if(flag.equals("modify_sortName")){ mAssetOrSort.setText("분류 수정"); }
-        else if(flag.equals("new_sortName")){ mAssetOrSort.setText("분류 추가"); }
+        mItemName.setText(itemName);
+
+
+        if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정");
+            layout.setVisibility(View.GONE);
+        }
+        else if(flag.equals("new_assetName")){
+            mAssetOrSort.setText("자산 추가");
+            layout.setVisibility(View.GONE);
+        }
+        else if(flag.equals("modify_sortName")) {
+            mAssetOrSort.setText("분류 수정");
+            if(db.dao().getSortDivision(mItemName.getText().toString()).equals("income")){
+                mExpense.setEnabled(false);
+            }
+            else if(db.dao().getSortDivision(mItemName.getText().toString()).equals("expense")){
+                mIncome.setEnabled(false);
+            }
+            setColorOfDivision(db.dao().getSortDivision(mItemName.getText().toString()));
+        }
+        else if(flag.equals("new_sortName")){
+            mAssetOrSort.setText("분류 추가");
+            setColorOfDivision("expense");
+        }
         mItemName.setText(itemName);
 
     }
@@ -57,6 +90,20 @@ public class EditItemNameActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.hold_activity, R.anim.bottom_out_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
                 }
 
+                break;
+
+            case R.id.tv_income_add:
+                Log.d("income", "click");
+                if (!checkIncome) {
+                    setColorOfDivision("income");
+                }
+                break;
+
+            case R.id.tv_expense_add:
+                Log.d("expense", "click");
+                if (!checkExpense) {
+                    setColorOfDivision("expense");
+                }
                 break;
 
             case R.id.save_editItemName:
@@ -100,7 +147,7 @@ public class EditItemNameActivity extends AppCompatActivity {
                                 db.dao().updateSort(mItemName.getText().toString(), itemName);
                                 closeAnimation();
                             } else if (flag.equals("new_sortName")) {
-                                db.dao().insertSortName(mItemName.getText().toString());
+                                db.dao().insertSortName(mItemName.getText().toString(), action);
                                 closeAnimation();
                             }
                         } else {
@@ -116,6 +163,7 @@ public class EditItemNameActivity extends AppCompatActivity {
                 break;
         }
     }
+
 
 
 
@@ -136,6 +184,49 @@ public class EditItemNameActivity extends AppCompatActivity {
         }
     }
 
+    private void setColorOfDivision(String division) {
+        if (division.equals("income")) {
+            action = "income";
+            actionKorean = "수입";
+            setColorOfTheme(action);
+
+            checkIncome = true;
+            checkExpense = false;
+
+            mIncome.setSelected(true);
+            mExpense.setSelected(false);
+            mSave.setSelected(false);
+            mIncome.setTextColor(getResources().getColor(R.color.hardGreen));           // 초록색
+            mExpense.setTextColor(getResources().getColor(R.color.grayForText));    // 진회색
+            mSave.setTextColor(getResources().getColor(R.color.hardGreen));             // 초록색
+            mItemName.setText("");
+        }
+        else if (division.equals("expense")) {
+            action = "expense";
+            actionKorean = "지출";
+            setColorOfTheme(action);
+
+            checkIncome = false;
+            checkExpense = true;
+
+            mIncome.setSelected(false);
+            mExpense.setSelected(true);
+            mSave.setSelected(true);
+            mIncome.setTextColor(getResources().getColor(R.color.grayForText));     // 진회색
+            mExpense.setTextColor(getResources().getColor(R.color.red));            // 빨간색
+            mSave.setTextColor(getResources().getColor(R.color.red));               // 빨간색
+            mItemName.setText("");
+        }
+    }
+
+    private void setColorOfTheme(String actionFlag) {
+
+        if (actionFlag.equals("income")) {
+            setTheme(R.style.editText_income);
+        } else if (actionFlag.equals("expense")) {
+            setTheme(R.style.editText_expense);
+        }
+    }
 
 
     @Override

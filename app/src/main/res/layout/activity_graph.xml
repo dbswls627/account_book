@@ -68,12 +68,14 @@
                             android:src="@drawable/ic_baseline_bar_chart_24"
                             android:layout_gravity="center"
                             app:tint="@color/white"/>
+
                         <TextView
+                            android:id="@+id/graph_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="7dp"
+                            android:text="막대 그래프"
                             android:textColor="@color/white"
-                            android:text="가져오기"/>
+                            android:textSize="7dp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

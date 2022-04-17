@@ -33,6 +33,44 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/button_layout_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_income_add"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/select_state_income"
+            android:gravity="center"
+            android:onClick="mOnClick"
+            android:text="수입"
+            android:textColor="@color/grayForText"
+            android:textSize="14dp"
+            app:backgroundTint="@null" />
+
+        <TextView
+            android:id="@+id/tv_expense_add"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/select_state_expense"
+            android:gravity="center"
+            android:onClick="mOnClick"
+            android:text="지출"
+            android:textColor="@color/red"
+            android:textSize="14dp"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -49,7 +87,6 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="10dp"/>
     </LinearLayout>
-
 
     <View
         android:layout_width="match_parent"
