@@ -1,7 +1,5 @@
 package com.team_3.accountbook;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +7,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
@@ -41,6 +41,7 @@ public class EditItemNameActivity extends AppCompatActivity {
         itemName = getIntent().getStringExtra("itemName");
         flag = getIntent().getStringExtra("flag");
 
+        mItemName.setText(itemName);
 
         if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정");
             mInExLayout.setVisibility(View.GONE);
