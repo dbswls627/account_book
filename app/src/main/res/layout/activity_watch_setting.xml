@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -169,6 +169,41 @@
         android:textColor="@color/hardGreen"
         android:textSize="14dp"
         android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        tools:context=".WatchSettingActivity">
+
+        <ProgressBar
+            android:id="@+id/amount_progressbar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:max="360"
+            android:progress="100"
+            android:progressBackgroundTint="#FFFFFF"
+            android:progressDrawable="@drawable/circle_progressbar"
+            android:progressTint="#00FF00"
+            android:scaleX="-1" />
+
+        <ProgressBar
+            android:id="@+id/day_progressbar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:max="360"
+            android:progress="10"
+            android:progressBackgroundTint="#FFFFFF"
+            android:progressDrawable="@drawable/circle_progressbar"
+            android:progressTint="#8F820C"
+            android:scaleX="1" />
+    </RelativeLayout>
 
 
 </LinearLayout>
