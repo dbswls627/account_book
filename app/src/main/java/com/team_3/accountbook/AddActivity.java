@@ -121,6 +121,8 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             // ListInAssetActivity 에서 추가버튼 클릭시 실행되는 부분
             mWay.setText(getIntent().getStringExtra("wayName"));
 
+            setColorOfDivision(action);
+
             moveToFocus();
         }
         else if(callValue.equals("Main")){

@@ -43,18 +43,40 @@
             android:id="@+id/graphLayout_sortName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/darkGray">
+            android:layout_marginTop="10dp">
             <TextView
-                android:id="@+id/sortName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="3dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:text="[ "/>
+            <TextView
+                android:id="@+id/sortName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:text="mm월 dd일"
-                android:textSize="15dp"
-                android:textColor="@color/white"/>
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:text=" ]"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/gray"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
