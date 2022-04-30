@@ -71,10 +71,10 @@ public class WatchSettingActivity extends AppCompatActivity {
         day_progressbar.setProgress((int) ((Float.valueOf(date.getDayOfMonth())/yearMonth.lengthOfMonth())*120)); //날짜 게이지
 
         try{        //이번달 쓴돈이 없으면 null 불러와 팅기므로 예외처리 함
-            int amountPercent = (int) (120*((float)amount /
+            int amountPercent = (int) (12000*((float)amount /
                                amountGoal));
 
-            if (amountPercent>120) {amountPercent = 120;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
+            if (amountPercent>12000) {amountPercent = 12000;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
 
             amount_progressbar.setProgress(amountPercent);
         }

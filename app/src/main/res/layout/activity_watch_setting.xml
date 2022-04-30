@@ -195,7 +195,7 @@
             android:id="@+id/amount_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:max="360"
+            android:max="36000"
             android:progress="120"
             android:rotation="150"
             android:scaleX="-1"
