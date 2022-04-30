@@ -176,33 +176,30 @@
         android:gravity="center"
         tools:context=".WatchSettingActivity">
 
-        <ProgressBar
-            android:id="@+id/amount_progressbar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:indeterminate="false"
-            android:max="360"
-            android:progress="100"
-            android:progressBackgroundTint="#FFFFFF"
-            android:progressDrawable="@drawable/circle_progressbar"
-            android:progressTint="#00FF00"
-            android:scaleX="-1" />
-
-        <ProgressBar
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/day_progressbar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:indeterminate="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:max="360"
-            android:progress="10"
-            android:progressBackgroundTint="#FFFFFF"
-            android:progressDrawable="@drawable/circle_progressbar"
-            android:progressTint="#8F820C"
-            android:scaleX="1" />
+            android:progress="120"
+            android:rotation="210"
+            app:indicatorColor="#8F820C"
+            app:indicatorSize="300dp"
+            app:trackCornerRadius="12dp"
+            app:trackThickness="12dp" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/amount_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="120"
+            android:max="360"
+            android:rotation="150"
+            android:scaleX="-1"
+            app:indicatorSize="300dp"
+            app:trackCornerRadius="12dp"
+            app:trackThickness="12dp" />
+
     </RelativeLayout>
 
 

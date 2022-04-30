@@ -2,15 +2,15 @@ package com.team_3.accountbook;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -19,7 +19,7 @@ public class WatchSettingActivity extends AppCompatActivity {
     EditText amountGoal, warning;
     ImageView back;
     TextView save, mGoal, mWarning, mWon, mPercent;
-    ProgressBar day_progressbar,amount_progressbar;
+    CircularProgressIndicator day_progressbar,amount_progressbar;
     Switch mSwitch;
     AppDatabase db;
     LinearLayout layout;
@@ -56,15 +56,15 @@ public class WatchSettingActivity extends AppCompatActivity {
         LocalDate date = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(date);
                                                             //오늘날짜 나누기 이번달 마지막 날짜
-        day_progressbar.setProgress((int) ((Float.valueOf(date.getDayOfMonth())/yearMonth.lengthOfMonth())*140)); //날짜 게이지
+        day_progressbar.setProgress((int) ((Float.valueOf(date.getDayOfMonth())/yearMonth.lengthOfMonth())*120)); //날짜 게이지
 
         try{        //이번달 쓴돈이 없으면 null 불러와 팅기므로 예외처리 함
-            int amountPercent = (int) ((float)db.dao().getAmountOfMonthForWatch(LS.monthYearFromDate(date), "expense") /
-                    Integer.parseInt(db.dao().getAmountGoal()));
+            int amountPercent = (int) (120*((float)db.dao().getAmountOfMonthForWatch(LS.monthYearFromDate(date), "expense") /
+                                Integer.parseInt(db.dao().getAmountGoal())));
 
-            if (amountPercent>1) {amountPercent = 1;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
+            if (amountPercent>120) {amountPercent = 120;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
 
-            amount_progressbar.setProgress(amountPercent* 140);
+            amount_progressbar.setProgress(amountPercent);
         }
         catch (Exception e){
             amount_progressbar.setProgress(0);
