@@ -171,8 +171,11 @@
         android:textStyle="bold" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:background="@drawable/oval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
         tools:context=".WatchSettingActivity">
 
@@ -192,14 +195,40 @@
             android:id="@+id/amount_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="120"
             android:max="360"
+            android:progress="120"
             android:rotation="150"
             android:scaleX="-1"
             app:indicatorSize="300dp"
             app:trackCornerRadius="12dp"
             app:trackThickness="12dp" />
 
+        <TextView
+
+            android:id="@+id/watchAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/day_progressbar"
+            android:layout_alignEnd="@+id/day_progressbar"
+            android:layout_alignBottom="@+id/day_progressbar"
+            android:layout_marginBottom="200dp"
+            android:gravity="center"
+            android:text="40,000"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
+
+        <TextView
+            android:id="@+id/watchAmountGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/day_progressbar"
+            android:layout_alignEnd="@+id/day_progressbar"
+            android:layout_below="@+id/watchAmount"
+            android:layout_marginTop="-200dp"
+            android:gravity="center"
+            android:text="/300,000원"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
     </RelativeLayout>
 
 
