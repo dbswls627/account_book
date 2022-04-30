@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="12dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="12dp"
             android:layout_marginRight="25dp"
             android:layout_marginBottom="12dp">
 
@@ -49,16 +49,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:text="워치 기능" />
+                android:text="워치 기능"
+                android:textColor="@color/black" />
 
             <Switch
-                android:trackTint="@drawable/newtrack"
-                android:thumbTint="@drawable/newthumb"
                 android:id="@+id/onOff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:thumbTint="@drawable/newthumb"
+                android:trackTint="@drawable/newtrack"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
         </LinearLayout>
 
@@ -72,15 +72,15 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
             android:layout_marginLeft="33dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="25dp">
 
             <TextView
@@ -88,8 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:textColor="@color/black"
-                android:text="목표 금액" />
+                android:text="목표 금액"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/amountGoal"
@@ -106,8 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/hardDarkGray"
-                android:text="원" />
+                android:text="원"
+                android:textColor="@color/hardDarkGray" />
 
 
         </LinearLayout>
@@ -126,8 +126,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:textColor="@color/black"
-                android:text="경고 %" />
+                android:text="경고 %"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/warning"
@@ -145,8 +145,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/hardDarkGray"
-                android:text="%" />
+                android:text="%"
+                android:textColor="@color/hardDarkGray" />
         </LinearLayout>
     </LinearLayout>
 
@@ -171,11 +171,11 @@
         android:textStyle="bold" />
 
     <RelativeLayout
-        android:layout_marginTop="100dp"
-        android:layout_gravity="center"
-        android:background="@drawable/oval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/oval"
         android:gravity="center"
         tools:context=".WatchSettingActivity">
 
@@ -204,14 +204,13 @@
             app:trackThickness="12dp" />
 
         <TextView
-
             android:id="@+id/watchAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/day_progressbar"
             android:layout_alignEnd="@+id/day_progressbar"
             android:layout_alignBottom="@+id/day_progressbar"
-            android:layout_marginBottom="200dp"
+            android:layout_marginBottom="180dp"
             android:gravity="center"
             android:text="40,000"
             android:textColor="@color/white"
@@ -221,14 +220,25 @@
             android:id="@+id/watchAmountGoal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/watchAmount"
             android:layout_alignStart="@+id/day_progressbar"
             android:layout_alignEnd="@+id/day_progressbar"
-            android:layout_below="@+id/watchAmount"
-            android:layout_marginTop="-200dp"
+            android:layout_marginTop="-180dp"
             android:gravity="center"
             android:text="/300,000원"
             android:textColor="@color/white"
             android:textSize="20dp" />
+        <ImageView
+            android:id="@+id/watchImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/empty"
+            android:layout_below="@+id/watchAmount"
+            android:layout_alignStart="@+id/day_progressbar"
+            android:layout_alignEnd="@+id/day_progressbar"
+            android:layout_marginTop="-110dp"
+            android:gravity="center"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
 
