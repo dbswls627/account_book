@@ -54,8 +54,12 @@ public class WatchSettingActivity extends AppCompatActivity {
         ListenerService LS = new ListenerService(); // monthYearFromDate 함수 불러다 쓰기 위함
 
         int amountGoal  = Integer.parseInt(db.dao().getAmountGoal());   //설정 목표값
-        int amount = db.dao().getAmountOfMonthForWatch(LS.monthYearFromDate(date), "expense");  //이번달 사용금액
-
+        int amount;
+        try {               //이번달 쓴돈이 없으면 null 불러와 팅기므로 예외처리 함
+            amount = db.dao().getAmountOfMonthForWatch(LS.monthYearFromDate(date), "expense");  //이번달 사용금액
+        }catch(Exception e){
+            amount = 0;
+        }
 
 
         amountGoalEdit.addTextChangedListener(new AddActivity.NumberTextWatcher(amountGoalEdit));            // 금액 입력반응
@@ -70,17 +74,12 @@ public class WatchSettingActivity extends AppCompatActivity {
                                                             //오늘날짜 나누기 이번달 마지막 날짜
         day_progressbar.setProgress((int) ((Float.valueOf(date.getDayOfMonth())/yearMonth.lengthOfMonth())*120)); //날짜 게이지
 
-        try{        //이번달 쓴돈이 없으면 null 불러와 팅기므로 예외처리 함
-            int amountPercent = (int) (12000*((float)amount /
+        int amountPercent = (int) (12000*((float)amount /
                                amountGoal));
+        if (amountPercent>12000) {amountPercent = 12000;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
+        amount_progressbar.setProgress(amountPercent);
 
-            if (amountPercent>12000) {amountPercent = 12000;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
 
-            amount_progressbar.setProgress(amountPercent);
-        }
-        catch (Exception e){
-            amount_progressbar.setProgress(0);
-        }
 
 
 
