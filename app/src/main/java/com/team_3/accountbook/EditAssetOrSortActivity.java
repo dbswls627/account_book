@@ -32,7 +32,6 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
     private String forWhat;
     private LinearLayout layout;
     private String action = "expense";
-    private Boolean checkIncome = false, checkExpense = true;
 
 
     @Override
@@ -66,38 +65,19 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
     private void setColorOfDivision(String division) {
         if (division.equals("income")) {
             action = "income";
-            setColorOfTheme(action);
-
-            checkIncome = true;
-            checkExpense = false;
 
             mIncome.setSelected(true);
             mExpense.setSelected(false);
-            mIncome.setTextColor(getResources().getColor(R.color.hardGreen));           // 초록색
+            mIncome.setTextColor(getResources().getColor(R.color.hardGreen));       // 초록색
             mExpense.setTextColor(getResources().getColor(R.color.grayForText));    // 진회색
         }
         else if (division.equals("expense")) {
             action = "expense";
-            setColorOfTheme(action);
-
-            checkIncome = false;
-            checkExpense = true;
 
             mIncome.setSelected(false);
             mExpense.setSelected(true);
             mIncome.setTextColor(getResources().getColor(R.color.grayForText));     // 진회색
             mExpense.setTextColor(getResources().getColor(R.color.red));            // 빨간색
-        }
-    }
-
-
-
-    private void setColorOfTheme(String actionFlag) {
-
-        if (actionFlag.equals("income")) {
-            setTheme(R.style.editText_income);
-        } else if (actionFlag.equals("expense")) {
-            setTheme(R.style.editText_expense);
         }
     }
 
@@ -174,19 +154,15 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
                 break;
 
             case R.id.tv_income_setting:
-                Log.d("income", "click");
-                if (!checkIncome) {
-                    setColorOfDivision("income");
-                }
+                setColorOfDivision("income");
                 setRV();
+
                 break;
 
             case R.id.tv_expense_setting:
-                Log.d("expense", "click");
-                if (!checkExpense) {
-                    setColorOfDivision("expense");
-                }
+                setColorOfDivision("expense");
                 setRV();
+
                 break;
         }
     }
@@ -217,6 +193,7 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
             }
             if(forWhat.equals("sort")){
                 intent.putExtra("itemName", assetName);
+                intent.putExtra("division", action);
                 intent.putExtra("flag", "modify_sortName");
             }
             startActivityForResult(intent, 0);

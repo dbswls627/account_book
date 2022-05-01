@@ -16,9 +16,8 @@ public class EditItemNameActivity extends AppCompatActivity {
     private TextView mAssetOrSort, mSave, mExpense, mIncome;
     private EditText mItemName;
     private AppDatabase db;
-    private String itemName;
-    private String flag;
-    private String action = "expense", actionKorean = "지출";
+    private String itemName, flag, division;
+    private String action = "expense";
     private LinearLayout mInExLayout;
     private boolean checkIncome = false, checkExpense = true;
 
@@ -39,32 +38,39 @@ public class EditItemNameActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
 
         itemName = getIntent().getStringExtra("itemName");
+        division = getIntent().getStringExtra("division");
         flag = getIntent().getStringExtra("flag");
 
-        mItemName.setText(itemName);
 
         if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정");
             mInExLayout.setVisibility(View.GONE);
         }
+
         else if(flag.equals("new_assetName")){
             mAssetOrSort.setText("자산 추가");
             mInExLayout.setVisibility(View.GONE);
         }
+
         else if(flag.equals("modify_sortName")) {
-            mAssetOrSort.setText("분류 수정");
-            if(db.dao().getSortDivision(mItemName.getText().toString()).equals("income")){
-                mExpense.setEnabled(false);
+            mInExLayout.setVisibility(View.GONE);
+
+            if(division.equals("expense")){
+                mAssetOrSort.setText("지출분류 수정");
             }
-            else if(db.dao().getSortDivision(mItemName.getText().toString()).equals("expense")){
-                mIncome.setEnabled(false);
+            else if(division.equals("income")){
+                mAssetOrSort.setText("수입분류 수정");
             }
-            setColorOfDivision(db.dao().getSortDivision(mItemName.getText().toString()));
+
+            setColorOfDivision(db.dao().getSortDivision(itemName));
         }
+
         else if(flag.equals("new_sortName")){
             mAssetOrSort.setText("분류 추가");
             setColorOfDivision("expense");
         }
+
         mItemName.setText(itemName);
+
 
     }
 
@@ -187,7 +193,6 @@ public class EditItemNameActivity extends AppCompatActivity {
     private void setColorOfDivision(String division) {
         if (division.equals("income")) {
             action = "income";
-            actionKorean = "수입";
             setColorOfTheme(action);
 
             checkIncome = true;
@@ -197,13 +202,11 @@ public class EditItemNameActivity extends AppCompatActivity {
             mExpense.setSelected(false);
             mSave.setSelected(false);
             mIncome.setTextColor(getResources().getColor(R.color.hardGreen));           // 초록색
-            mExpense.setTextColor(getResources().getColor(R.color.grayForText));    // 진회색
+            mExpense.setTextColor(getResources().getColor(R.color.grayForText));        // 진회색
             mSave.setTextColor(getResources().getColor(R.color.hardGreen));             // 초록색
-            mItemName.setText("");
         }
         else if (division.equals("expense")) {
             action = "expense";
-            actionKorean = "지출";
             setColorOfTheme(action);
 
             checkIncome = false;
@@ -215,19 +218,20 @@ public class EditItemNameActivity extends AppCompatActivity {
             mIncome.setTextColor(getResources().getColor(R.color.grayForText));     // 진회색
             mExpense.setTextColor(getResources().getColor(R.color.red));            // 빨간색
             mSave.setTextColor(getResources().getColor(R.color.red));               // 빨간색
-            mItemName.setText("");
         }
+
     }
 
 
 
     private void setColorOfTheme(String actionFlag) {
-
         if (actionFlag.equals("income")) {
             setTheme(R.style.editText_income);
-        } else if (actionFlag.equals("expense")) {
+        }
+        else if (actionFlag.equals("expense")) {
             setTheme(R.style.editText_expense);
         }
+
     }
 
 
