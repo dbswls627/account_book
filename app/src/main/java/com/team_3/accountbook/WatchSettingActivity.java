@@ -19,7 +19,7 @@ import java.time.YearMonth;
 public class WatchSettingActivity extends AppCompatActivity {
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     EditText amountGoalEdit, warning;
-    ImageView back;
+    ImageView back,watchImage;
     TextView save, mGoal, mWarning, mWon, mPercent,watchAmount, watchAmountGoal;
     CircularProgressIndicator day_progressbar,amount_progressbar;
     Switch mSwitch;
@@ -47,6 +47,7 @@ public class WatchSettingActivity extends AppCompatActivity {
         mWon = findViewById(R.id.won);
         mPercent = findViewById(R.id.tv_percent);
         layout = findViewById(R.id.layout);
+        watchImage = findViewById(R.id.watchImage);
 
         LocalDate date = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(date);
@@ -79,7 +80,9 @@ public class WatchSettingActivity extends AppCompatActivity {
         if (amountPercent>12000) {amountPercent = 12000;}    //amountPercent 가 1을 넘으면 게이지가 넘쳐서 침범
         amount_progressbar.setProgress(amountPercent);
 
-
+        if (amountPercent >=  12000 * Integer.parseInt(db.dao().getWarning()) * 0.01) { watchImage.setImageResource(R.drawable.warning); }
+        else if (amountPercent == 12000) { watchImage.setImageResource(R.drawable.empty); }
+        else { watchImage.setImageResource(R.drawable.money); }
 
 
 
