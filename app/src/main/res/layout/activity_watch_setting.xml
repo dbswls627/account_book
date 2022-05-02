@@ -178,15 +178,36 @@
         android:background="@drawable/oval"
         android:gravity="center"
         tools:context=".WatchSettingActivity">
-
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/day_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:max="360"
             android:progress="120"
             android:rotation="210"
+            app:indicatorColor="#3D8F820C"
+            app:indicatorSize="300dp"
+            app:trackCornerRadius="12dp"
+            app:trackThickness="12dp" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/day_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:max="360"
+            android:progress="60"
+            android:rotation="210"
             app:indicatorColor="#8F820C"
+            app:indicatorSize="300dp"
+            app:trackCornerRadius="12dp"
+            app:trackThickness="12dp" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorColor="#3D2DB532"
+            android:max="36000"
+            android:progress="12000"
+            android:rotation="150"
+            android:scaleX="-1"
             app:indicatorSize="300dp"
             app:trackCornerRadius="12dp"
             app:trackThickness="12dp" />
@@ -195,6 +216,7 @@
             android:id="@+id/amount_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:indicatorColor="#2DB532"
             android:max="36000"
             android:progress="120"
             android:rotation="150"
@@ -228,17 +250,26 @@
             android:text="/300,000원"
             android:textColor="@color/white"
             android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/refresh"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:layout_alignEnd="@+id/day_progressbar"
+            android:src="@drawable/ic_baseline_refresh_24"
+            app:tint="@color/black" />
+
         <ImageView
             android:id="@+id/watchImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/empty"
             android:layout_below="@+id/watchAmount"
             android:layout_alignStart="@+id/day_progressbar"
             android:layout_alignEnd="@+id/day_progressbar"
             android:layout_marginTop="-110dp"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:src="@drawable/empty" />
     </RelativeLayout>
 
 
