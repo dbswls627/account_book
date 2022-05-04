@@ -128,7 +128,7 @@ public class MyTileService extends TileService {
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 첫번째 선 투명한 게이지
                                         .setLength(degrees(100f))  //게이지 = 360f가 만땅
-                                        .setColor(argb(0x1F00C853))  //1F -투명도
+                                        .setColor(argb(0x3D00C853))  //1F -투명도
                                         .setThickness(Tdp)                    //선 두께
                                         .build()
                         )
@@ -162,7 +162,7 @@ public class MyTileService extends TileService {
                         .addContent(
                                 new LayoutElementBuilders.ArcLine.Builder()    //테두리에 두번째 선 투명한 게이지
                                         .setLength(degrees(100f))  //게이지 = 360f가 만땅
-                                        .setColor(argb(0x1F8F820C))  //1F -투명도
+                                        .setColor(argb(0x3D8F820C))  //1F -투명도
                                         .setThickness(Tdp) //선 두께
                                         .build()
                         )
