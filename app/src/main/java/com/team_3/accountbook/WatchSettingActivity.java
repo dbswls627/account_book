@@ -23,7 +23,7 @@ public class WatchSettingActivity extends AppCompatActivity {
     private final DecimalFormat myFormatter = new DecimalFormat("###,###");
     EditText amountGoalEdit, warning;
     ImageView back,watchImage,refresh;
-    TextView save, mGoal, mWarning, mWon, mPercent,watchAmount, watchAmountGoal;
+    TextView save, mGoal, mWarning, mWon, mPercent,watchAmount, watchAmountGoal, balance;
     CircularProgressIndicator day_progressbar,amount_progressbar;
     Switch mSwitch;
     AppDatabase db;
@@ -45,6 +45,7 @@ public class WatchSettingActivity extends AppCompatActivity {
         watchAmountGoal = findViewById(R.id.watchAmountGoal);
         day_progressbar = findViewById(R.id.day_progressbar);
         amount_progressbar = findViewById(R.id.amount_progressbar);
+        balance = findViewById(R.id.balance);
         refresh = findViewById(R.id.refresh);
         mSwitch = findViewById(R.id.onOff);
         back = findViewById(R.id.toBack);
@@ -155,6 +156,8 @@ public class WatchSettingActivity extends AppCompatActivity {
         }catch(Exception e){
             amount = 0;
         }
+
+        balance.setText("잔액 : "+myFormatter.format(amountGoal - amount)+ "원");
 
         watchAmountGoal.setText(myFormatter.format(amountGoal)+"원");
         watchAmount.setText(myFormatter.format(amount));

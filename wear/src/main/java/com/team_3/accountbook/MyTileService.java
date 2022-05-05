@@ -105,6 +105,8 @@ public class MyTileService extends TileService {
         try {
             warning = Integer.parseInt(db.dao().get("warning"));
         }catch (Exception e){}
+
+        int balance = goal - amount;
         LocalDate date = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(date);
 
@@ -206,6 +208,12 @@ public class MyTileService extends TileService {
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
                                         .setText("/"+myFormatter.format(amountProgress.goal)+"원")
+                                        .setTypography(10)                  //글씨 크기(?)
+                                        .build()
+                                )
+                                .addContent(new Text.Builder()              //텍스트
+                                        .setColor(argb(0xFFFFFFFF))
+                                        .setText("잔액 : "+myFormatter.format(balance)+"원")
                                         .setTypography(10)                  //글씨 크기(?)
                                         .build()
                                 )

@@ -184,7 +184,7 @@
             android:max="360"
             android:progress="120"
             android:rotation="210"
-            app:indicatorColor="#3D8F820C"
+            app:indicatorColor="#4D8F820C"
             app:indicatorSize="300dp"
             app:trackCornerRadius="12dp"
             app:trackThickness="12dp" />
@@ -203,7 +203,7 @@
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:indicatorColor="#3D2DB532"
+            app:indicatorColor="#4D2DB532"
             android:max="36000"
             android:progress="12000"
             android:rotation="150"
@@ -239,6 +239,18 @@
             android:textSize="40dp" />
 
         <TextView
+            android:id="@+id/balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/watchAmountGoal"
+            android:layout_alignStart="@+id/day_progressbar"
+            android:layout_alignEnd="@+id/day_progressbar"
+            android:gravity="center"
+            android:text="잔액 : 50원"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <TextView
             android:id="@+id/watchAmountGoal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -270,6 +282,18 @@
             android:layout_marginTop="-110dp"
             android:gravity="center"
             android:src="@drawable/empty" />
+        <TextView
+            android:id="@+id/emoticon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/watchAmount"
+            android:layout_alignStart="@+id/day_progressbar"
+            android:layout_alignEnd="@+id/day_progressbar"
+            android:gravity="center"
+            android:layout_marginTop="-40dp"
+            android:text="🕦                💵"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
     </RelativeLayout>
 
 
