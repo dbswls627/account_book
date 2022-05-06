@@ -44,6 +44,14 @@ public class BarChartFragment extends Fragment {
     RecyclerView rv;
     ArrayList<String> xAxisValues;
     Context context;
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onResume() {
+        super.onResume();
+        setChart(YYYYMM);
+    }
+
     public BarChartFragment(LocalDate YYYYMM) {
         // Required empty public constructor
         this.YYYYMM = YYYYMM;

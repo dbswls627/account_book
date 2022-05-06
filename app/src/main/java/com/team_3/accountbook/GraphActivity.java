@@ -58,7 +58,7 @@ public class GraphActivity extends AppCompatActivity {
 
         selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
 
-        graphCheck = true;
+        graphCheck = true; //true = 원그래프    false = 막대그래프
 
 
         transaction = getSupportFragmentManager().beginTransaction();

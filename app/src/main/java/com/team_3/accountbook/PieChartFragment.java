@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,12 @@ public class PieChartFragment extends Fragment {
         YYYYMM = date;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onResume() {
+        super.onResume();
+        setChart(YYYYMM);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -52,7 +59,7 @@ public class PieChartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pie_chart, container, false);
         context = container.getContext();
         db = AppDatabase.getInstance(context);
-
+        Log.d("텟트","onCreateView");
         rv = (view).findViewById(R.id.rv);
         listLayout = (view).findViewById(R.id.listLayout);
         chartLayout = (view).findViewById(R.id.chartLayout);
