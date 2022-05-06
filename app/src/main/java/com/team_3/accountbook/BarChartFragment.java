@@ -28,8 +28,8 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,21 +39,20 @@ public class BarChartFragment extends Fragment {
     List<BarEntry> barEntries = new ArrayList<>();
     TextView month;
     LinearLayout MMLayout,listLayout, chartLayout, noData;
-    String YYYY;
+    LocalDate YYYYMM;
     String MM;
     RecyclerView rv;
-    String halfYear;
     ArrayList<String> xAxisValues;
     Context context;
-    public BarChartFragment(String YYYY) {
+    public BarChartFragment(LocalDate YYYYMM) {
         // Required empty public constructor
-        this.YYYY = YYYY;
+        this.YYYYMM = YYYYMM;
 
 
     }
-    public void setDate(String date,String halfYear){
-        YYYY = date;
-        this.halfYear = halfYear;
+    public void setDate(LocalDate date){
+        YYYYMM = date;
+
     }
 
 
@@ -87,7 +86,7 @@ public class BarChartFragment extends Fragment {
         MM = LocalDate.now().getMonthValue() +"월";
 
 
-        setChart(YYYY,halfYear);
+        setChart(YYYYMM);
 
         /**클릭 이벤트*/
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -97,7 +96,7 @@ public class BarChartFragment extends Fragment {
                 MM = xAxisValues.get((int) h.getX());
                 if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
                 month.setText(MM);
-                setList((ArrayList<Cost>) db.dao().getMDate(YYYY+" "+MM, "expense"));
+                setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromYear(YYYYMM)+" "+MM, "expense"));
             }
 
             @Override
@@ -115,26 +114,29 @@ public class BarChartFragment extends Fragment {
 
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setChart(String YYYY,String halfYear) {
+    public void setChart(LocalDate YYYYMM) {
+
         AtomicBoolean barEntriesIsEmpty = new AtomicBoolean(true); //forEach 에서 쓰려면 이런 형태여야 한다네? 원랜 boolean barEntriesIsEmpty =true 란 의미
+        xAxisValues = new ArrayList<>();    //그래프 x축 값
+
         if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
         month.setText(MM);
-        this.YYYY = YYYY;
-        this.halfYear = halfYear;
-        int mon = 1;
-        if (halfYear.equals(" 상반기")){ mon = 1;}
-        else if (halfYear.equals(" 하반기")){ mon = 7;}
-        barEntries.clear();
-        for (int i = mon; i <= mon + 5; i++){
-            String s = String.valueOf(i);
-            if (s.length()==1){s = "0"+ s;} //1월이면->01월 이 되도록
+        this.YYYYMM = YYYYMM;
 
+        barEntries.clear();
+
+        YYYYMM = YYYYMM.minusMonths(6);
+        for (int i = 1; i <= 6; i++){
+            YYYYMM = YYYYMM.plusMonths(1);
             try {
-                barEntries.add(new BarEntry(i-1,db.dao().getAmountOfMonth(YYYY+" "+s+"월","expense")));
+                barEntries.add(new BarEntry(i-1,db.dao().getAmountOfMonth(monthYearFromDate(YYYYMM),"expense")));
             }catch (Exception e){
                 barEntries.add(new BarEntry(i-1,0));        //해당 월에 쓴돈이 없어 null 값 이면 0원
             }
+
+            xAxisValues.add(YYYYMM.getMonthValue()+"월");
         }
+
 
         barEntries.forEach((item)->{
             if (item.getY() != 0){  //하나라도 값이 있으면..
@@ -154,13 +156,13 @@ public class BarChartFragment extends Fragment {
 
 
 
-        setList((ArrayList<Cost>) db.dao().getMDate(YYYY+" "+MM, "expense"));
+        setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(YYYYMM), "expense"));
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
         barDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);   //비율맞추기 1
         /** X축 글씨*/
 
-        xAxisValues = new ArrayList<>(Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월","7월", "8월", "9월", "10월", "11월", "12월"));
+
         barChart.getAxisLeft().setEnabled(false);       //y축 왼쪽 안뜨게
 
         XAxis xAxis = barChart.getXAxis();              //x축
@@ -205,6 +207,18 @@ public class BarChartFragment extends Fragment {
     }
     void MMLayoutInvisible (){
         MMLayout.setVisibility(View.INVISIBLE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String monthYearFromDate(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        return date.format(formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String monthYearFromYear(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
+        return date.format(formatter);
     }
 
 }
