@@ -113,8 +113,8 @@ public interface sqlDao {
     @Query("DELETE FROM Asset WHERE assetName = :assetName")
     void deleteAsset(String assetName);
 
-    @Query("DELETE FROM Sort WHERE sortName = :sortName")
-    void deleteSort(String sortName);
+    @Query("DELETE FROM Sort WHERE sortName = :sortName AND sortDivision = :sortDivision")
+    void deleteSort(String sortName, String sortDivision);
 
 
 

@@ -147,6 +147,7 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
                 }
                 if(forWhat.equals("sort")){
                     intent.putExtra("flag", "new_sortName");
+                    intent.putExtra("action", action);
                 }
                 startActivityForResult(intent, 0);
                 overridePendingTransition(R.anim.bottom_in_activity, R.anim.hold_activity);    // (나타날 액티비티가 취해야할 애니메이션, 현재 액티비티가 취해야할 애니메이션)
@@ -218,7 +219,7 @@ public class EditAssetOrSortActivity extends AppCompatActivity implements AssetI
                         db.dao().deleteAsset(assetName);
                     }
                     if(forWhat.equals("sort")){
-                        db.dao().deleteSort(assetName);
+                        db.dao().deleteSort(assetName, action);
                     }
                     setRV();
                 }

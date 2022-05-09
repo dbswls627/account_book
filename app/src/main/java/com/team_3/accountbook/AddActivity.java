@@ -31,7 +31,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -252,7 +251,7 @@ public class AddActivity extends AppCompatActivity implements WayAndSortAdapter.
             }
         }
         else{
-            mSetGaol.setVisibility(View.GONE);
+            mSetGaol.setVisibility(View.VISIBLE);
         }
 
 

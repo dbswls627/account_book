@@ -16,8 +16,7 @@ public class EditItemNameActivity extends AppCompatActivity {
     private TextView mAssetOrSort, mSave, mExpense, mIncome;
     private EditText mItemName;
     private AppDatabase db;
-    private String itemName, flag, division;
-    private String action = "expense";
+    private String itemName, flag, division, action;
     private LinearLayout mInExLayout;
     private boolean checkIncome = false, checkExpense = true;
 
@@ -40,6 +39,7 @@ public class EditItemNameActivity extends AppCompatActivity {
         itemName = getIntent().getStringExtra("itemName");
         division = getIntent().getStringExtra("division");
         flag = getIntent().getStringExtra("flag");
+        action = getIntent().getStringExtra("action");
 
 
         if(flag.equals("modify_assetName")){ mAssetOrSort.setText("자산 수정");
@@ -66,7 +66,7 @@ public class EditItemNameActivity extends AppCompatActivity {
 
         else if(flag.equals("new_sortName")){
             mAssetOrSort.setText("분류 추가");
-            setColorOfDivision("expense");
+            setColorOfDivision(action);
         }
 
         mItemName.setText(itemName);
@@ -141,7 +141,7 @@ public class EditItemNameActivity extends AppCompatActivity {
                     if( flag.equals("modify_sortName") || flag.equals("new_sortName") ){
 
                         for (String str : sortName) {
-                            if (str.equals(mItemName.getText().toString())) {
+                            if (str.equals(mItemName.getText().toString()) && action.equals(db.dao().getSortDivision(mItemName.getText().toString()))) {
                                 notExist = false;
                             }
                         }
