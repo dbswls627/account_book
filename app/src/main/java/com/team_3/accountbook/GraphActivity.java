@@ -29,7 +29,7 @@ public class GraphActivity extends AppCompatActivity {
     BarChartFragment barChartFragment;
     ImageView graphImage;
     AppDatabase db;
-    LocalDate selectedDate;
+    LocalDate pieSelectedDate,barSelectDate;
 
     FragmentTransaction transaction;
     boolean graphCheck;
@@ -56,17 +56,18 @@ public class GraphActivity extends AppCompatActivity {
         GraphName = findViewById(R.id.graph_name);
 
 
-        selectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
+        pieSelectedDate = LocalDate.now();      // LocalDate: 지정된 날짜로 구성된 년-월 날짜.(시간 x) / 형식: YYYY-MM-DD
+        barSelectDate = LocalDate.now();
 
         graphCheck = true; //true = 원그래프    false = 막대그래프
 
 
         transaction = getSupportFragmentManager().beginTransaction();
 
-        pieChartFragment = new PieChartFragment(monthYearFromDate(selectedDate));
-        barChartFragment = new BarChartFragment(selectedDate);
+        pieChartFragment = new PieChartFragment(monthYearFromDate(pieSelectedDate));
+        barChartFragment = new BarChartFragment(barSelectDate);
         transaction.replace(R.id.container,pieChartFragment).commit();
-        monthYearText.setText(monthYearFromDate(selectedDate));
+        monthYearText.setText(monthYearFromDate(pieSelectedDate));
 
         bottom_menu = findViewById(R.id.bottom_menu);
         bottom_menu.setOnNavigationItemSelectedListener((@NonNull MenuItem menuItem)-> {
@@ -94,14 +95,14 @@ public class GraphActivity extends AppCompatActivity {
 
         preButton.setOnClickListener(view -> {
             if (graphCheck) {           //원 그래프 일때
-                selectedDate = selectedDate.minusMonths(1);
-                monthYearText.setText(monthYearFromDate(selectedDate));
-                pieChartFragment.setChart(monthYearFromDate(selectedDate));
+                pieSelectedDate = pieSelectedDate.minusMonths(1);
+                monthYearText.setText(monthYearFromDate(pieSelectedDate));
+                pieChartFragment.setChart(monthYearFromDate(pieSelectedDate));
             }
             else {                      //막대 그래프 일때
-                selectedDate = selectedDate.minusMonths(6);
-                monthYearText.setText(monthYearFromDate(selectedDate)+"~"+monthYearFromDate(selectedDate.plusMonths(5)));
-                barChartFragment.setChart(selectedDate);
+                barSelectDate = barSelectDate.minusMonths(6);
+                monthYearText.setText(monthYearFromDate(barSelectDate)+"~"+monthYearFromDate(barSelectDate.plusMonths(5)));
+                barChartFragment.setChart(barSelectDate);
                 barChartFragment.setList((new ArrayList<Cost>())) ; //빈리스트 띄우기
                 barChartFragment.MMLayoutInvisible();
             }
@@ -109,14 +110,14 @@ public class GraphActivity extends AppCompatActivity {
 
         nextButton.setOnClickListener(view -> {
             if (graphCheck) {           //원 그래프 일때
-                selectedDate = selectedDate.plusMonths(1);
-                monthYearText.setText(monthYearFromDate(selectedDate));
-                pieChartFragment.setChart(monthYearFromDate(selectedDate));
+                pieSelectedDate = pieSelectedDate.plusMonths(1);
+                monthYearText.setText(monthYearFromDate(pieSelectedDate));
+                pieChartFragment.setChart(monthYearFromDate(pieSelectedDate));
             }
             else {                      //막대그래프 일때
-                selectedDate = selectedDate.plusMonths(6);
-                monthYearText.setText(monthYearFromDate(selectedDate.minusMonths(5))+"~"+monthYearFromDate(selectedDate));
-                barChartFragment.setChart(selectedDate);
+                barSelectDate = barSelectDate.plusMonths(6);
+                monthYearText.setText(monthYearFromDate(barSelectDate.minusMonths(5))+"~"+monthYearFromDate(barSelectDate));
+                barChartFragment.setChart(barSelectDate);
                 barChartFragment.setList((new ArrayList<Cost>())); //빈리스트 띄우기
                 barChartFragment.MMLayoutInvisible();
             }
@@ -125,8 +126,8 @@ public class GraphActivity extends AppCompatActivity {
         graph.setOnClickListener(view -> {
             transaction = getSupportFragmentManager().beginTransaction();
             if (graphCheck) {       //원 그래프 일때(막대 그래프로 가는 버튼)
-                barChartFragment.setDate(selectedDate);
-                monthYearText.setText(monthYearFromDate(selectedDate.minusMonths(5))+"~"+monthYearFromDate(selectedDate));
+                barChartFragment.setDate(barSelectDate);
+                monthYearText.setText(monthYearFromDate(barSelectDate.minusMonths(5))+"~"+monthYearFromDate(barSelectDate));
                 transaction.replace(R.id.container, barChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_pie_chart_24);
                 graphCheck = false;
@@ -134,7 +135,7 @@ public class GraphActivity extends AppCompatActivity {
 
             }
             else {                 //막대 그래프 일때(원 그래프로 가는 버튼)
-                monthYearText.setText(monthYearFromDate(selectedDate));
+                monthYearText.setText(monthYearFromDate(pieSelectedDate));
                 transaction.replace(R.id.container, pieChartFragment).commit();
                 graphImage.setImageResource(R.drawable.ic_baseline_bar_chart_24);
                 graphCheck = true;
