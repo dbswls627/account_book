@@ -171,7 +171,7 @@ public class WatchSettingActivity extends AppCompatActivity {
 
         amount_progressbar.setProgress(amountPercent);
 
-        if (amountPercent >=  12000 * Integer.parseInt(warning.getText().toString()) * 0.01) { watchImage.setImageResource(R.drawable.warning); }
+        if (amountPercent >=  12000 * Integer.parseInt(warning.getText().toString()) * 0.01 && amountPercent < 12000) { watchImage.setImageResource(R.drawable.warning); }
         else if (amountPercent == 12000) { watchImage.setImageResource(R.drawable.empty); }
         else { watchImage.setImageResource(R.drawable.money); }
     }
