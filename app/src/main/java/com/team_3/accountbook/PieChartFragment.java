@@ -124,8 +124,8 @@ public class PieChartFragment extends Fragment {
         dataSet.setSliceSpace(5f);      //그래프 사이 빈공간
         dataSet.setSelectionShift(8);  //그래프 클릭시 해당 파이 커지는 크기 설정
         dataSet.setValueLinePart1OffsetPercentage(90.f);
-        dataSet.setValueLinePart1Length(.6f);
-        dataSet.setValueLinePart2Length(.5f);
+        dataSet.setValueLinePart1Length(.8f);
+        dataSet.setValueLinePart2Length(.2f);
         dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);  //데이터 밖으로 빼기
         dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);  //데이터 밖으로 빼기
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);   //색 조합
