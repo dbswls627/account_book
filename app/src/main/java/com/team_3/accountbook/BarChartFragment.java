@@ -1,5 +1,7 @@
 package com.team_3.accountbook;
 
+import static java.lang.Math.abs;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
@@ -45,11 +47,13 @@ public class BarChartFragment extends Fragment {
     ArrayList<String> xAxisValues;
     Context context;
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onResume() {
         super.onResume();
         setChart(YYYYMM);
+        month.setText(YYYYMM.getMonthValue()+"월");
     }
 
     public BarChartFragment(LocalDate YYYYMM) {
@@ -104,7 +108,8 @@ public class BarChartFragment extends Fragment {
                 MM = xAxisValues.get((int) h.getX());
                 if (MM.length()==2){ MM = "0"+MM;}      //1월 -> 01월로 바꾸기
                 month.setText(MM);
-                setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromYear(YYYYMM)+" "+MM, "expense"));
+               // Log.d("테스트", String.valueOf());
+                setList((ArrayList<Cost>) db.dao().getMDate(monthYearFromDate(YYYYMM.minusMonths(abs((int) e.getX()-5))), "expense"));
             }
 
             @Override
@@ -222,11 +227,5 @@ public class BarChartFragment extends Fragment {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년 MM월");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
         return date.format(formatter);
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private String monthYearFromYear(LocalDate date) {      // LocalDate 형식(YYYY-MM-DD)의 데이터를 '----년 --월' 형식으로 변환하는 함수
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY년");   // 변환 형식 formatter 구축. (MMMM: 01월, MM: 01)
-        return date.format(formatter);
-    }
-
+    
 }
