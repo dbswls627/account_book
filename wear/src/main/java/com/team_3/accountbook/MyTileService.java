@@ -20,6 +20,7 @@ import androidx.wear.tiles.TileBuilders;
 import androidx.wear.tiles.TileService;
 import androidx.wear.tiles.TimelineBuilders;
 import androidx.wear.tiles.material.Text;
+import androidx.wear.tiles.material.Typography;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -208,13 +209,13 @@ public class MyTileService extends TileService {
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
                                         .setText("/"+myFormatter.format(amountProgress.goal)+"원")
-                                        .setTypography(10)                  //글씨 크기(?)
+                                        .setTypography(Typography.TYPOGRAPHY_CAPTION1)                  //글씨 크기(?)
                                         .build()
                                 )
                                 .addContent(new Text.Builder()              //텍스트
                                         .setColor(argb(0xFFFFFFFF))
                                         .setText("잔액 : "+myFormatter.format(balance)+"원")
-                                        .setTypography(10)                  //글씨 크기(?)
+                                        .setTypography(Typography.TYPOGRAPHY_BODY1)                  //글씨 크기(?)
                                         .build()
                                 )
                                 //공간 띄우기 padding 같은 역할

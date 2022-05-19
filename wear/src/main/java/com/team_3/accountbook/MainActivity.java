@@ -1,24 +1,9 @@
 package com.team_3.accountbook;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Wear Device code  so I can kept this straight.
@@ -49,10 +34,10 @@ public class MainActivity extends WearableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView =  findViewById(R.id.text);
-        myButton =  findViewById(R.id.wrbutton);
 
-        db = AppDatabase.getInstance(this);
+
+
+      /*  db = AppDatabase.getInstance(this);
 
         //send a message from the wear.  This one will not have response.
         new SendThread(datapath, "amount").start();
@@ -141,7 +126,7 @@ public class MainActivity extends WearableActivity {
             } catch (InterruptedException exception) {
                 Log.e(TAG, "Interrupt occurred: " + exception);
             }
-        }
+        }*/
     }
 
 

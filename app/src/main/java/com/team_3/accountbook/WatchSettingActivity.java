@@ -159,7 +159,7 @@ public class WatchSettingActivity extends AppCompatActivity {
 
         balance.setText("잔액 : "+myFormatter.format(amountGoal - amount)+ "원");
 
-        watchAmountGoal.setText(myFormatter.format(amountGoal)+"원");
+        watchAmountGoal.setText("/"+myFormatter.format(amountGoal)+"원");
         watchAmount.setText(myFormatter.format(amount));
 
         day_progressbar.setProgress((int) ((Float.valueOf(date.getDayOfMonth())/yearMonth.lengthOfMonth())*120)); //날짜 게이지

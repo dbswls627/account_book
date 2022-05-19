@@ -16,16 +16,12 @@
         android:orientation="vertical"
         app:boxedEdges="all">
 
-        <Button
-            android:id="@+id/wrbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="새로고침(미구현)"/>
-
         <TextView
             android:id="@+id/text"
+            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:text="타일을 생성해주세요"/>
     </LinearLayout>
 </androidx.wear.widget.BoxInsetLayout>
 
