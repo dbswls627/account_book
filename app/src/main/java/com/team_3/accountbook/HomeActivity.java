@@ -145,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements CalendarAdapter.O
             public void run() {
                 callPermission();
             }
-        }, 1000);   // 1초 후 권한 요청이 실행됨.(바로 요청하면 요청이 씹힘. 딜레이를 줌으로 해결함)
+        }, 100);   // 1초 후 권한 요청이 실행됨.(바로 요청하면 요청이 씹힘. 딜레이를 줌으로 해결함)
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED){
